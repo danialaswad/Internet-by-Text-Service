@@ -24,6 +24,7 @@ export class HomePage {
   fetchSMS() {
     this.sms.fetchSMS().then((data:any) => {
       for(var sms of data.reverse()){
+        //On concatène les SMS de la liste
         this.smsValue+=sms.body;
       }
     }, error => {
