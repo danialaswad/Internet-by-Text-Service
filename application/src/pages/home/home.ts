@@ -32,8 +32,7 @@ export class HomePage {
   }
 
   sendSearch(){
-    console.log(this.url);
-   // this.smsValue=this.url;
+    this.sms.sendSMS(this.url);
   }
 
 }
