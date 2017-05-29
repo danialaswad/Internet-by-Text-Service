@@ -1,14 +1,37 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import {Component} from "@angular/core";
+import {NavController} from "ionic-angular";
+import {SMSManager} from "../../providers/SMSManager";
+
+
+declare var window: any;
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html'
+  templateUrl: 'home.html',
+  providers: [SMSManager]
 })
+
 export class HomePage {
 
-  constructor(public navCtrl: NavController) {
+  websiteContent = "AZAZZAAZ";
+  smsValue="";
 
+  constructor(public navCtrl: NavController, private sms: SMSManager) {
+    this.fetchSMS();
+  }
+
+  setText() {
+    this.websiteContent = "<h1>Wesh</h1>";
+  }
+
+  fetchSMS() {
+    this.sms.fetchSMS().then((data:any) => {
+      for(var sms of data.reverse()){
+        this.smsValue+=sms.body;
+      }
+    }, error => {
+      console.log(error)
+    })
   }
 
 }
