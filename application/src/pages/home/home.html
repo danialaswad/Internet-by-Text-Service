@@ -1,10 +1,12 @@
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-searchbar (input)="getItems($event)"></ion-searchbar>
+  <ion-toolbar color="gris" >
+    <ion-input placeholder="Salut"></ion-input>
+    <ion-buttons end>
+      <ion-icon class="send" (click)="sendSearch()" name="arrow-round-forward"></ion-icon>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  <div id="content"[innerHTML]="smsValue"></div>
-  <button (click)="setText()">Cliquez </button>
+  <div id="content" [innerHTML]="smsValue"></div>
 </ion-content>

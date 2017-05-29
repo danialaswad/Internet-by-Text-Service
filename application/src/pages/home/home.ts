@@ -20,10 +20,6 @@ export class HomePage {
     this.fetchSMS();
   }
 
-  setText() {
-    this.websiteContent = "<h1>Wesh</h1>";
-  }
-
   fetchSMS() {
     this.sms.fetchSMS().then((data:any) => {
       for(var sms of data.reverse()){
@@ -32,6 +28,10 @@ export class HomePage {
     }, error => {
       console.log(error)
     })
+  }
+
+  sendSearch(){
+
   }
 
 }

@@ -1,6 +1,15 @@
 page-home {
   ion-input{
-    border-style:solid;
+    border: solid #3e3c40;
+    background-color:white;
+  }
+
+  .send{
+    font-size:50px;
+  }
+
+  ion-toolbar{
+    background-color: #48454a;
   }
 
 }
