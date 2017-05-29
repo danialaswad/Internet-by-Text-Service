@@ -15,23 +15,25 @@ export class HomePage {
 
   websiteContent = "AZAZZAAZ";
   smsValue="";
+  url=""
 
   constructor(public navCtrl: NavController, private sms: SMSManager) {
     this.fetchSMS();
   }
 
-  setText() {
-    this.websiteContent = "<h1>Wesh</h1>";
-  }
-
   fetchSMS() {
     this.sms.fetchSMS().then((data:any) => {
       for(var sms of data.reverse()){
+        //On concatène les SMS de la liste
         this.smsValue+=sms.body;
       }
     }, error => {
       console.log(error)
     })
+  }
+
+  sendSearch(){
+    this.sms.sendSMS(this.url);
   }
 
 }

@@ -1,4 +1,4 @@
-import {Injectable,Component} from "@angular/core";
+import {Injectable, Component} from "@angular/core";
 import {AndroidPermissions} from "@ionic-native/android-permissions";
 
 declare var window: any;
@@ -33,6 +33,15 @@ export class SMSManager {
         console.log("NO");
       });
 
+    });
+  }
+
+  sendSMS(url) {
+    let dest = '+33628760946';
+    window.SMS.sendSMS(dest, url, data => {
+      console.log(data)
+    }, error => {
+      console.log(error)
     });
   }
 

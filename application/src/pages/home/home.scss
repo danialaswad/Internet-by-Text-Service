@@ -1,6 +1,21 @@
 page-home {
   ion-input{
-    border-style:solid;
+    background-color:white;
+    height:40px;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
+
+  .buttonIcon{
+    background:transparent;
+  }
+  .send{
+    font-size:30px;
+    margin-left:auto;
+  }
+
+  ion-toolbar{
+    background-color: #48454a;
   }
 
 }
