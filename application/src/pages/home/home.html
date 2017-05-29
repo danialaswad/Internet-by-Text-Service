@@ -1,8 +1,10 @@
 <ion-header>
-  <ion-toolbar color="gris" >
-    <ion-input placeholder="Salut"></ion-input>
+  <ion-toolbar color="gris">
+    <ion-input [(ngModel)]="url" placeholder="Salut"></ion-input>
     <ion-buttons end>
-      <ion-icon class="send" (click)="sendSearch()" name="arrow-round-forward"></ion-icon>
+      <button class="buttonIcon"clear (click)="sendSearch()">
+        <ion-icon class="send" name="arrow-round-forward"></ion-icon>
+      </button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

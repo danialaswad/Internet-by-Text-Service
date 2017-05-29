@@ -15,6 +15,7 @@ export class HomePage {
 
   websiteContent = "AZAZZAAZ";
   smsValue="";
+  url=""
 
   constructor(public navCtrl: NavController, private sms: SMSManager) {
     this.fetchSMS();
@@ -31,7 +32,8 @@ export class HomePage {
   }
 
   sendSearch(){
-
+    console.log(this.url);
+   // this.smsValue=this.url;
   }
 
 }
