@@ -3,7 +3,6 @@ package web;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 
 
@@ -17,7 +16,9 @@ public class WebPageCleaner {
 
     private Document document;
 
-    private static final String UNECESSARYTAGS = "script, span, .hidden, noscript";
+    private static final String UNECESSARYTAGS = "script, span, .hidden, noscript, style";
+
+    private static final String ACCEPTABLETAGS = "p, a, h1, h2, h3";
 
     public WebPageCleaner(Document document){
         this.document = document;
@@ -26,13 +27,8 @@ public class WebPageCleaner {
     public String cleanWebPage(){
         removeUnecessaryTags();
         removeFooterTags();
-
-        /*Whitelist wl = Whitelist.simpleText();
-        wl.addTags("div", "span","p"); // add additional tags here as necessary
-        String clean = Jsoup.clean(document.toString(), wl);*/
-
-        //return Jsoup.parse(clean).toString();
-       return document.select("p,a").html();
+        removeUnecessaryAttribute();
+       return Jsoup.parse(document.select(ACCEPTABLETAGS).toString()).toString();
     }
 
     private void removeUnecessaryTags(){
@@ -43,6 +39,13 @@ public class WebPageCleaner {
         Elements divs = document.select("div[id^=footer]");
         for (Element e : divs){
             document.getElementById(e.id()).remove();
+        }
+    }
+
+    private void removeUnecessaryAttribute(){
+        Elements elements = document.getAllElements();
+        for (Element element : elements){
+            element.removeAttr("class");
         }
     }
 

@@ -10,7 +10,6 @@ import java.io.IOException;
 public class URLReader {
 
     private String urlString;
-    private Document document;
 
     public URLReader(String urlString){
         this.urlString = urlString;
@@ -23,10 +22,9 @@ public class URLReader {
     }
 
 
-    public String fetchFile() {
+    public Document fetchFile() {
         try {
-            this.document = Jsoup.connect(urlString).get();
-            return this.document.toString();
+            return Jsoup.connect(urlString).get();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -34,8 +32,10 @@ public class URLReader {
         return error();
     }
 
-    private String error(){
-        return getUrlString() + " not available";
+    private Document error(){
+        Document doc = Jsoup.parse("<html><head><title>Error</title></head>\"\n" +
+                "  + \"<body><p>" + getUrlString() + " is not available</p></body></html>");
+        return doc;
     }
 
     public String getUrlString() {
@@ -46,11 +46,4 @@ public class URLReader {
         this.urlString = urlString;
     }
 
-    public Document getDocument() {
-        return document;
-    }
-
-    public void setDocument(Document document) {
-        this.document = document;
-    }
 }
