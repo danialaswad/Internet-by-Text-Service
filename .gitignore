@@ -16,17 +16,15 @@ npm-debug.log*
 .sass-cache/
 .tmp/
 .versions/
-application/coverage/
-application/dist/
-application/node_modules/
-application/tmp/
-application/temp/
-application/hooks/
-application/platforms/
-application/plugins/
-application/plugins/android.json
-application/plugins/ios.json
-application/www/
+*.iml
+*.gradle
+application/local.properties
+application/.idea/workspace.xml
+application/.idea/libraries
+application/.DS_Store
+application/build
+application/captures
+
 $RECYCLE.BIN/
 
 .DS_Store
