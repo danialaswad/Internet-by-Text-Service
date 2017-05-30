@@ -1,4 +1,4 @@
-/**
+package compression; /**
  * Created by Antoine on 29/05/2017.
  * Inspired by http://stackoverflow.com/q/6173920/600500.
  */
