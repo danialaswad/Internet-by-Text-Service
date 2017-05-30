@@ -10,7 +10,7 @@ public class WebPageCleaner {
 
     private static final String UNECESSARYTAGS = "script, span, .hidden, noscript, style";
 
-    private static final String ACCEPTABLETAGS = "p, a, h1, h2, h3";
+    private static final String ACCEPTABLETAGS = "p, a, h1, h2, h3, h4";
 
 
     public String cleanWebPage(Document document){
