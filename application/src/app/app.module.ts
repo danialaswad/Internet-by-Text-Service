@@ -5,13 +5,15 @@ import {SplashScreen} from "@ionic-native/splash-screen";
 import {StatusBar} from "@ionic-native/status-bar";
 import {MyApp} from "./app.component";
 import {HomePage} from "../pages/home/home";
+import { CompressionPage } from '../pages/compression/compression';
 import {SMSManager} from "../providers/SMSManager";
 import {AndroidPermissions} from "@ionic-native/android-permissions/";
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    CompressionPage
   ],
   imports: [
     BrowserModule,
@@ -20,7 +22,8 @@ import {AndroidPermissions} from "@ionic-native/android-permissions/";
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    CompressionPage
   ],
   providers: [
     SMSManager,

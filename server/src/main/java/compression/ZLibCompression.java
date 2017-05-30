@@ -3,61 +3,40 @@ package compression; /**
  * Inspired by http://stackoverflow.com/q/6173920/600500.
  */
 
-import org.apache.commons.io.FileUtils;
+
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.*;
-import java.nio.charset.Charset;
-import java.util.Scanner;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
-public class ZLibCompression
-{
-    public static void compress(String raw, File compressed) throws IOException
-    {
-        FileUtils.writeStringToFile(new File("codeSource.txt"),raw, Charset.defaultCharset());
-        try (InputStream inputStream = new FileInputStream("codeSource.txt");
-             OutputStream outputStream = new DeflaterOutputStream(new FileOutputStream(compressed)))
-        {
-            copy(inputStream, outputStream);
+public class ZLibCompression {
+    public static String compressToBase64(String entry, String encoding) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            OutputStream out = new DeflaterOutputStream(baos);
+            out.write(entry.getBytes(encoding));
+            out.close();
+        } catch (IOException e) {
+            throw new AssertionError(e);
         }
+        byte[] b64 = Base64.encodeBase64(baos.toByteArray());
+        return new String(b64);
     }
 
-    public static void decompress(File compressed, File raw)
-            throws IOException
-    {
-        try (InputStream inputStream = new InflaterInputStream(new FileInputStream(compressed));
-             OutputStream outputStream = new FileOutputStream(raw))
-        {
-            copy(inputStream, outputStream);
-        }
-    }
+    public static String decompressFromBase64(String entry, String encoding) throws UnsupportedEncodingException {
 
-    public static String decompress(File compressed) throws IOException
-    {
-        try (InputStream inputStream = new InflaterInputStream(new FileInputStream(compressed)))
-        {
-            return toString(inputStream);
-        }
-    }
-
-    private static String toString(InputStream inputStream)
-    {
-        try (Scanner scanner = new Scanner(inputStream).useDelimiter("\\A"))
-        {
-            return scanner.hasNext() ? scanner.next() : "";
-        }
-    }
-
-    private static void copy(InputStream inputStream, OutputStream outputStream)
-            throws IOException
-    {
-        byte[] buffer = new byte[1000];
-        int length;
-
-        while ((length = inputStream.read(buffer)) > 0)
-        {
-            outputStream.write(buffer, 0, length);
+        byte[] dec = Base64.decodeBase64(entry.getBytes(encoding));
+        InputStream in = new InflaterInputStream(new ByteArrayInputStream(dec));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            byte[] buffer = new byte[8192];
+            int len;
+            while ((len = in.read(buffer)) > 0)
+                baos.write(buffer, 0, len);
+            return new String(baos.toByteArray(), encoding);
+        } catch (IOException e) {
+            throw new AssertionError(e);
         }
     }
 }
