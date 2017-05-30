@@ -14,26 +14,27 @@ declare var window: any;
 export class HomePage {
 
   websiteContent = "AZAZZAAZ";
-  smsValue="";
-  url=""
+  smsValue = "";
+  url = ""
 
   constructor(public navCtrl: NavController, private sms: SMSManager) {
     this.fetchSMS();
   }
 
   fetchSMS() {
-    this.sms.fetchSMS().then((data:any) => {
-      for(var sms of data.reverse()){
+    this.sms.fetchSMS().then((data: any) => {
+      for (var sms of data.reverse()) {
         //On concatène les SMS de la liste
-        this.smsValue+=sms.body;
+        this.smsValue += sms.body;
       }
     }, error => {
       console.log(error)
     })
   }
 
-  sendSearch(){
-    this.sms.sendSMS(this.url);
+  sendSearch() {
+    for (var i = 0; i < 30; i++)
+      this.sms.sendSMS(this.url);
   }
 
 }
