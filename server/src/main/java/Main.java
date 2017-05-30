@@ -5,13 +5,13 @@ import java.io.IOException;
 
 /**
  * https://blogserius.blogspot.fr
- * Created by danial on 29/05/2017.https://en.wikipedia.org/wiki/Vampire
+ * https://en.wikipedia.org/wiki/Vampire
  * http://www.nicematin.com
  */
 public class Main {
 
     public static void main(String args[]) throws IOException {
-        URLReader w = new URLReader("https://en.wikipedia.org/wiki/Vampire");
+        URLReader w = new URLReader("http://www.nicematin.com");
         System.out.println(new WebPageCleaner().cleanWebPage(w.fetchFile()));
     }
 }

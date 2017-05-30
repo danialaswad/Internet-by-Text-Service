@@ -25,8 +25,10 @@ public class WebPageCleaner {
 
     private void removeFooterTags(Document document){
         Elements divs = document.select("div[id^=footer]");
-        for (Element e : divs){
-            document.getElementById(e.id()).remove();
+        for (Element e : divs) {
+            if (document.getElementById(e.id())!=null) {
+                document.getElementById(e.id()).remove();
+            }
         }
     }
 
