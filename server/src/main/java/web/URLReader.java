@@ -2,17 +2,15 @@ package web;
 
 import org.apache.commons.validator.routines.UrlValidator;
 import org.jsoup.Jsoup;
-import org.jsoup.examples.HtmlToPlainText;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
 
 public class URLReader {
 
-
     private String urlString;
+    private Document document;
 
     public URLReader(String urlString){
         this.urlString = urlString;
@@ -26,13 +24,9 @@ public class URLReader {
 
 
     public String fetchFile() {
-
         try {
-
-            Document doc = Jsoup.connect(urlString).get();
-            Elements newsHeadlines = doc.select("#mp-itn b a");
-            doc.select("script, style, .hidden").remove().text();
-            return  new HtmlToPlainText().getPlainText(Jsoup.parse(doc.title() + doc.body().select("p")));
+            this.document = Jsoup.connect(urlString).get();
+            return this.document.toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,5 +44,13 @@ public class URLReader {
 
     public void setUrlString(String urlString) {
         this.urlString = urlString;
+    }
+
+    public Document getDocument() {
+        return document;
+    }
+
+    public void setDocument(Document document) {
+        this.document = document;
     }
 }
