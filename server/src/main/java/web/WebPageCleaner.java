@@ -22,15 +22,17 @@ public class WebPageCleaner {
 
     private String url;
 
+
     public String cleanWebPage(Document document, String url){
         this.url = url;
         removeUnecessaryTags(document);
         removeFooterTags(document);
         removeUnecessaryAttribute(document);
-       return Jsoup.parse(document.select(ACCEPTABLETAGS).toString()).toString();
+       return Jsoup.parse(document.body().toString()).toString();//Jsoup.parse(document.select(ACCEPTABLETAGS).toString()).toString();
     }
 
     void removeUnecessaryTags(Document document){
+
         document.select(UNECESSARYTAGS).remove().text();
     }
 
@@ -75,11 +77,16 @@ public class WebPageCleaner {
             domain = url;
             url = "https://" + url;
         }
+        if (attribute.getValue().contains(url)){
+            return;
+        }
         if (attribute.getValue().contains(domain)){
             attribute.setValue(attribute.getValue().replace(domain,""));
             attribute.setValue(url + attribute.getValue());
+            System.out.println("1 :"+ attribute.getValue());
         } else if (!attribute.getValue().contains(url)){
             attribute.setValue(url + attribute.getValue());
+            System.out.println("2 :" +attribute.getValue());
         }
     }
 
