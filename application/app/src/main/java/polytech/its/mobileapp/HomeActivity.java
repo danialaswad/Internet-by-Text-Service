@@ -54,12 +54,20 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Nettoyage de la webview afin d'accueillir le futur site
+     * @param url
+     */
     private void clearViewAndSend(String url) {
         webArea.loadUrl("about:blank");
         smsContent = "";
         sendMessage(url);
     }
 
+    /**
+     * Récupération des SMS et vérification qu'il correspond au numéro du serveur
+     * @param cursor
+     */
     private void displaySms(Cursor cursor) {
         if (!cursor.moveToFirst()) { /* false = cursor is empty */
             return;
@@ -78,7 +86,11 @@ public class HomeActivity extends AppCompatActivity {
         webArea.loadData(smsContent, "text/html", "UTF-8");
     }
 
-    //Callback du boutton envoyer
+    /**
+     * Callback du bouton d'envoi
+     * @param view
+     */
+
     void retrieveURL(View view) {
         //Récupérer l'URL
 
