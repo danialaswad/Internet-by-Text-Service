@@ -14,13 +14,15 @@ public class PageCutter {
     private Document page;
     private Element currentElement;
     private Stack<Element> elementStack;
+    private int size;
 
     private final static int SIZE_CHUNK = 8880;
 
     public PageCutter(String pageString){
         this.page=  Jsoup.parse(pageString);
-        Element currentElement =page.select("body").first();
+        currentElement =page.select("body").first();
         elementStack = new Stack<>();
+        size=0;
     }
 
     /*
@@ -43,15 +45,40 @@ public class PageCutter {
 
      */
     public String nextPackage(){
-
-        /*
-         - on supprime que si on est dans un body
-         - pas couper mot en deux
-         - vérifier qu'on a pas dépassé la fin du texte
-         */
-        return null;
+        return write(currentElement);
     }
 
+    private String write(Element element){
+        elementStack.add(element);
+        String result="";
+
+        if(size+element.outerHtml().length()<=SIZE_CHUNK){
+            /*Si en ajoutant le prochain element je ne dépasse pas la taille max*/
+            elementStack.pop();
+            size+=element.outerHtml().length();
+            if (element.nextElementSibling()==null){
+                return element.outerHtml();
+            }else {
+                return element.outerHtml() + write(element.nextElementSibling());
+            }
+        }else{
+            /* je ne peux pas ajouter l'élément car trop gros*/
+           if (!element.children().isEmpty()){
+               /*Si cet élément à des éléments à l'intérieur*/
+
+               //modification de la taille pour anticiper quand on devra refermer avec surroundedByTag
+               size+=5+(element.tagName().length()*2); // pour anticiper <tagName> </tagName>
+               if (!(element.attributes().size()==0))
+                   size+=element.attributes().toString().length(); //j'ajoute la longueur de l'attribut
+               //while (size <=SIZE_CHUNK) ??
+               result = write(element.children().first()); //write les éléments à l'intérieur de celui-ci
+           }
+
+           //enregistre nouvelle position de départ
+           currentElement=element;
+            return surroundedByTag(elementStack.pop(),result);
+        }
+    }
     /**
      * Permet d'entourer htmlString avec la balise de l'élément tag
      * Respecte les attributs etc..

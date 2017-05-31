@@ -31,6 +31,19 @@ public class MainPerso {
         System.out.println("------selector:"+a.cssSelector()); //utile => doc.select( ceci) selectionne cet élément
         System.out.println("------Ce qu'il y a à l'intérieur:"+a.html()); //ce qu'il y a à l'intérieur
         System.out.println("------les attributs:"+a.attributes().toString());
-        System.out.println("------testSurrounded:"+cutter.surroundedByTag(a,a.outerHtml()));
+        if (bodyElmement.nextElementSibling()==null){
+            System.out.println("body hasn't next sibling");
+        }
+        System.out.println(a.children().first().children().toString()+"tuz");
+        if (a.children().first().children().isEmpty()){
+            System.out.println("img n'a pas d'enfant");
+        }
+
+        if (bodyElmement.attributes().size()==0){
+            System.out.println("body n'a pas d'attribut");
+        }
+
+        System.out.println(cutter.nextPackage());
+
     }
 }
