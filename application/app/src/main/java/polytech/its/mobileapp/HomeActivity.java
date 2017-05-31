@@ -7,12 +7,13 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 
 public class HomeActivity extends AppCompatActivity {
@@ -25,7 +26,6 @@ public class HomeActivity extends AppCompatActivity {
     String url = "";
     static String smsContent = "";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,28 +37,27 @@ public class HomeActivity extends AppCompatActivity {
 
         webArea = (WebView) findViewById(R.id.pageView);
         URLArea = (EditText) findViewById(R.id.urlEditor);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 
-        URLArea.setFocusableInTouchMode(true);
-        URLArea.requestFocus();
-
-        URLArea.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                // If the event is a key-down event on the "enter" button
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    Log.d("ENTER", "ENTER PRESSED");
-                    retrieveURL(v);
-                    return true;
-                }
-                return false;
-            }
-        });
-        SmsReader sr = new SmsReader();
+        SmsUtility sr = new SmsUtility();
         Cursor cursor = sr.getMessages(HomeActivity.this);
         displaySms(cursor);
 
+        webArea.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Log.d("TESTO", url);
+                clearViewAndSend(url);
+                return true;
+            }
+        });
+    }
 
-        //}
+    private void clearViewAndSend(String url) {
+        webArea.loadUrl("about:blank");
+        smsContent = "";
+        sendMessage(url);
     }
 
     private void displaySms(Cursor cursor) {
@@ -79,13 +78,21 @@ public class HomeActivity extends AppCompatActivity {
         webArea.loadData(smsContent, "text/html", "UTF-8");
     }
 
+    //Callback du boutton envoyer
     void retrieveURL(View view) {
         //Récupérer l'URL
 
         url = URLArea.getText().toString();
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(PHONE_NUMBER, null, url, null, null);
+        URLArea.setText("");
 
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        sendMessage(url);
+    }
+
+    void sendMessage(String msg) {
+        SmsUtility sr = new SmsUtility();
+        sr.sendMessage(PHONE_NUMBER, msg);
     }
 
     static void updateTextView(String msg) {
@@ -115,7 +122,6 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         }
+
     }
-
-
 }
