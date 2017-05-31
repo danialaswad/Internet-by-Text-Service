@@ -1,3 +1,4 @@
+import compression.PageCutter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -11,6 +12,7 @@ public class MainPerso {
     public static void main(String[] args) {
         URLReader w = new URLReader("https://en.wikipedia.org/wiki/Vampire");
         String str = new WebPageCleaner().cleanWebPage(w.fetchFile());
+        PageCutter cutter = new PageCutter(str);
         //System.out.println(str);
         //TAGNAME = body , html img nom de la balise quoi
         Document doc = Jsoup.parse(str);
@@ -29,6 +31,6 @@ public class MainPerso {
         System.out.println("------selector:"+a.cssSelector()); //utile => doc.select( ceci) selectionne cet élément
         System.out.println("------Ce qu'il y a à l'intérieur:"+a.html()); //ce qu'il y a à l'intérieur
         System.out.println("------les attributs:"+a.attributes().toString());
-
+        System.out.println("------testSurrounded:"+cutter.surroundedByTag(a,a.outerHtml()));
     }
 }
