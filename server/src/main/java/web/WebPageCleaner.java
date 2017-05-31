@@ -10,7 +10,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 
 public class WebPageCleaner {
@@ -21,7 +20,10 @@ public class WebPageCleaner {
 
     private static final List<String> UNECCESARYATTRIBUTES = Arrays.asList("id", "src", "href", "alt", "title", "height", "width");
 
-    public String cleanWebPage(Document document){
+    private String url;
+
+    public String cleanWebPage(Document document, String url){
+        this.url = url;
         removeUnecessaryTags(document);
         removeFooterTags(document);
         removeUnecessaryAttribute(document);
@@ -50,11 +52,34 @@ public class WebPageCleaner {
                 if (!UNECCESARYATTRIBUTES.contains(attribute.getKey())){
                     keys.add(attribute.getKey());
                 }
+                if (attribute.getKey().equals("href")){
+                    completeURL(attribute);
+                }
             }
             for (String s :keys){
                 element.removeAttr(s);
             }
             keys.clear();
+        }
+    }
+
+    void completeURL(Attribute attribute){
+        String domain="";
+        if (url.contains("http://")) {
+            domain = url;
+            domain = domain.replaceAll("http://", "");
+        } else if (url.contains("https://")) {
+            domain = url;
+            domain = domain.replaceAll("https://", "");
+        } else {
+            domain = url;
+            url = "https://" + url;
+        }
+        if (attribute.getValue().contains(domain)){
+            attribute.setValue(attribute.getValue().replace(domain,""));
+            attribute.setValue(url + attribute.getValue());
+        } else if (!attribute.getValue().contains(url)){
+            attribute.setValue(url + attribute.getValue());
         }
     }
 

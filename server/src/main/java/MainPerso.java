@@ -11,7 +11,7 @@ import web.WebPageCleaner;
 public class MainPerso {
     public static void main(String[] args) {
         URLReader w = new URLReader("https://en.wikipedia.org/wiki/Vampire");
-        String str = new WebPageCleaner().cleanWebPage(w.fetchFile());
+        String str = new WebPageCleaner().cleanWebPage(w.fetchFile(),w.getUrlString());
         PageCutter cutter = new PageCutter(str);
         //System.out.println(str);
         //TAGNAME = body , html img nom de la balise quoi

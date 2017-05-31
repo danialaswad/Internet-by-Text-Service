@@ -37,7 +37,7 @@ public class URLReader {
         return doc;
     }
 
-    String getUrlString() {
+    public String getUrlString() {
         return urlString;
     }
 
