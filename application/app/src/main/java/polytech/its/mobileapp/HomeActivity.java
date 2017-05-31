@@ -7,34 +7,57 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
-import android.widget.TextView;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.webkit.WebView;
+import android.widget.EditText;
 
 public class HomeActivity extends AppCompatActivity {
-    private static TextView webArea;
     public static final String PHONE_NUMBER = "+33628760946";
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
+
+    private static WebView webArea;
+    private static EditText URLArea;
+
+    String url = "";
+    static String smsContent = "";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-       /* ActionBar actionBar = getSupportActionBar();
-        actionBar.setCustomView(R.layout.actionbar_view);*/
         setContentView(R.layout.activity_home);
         IntentFilter filter = new IntentFilter(HomeActivity.SMS_RECEIVED);
         SmsListener sl = new SmsListener();
         registerReceiver(sl, filter);
 
+        webArea = (WebView) findViewById(R.id.pageView);
+        URLArea = (EditText) findViewById(R.id.urlEditor);
 
+
+        URLArea.setFocusableInTouchMode(true);
+        URLArea.requestFocus();
+
+        URLArea.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    Log.d("ENTER", "ENTER PRESSED");
+                    retrieveURL(v);
+                    return true;
+                }
+                return false;
+            }
+        });
         SmsReader sr = new SmsReader();
-
-        webArea = (TextView) findViewById(R.id.pageView);
-
         Cursor cursor = sr.getMessages(HomeActivity.this);
-
         displaySms(cursor);
+
+
         //}
     }
 
@@ -43,7 +66,6 @@ public class HomeActivity extends AppCompatActivity {
             return;
         }
 
-        String smsContent = "";
         if (cursor.moveToLast()) {
             for (int i = 0; i < cursor.getCount(); i++) {
                 String phone = cursor.getString(cursor.getColumnIndexOrThrow("address")).toString();
@@ -54,11 +76,21 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
         cursor.close();
-        webArea.setText(smsContent);
+        webArea.loadData(smsContent, "text/html", "UTF-8");
+    }
+
+    void retrieveURL(View view) {
+        //Récupérer l'URL
+
+        url = URLArea.getText().toString();
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(PHONE_NUMBER, null, url, null, null);
+
     }
 
     static void updateTextView(String msg) {
-        webArea.setText(webArea.getText() + msg);
+        smsContent += msg;
+        webArea.loadData(smsContent, "text/html", "UTF-8");
 
     }
 
