@@ -26,7 +26,7 @@ public class WebPageCleaner {
         removeFooterTags(document);
         removeUnecessaryAttribute(document);
         removeComments(document);
-       return document.body().toString();
+       return Jsoup.parse(document.body().toString()).toString();
        //Jsoup.parse(document.select(ACCEPTABLETAGS).toString()).toString();
     }
 
@@ -52,13 +52,9 @@ public class WebPageCleaner {
             }
         }
 
-        String removeTags = "";
-        for (int i= 0; i < arrayList.size()-1; i++){
-            removeTags = removeTags + arrayList.get(i) + " ,";
-        }
-
-        removeTags = removeTags + arrayList.get(arrayList.size()-1);
-        document.select(removeTags).remove().text();
+        String removeTags = arrayList.toString().replace("]","").replace("[","").trim();
+        if (!removeTags.isEmpty())
+            document.select(removeTags).remove().text();
     }
 
     void removeFooterTags(Document document){

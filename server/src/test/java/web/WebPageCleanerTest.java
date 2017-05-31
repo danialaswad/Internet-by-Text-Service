@@ -32,7 +32,7 @@ public class WebPageCleanerTest {
 
     @Test
     public void removeUnecessaryTest(){
-        Document document = Jsoup.parse("<script>this is a script</script><p>this must not be remove</p>");
+        Document document = Jsoup.parse("<body><script>this is a script</script><p>this must not be remove</p></body>");
         new WebPageCleaner().removeUnecessaryTags(document);
         Assert.assertEquals(Jsoup.parse("<p>this must not be remove</p>").toString(), document.toString());
 
@@ -42,12 +42,12 @@ public class WebPageCleanerTest {
         Assert.assertEquals(Jsoup.parse("<p>this must not be remove</p>").toString(), document.toString());
 
 
-        document = Jsoup.parse("<noscript>this is a script</noscript><p>this must not be remove</p>");
+        document = Jsoup.parse("<body><noscript>this is a script</noscript><p>this must not be remove</p></body>");
         new WebPageCleaner().removeUnecessaryTags(document);
         Assert.assertEquals(Jsoup.parse("<p>this must not be remove</p>").toString(), document.toString());
 
 
-        document = Jsoup.parse("<style>this is a script</style><p>this must not be remove</p>");
+        document = Jsoup.parse("<body><style>this is a script</style><p>this must not be remove</p></body>");
         new WebPageCleaner().removeUnecessaryTags(document);
         Assert.assertEquals(Jsoup.parse("<p>this must not be remove</p>").toString(), document.toString());
     }
