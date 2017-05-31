@@ -32,8 +32,30 @@ public class WebPageCleanerTest {
 
     @Test
     public void removeUnecessaryTest(){
-        Document document = Jsoup.parse("<p>this must not be remove</p>");
-        new WebPageCleaner().removeFooterTags(document);
+        Document document = Jsoup.parse("<script>this is a script</script><p>this must not be remove</p>");
+        new WebPageCleaner().removeUnecessaryTags(document);
         Assert.assertEquals(Jsoup.parse("<p>this must not be remove</p>").toString(), document.toString());
+
+
+        document = Jsoup.parse("<span>this is a script</span><p>this must not be remove</p>");
+        new WebPageCleaner().removeUnecessaryTags(document);
+        Assert.assertEquals(Jsoup.parse("<p>this must not be remove</p>").toString(), document.toString());
+
+
+        document = Jsoup.parse("<noscript>this is a script</noscript><p>this must not be remove</p>");
+        new WebPageCleaner().removeUnecessaryTags(document);
+        Assert.assertEquals(Jsoup.parse("<p>this must not be remove</p>").toString(), document.toString());
+
+
+        document = Jsoup.parse("<style>this is a script</style><p>this must not be remove</p>");
+        new WebPageCleaner().removeUnecessaryTags(document);
+        Assert.assertEquals(Jsoup.parse("<p>this must not be remove</p>").toString(), document.toString());
+    }
+
+    @Test
+    public void removeUnecessaryAttributesTest(){
+        Document document = Jsoup.parse("<p class=\"unecessary\" id=\"necessary\">this must not be remove</p>");
+        new WebPageCleaner().removeUnecessaryAttribute(document);
+        Assert.assertEquals(Jsoup.parse("<p id=\"necessary\">this must not be remove</p>").toString(), document.toString());
     }
 }
