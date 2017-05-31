@@ -25,23 +25,23 @@ public class URLReader {
         try {
             return Jsoup.connect(urlString).get();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage() + " is un reachable");
         }
 
         return error();
     }
 
-    private Document error(){
+    Document error(){
         Document doc = Jsoup.parse("<html><head><title>Error</title></head>\"\n" +
                 "  + \"<body><p>" + getUrlString() + " is not available</p></body></html>");
         return doc;
     }
 
-    public String getUrlString() {
+    String getUrlString() {
         return urlString;
     }
 
-    public void setUrlString(String urlString) {
+    void setUrlString(String urlString) {
         this.urlString = urlString;
     }
 
