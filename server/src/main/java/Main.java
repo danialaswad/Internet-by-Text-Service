@@ -10,15 +10,17 @@ import java.io.IOException;
  *
  * http://www.nicematin.com
  * http://www.apple.com
+ * https://en.wikipedia.org/wiki/Silverio_Pérez
  */
 public class Main {
 
-    public static void main(String args[]) throws IOException, SMSLibException, InterruptedException {
-        //URLReader w = new URLReader("https://en.wikipedia.org/wiki/Vampire");
+    public static void main(String args[]){
+        //AIzaSyCPwDK5HD1C1kKJSLhLoRquom6mwv9Ydhs
+        URLReader w = new URLReader("http://anasghira.com/lorem");
         //new WebPageCleaner().cleanWebPage(w.fetchFile());
         //Document document = w.fetchFile();
-        //System.out.println(new WebPageCleaner().cleanWebPage(w.fetchFile(), w.getUrlString()));
-        testSmsServer();
+        System.out.println(new WebPageCleaner().cleanWebPage(w.fetchFile(), w.getUrlString()));
+        //testSmsServer();
     }
 
     public static void testSmsServer() throws InterruptedException, SMSLibException, IOException {
@@ -38,4 +40,6 @@ public class Main {
         }
         //app.stop();
     }
+
+
 }

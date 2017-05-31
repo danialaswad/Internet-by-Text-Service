@@ -1,10 +1,7 @@
 package web;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Attribute;
-import org.jsoup.nodes.Attributes;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
@@ -16,7 +13,7 @@ public class WebPageCleaner {
 
     private static final String UNECESSARYTAGS = "script, span, .hidden, noscript, style";
 
-    private static final String ACCEPTABLETAGS = "p, a, h1, h2, h3, h4, table, th, td";
+    private static final String ACCEPTABLETAGS = "p, a, h1, h2, h3, h4, table, th, td, i, tr, tbody, b, img, body, div, ul, li";
 
     private static final List<String> UNECCESARYATTRIBUTES = Arrays.asList("id", "src", "href", "alt", "title", "height", "width");
 
@@ -28,12 +25,40 @@ public class WebPageCleaner {
         removeUnecessaryTags(document);
         removeFooterTags(document);
         removeUnecessaryAttribute(document);
-       return Jsoup.parse(document.body().toString()).toString();//Jsoup.parse(document.select(ACCEPTABLETAGS).toString()).toString();
+        removeComments(document);
+       return document.body().toString();
+       //Jsoup.parse(document.select(ACCEPTABLETAGS).toString()).toString();
+    }
+
+    void removeComments(Node node) {
+        for (int i = 0; i < node.childNodes().size();) {
+            Node child = node.childNode(i);
+            if (child.nodeName().equals("#comment"))
+                child.remove();
+            else {
+                removeComments(child);
+                i++;
+            }
+        }
     }
 
     void removeUnecessaryTags(Document document){
+        List<String> arrayList = new ArrayList<>();
+        Elements elements = document.body().select(ACCEPTABLETAGS);
 
-        document.select(UNECESSARYTAGS).remove().text();
+        for (Element element : document.body().getAllElements()){
+            if (!elements.contains(element) && !arrayList.contains(element.nodeName())) {
+                    arrayList.add(element.nodeName());
+            }
+        }
+
+        String removeTags = "";
+        for (int i= 0; i < arrayList.size()-1; i++){
+            removeTags = removeTags + arrayList.get(i) + " ,";
+        }
+
+        removeTags = removeTags + arrayList.get(arrayList.size()-1);
+        document.select(removeTags).remove().text();
     }
 
     void removeFooterTags(Document document){
@@ -77,16 +102,14 @@ public class WebPageCleaner {
             domain = url;
             url = "https://" + url;
         }
-        if (attribute.getValue().contains(url)){
+        if (attribute.getValue().contains(url) || attribute.getValue().startsWith("http")){
             return;
         }
         if (attribute.getValue().contains(domain)){
             attribute.setValue(attribute.getValue().replace(domain,""));
             attribute.setValue(url + attribute.getValue());
-            System.out.println("1 :"+ attribute.getValue());
         } else if (!attribute.getValue().contains(url)){
             attribute.setValue(url + attribute.getValue());
-            System.out.println("2 :" +attribute.getValue());
         }
     }
 
