@@ -25,7 +25,7 @@ public class URLReader {
         try {
             return Jsoup.connect(urlString).get();
         } catch (IOException e) {
-            System.err.println(e.getMessage() + " is un reachable");
+            System.err.println(e.getMessage() + " is unreachable");
         }
 
         return error();

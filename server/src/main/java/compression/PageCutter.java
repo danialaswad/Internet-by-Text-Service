@@ -3,7 +3,6 @@ package compression;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-
 import java.util.Stack;
 
 
@@ -60,9 +59,9 @@ public class PageCutter {
      * @param htmlString
      * @return
      */
-    private String surroundedByTag(Element tag,String htmlString){
-        String openTag="<"+tag.tagName()+" "+tag.attributes().toString()+">";
-        String closeTag= "<"+tag.tagName()+">";
-        return null;
+    public String surroundedByTag(Element tag,String htmlString){
+        String openTag="<"+tag.tagName()+tag.attributes().toString()+">";
+        String closeTag= "</"+tag.tagName()+">";
+        return openTag+htmlString+closeTag;
     }
 }
