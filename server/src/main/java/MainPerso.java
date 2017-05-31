@@ -156,9 +156,6 @@ public class MainPerso {
             System.out.println("body n'a pas d'attribut");
         }
 
-        System.out.println(cutter.nextPackage());
-        System.out.println("222222222222222222222"+cutter.nextPackage());
-        System.out.println("333333333333333333333333333333333333333333333333333333"+cutter.nextPackage());
-
+        System.out.println(cutter.getChunkList().size());
     }
 }

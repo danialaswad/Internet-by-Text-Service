@@ -6,6 +6,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 
@@ -15,21 +16,24 @@ import java.util.Stack;
 public class PageCutter {
 
     private Document page;
-    /*private Element currentElement;
-    private Stack<Element> elementStack;*/
     private Elements bodyChildren;
     private int currentIndice;
     private int size;
+    private ArrayList<String> chunkList;
+
+    /*private Element currentElement;
+    private Stack<Element> elementStack;*/
 
     private final static int SIZE_CHUNK = 3000;
 
     public PageCutter(String pageString){
-        this.page=  Jsoup.parse(pageString);
-        /*currentElement =page.select("body").first().children().first();
-        elementStack = new Stack<>();*/
+        page=  Jsoup.parse(pageString);
         bodyChildren=page.select("body").first().children();
         currentIndice=0;
         size=0;
+        chunkList=new ArrayList<String>();
+        /*currentElement =page.select("body").first().children().first();
+        elementStack = new Stack<>();*/
     }
 
     /*
@@ -52,7 +56,7 @@ public class PageCutter {
       on regarde juste si le prochain de body prend pas trop de place pour l'ajouter sinon on ferme avec les balises body header et html et on envoie
 
      */
-    public String nextPackage(){
+    private String nextPackage(){
         /*size=0;
         return write(currentElement);*/
         String result="";
@@ -73,7 +77,27 @@ public class PageCutter {
         return surroundedByTag(page.select("body").first(),result);
     }
 
-    /*private String write(Element element){
+    public ArrayList<String> getChunkList(){
+        while (bodyChildren.size()>currentIndice){
+            chunkList.add(nextPackage());
+        }
+        return chunkList;
+    }
+
+    /**
+     * Permet d'entourer htmlString avec la balise de l'élément tag
+     * Respecte les attributs etc..
+     * @param tag
+     * @param htmlString
+     * @return
+     */
+    public String surroundedByTag(Element tag,String htmlString){
+        String openTag="<"+tag.tagName()+tag.attributes().toString()+">";
+        String closeTag= "</"+tag.tagName()+">";
+        return openTag+htmlString+closeTag;
+    }
+
+        /*private String write(Element element){
         elementStack.add(element);
         String result="";
 
@@ -91,7 +115,7 @@ public class PageCutter {
            /*if (!element.children().isEmpty()){*/
                /*Si cet élément à des éléments à l'intérieur*/
 
-               //modification de la taille pour anticiper quand on devra refermer avec surroundedByTag
+    //modification de la taille pour anticiper quand on devra refermer avec surroundedByTag
                /*size+=5+(element.tagName().length()*2); // pour anticiper <tagName> </tagName>
                if (!(element.attributes().size()==0))
                    size+=element.attributes().toString().length(); //j'ajoute la longueur de l'attribut
@@ -104,16 +128,4 @@ public class PageCutter {
             return surroundedByTag(elementStack.pop(),result);
         }
     }*/
-    /**
-     * Permet d'entourer htmlString avec la balise de l'élément tag
-     * Respecte les attributs etc..
-     * @param tag
-     * @param htmlString
-     * @return
-     */
-    public String surroundedByTag(Element tag,String htmlString){
-        String openTag="<"+tag.tagName()+tag.attributes().toString()+">";
-        String closeTag= "</"+tag.tagName()+">";
-        return openTag+htmlString+closeTag;
-    }
 }
