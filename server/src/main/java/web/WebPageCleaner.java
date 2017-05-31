@@ -19,11 +19,11 @@ public class WebPageCleaner {
        return Jsoup.parse(document.select(ACCEPTABLETAGS).toString()).toString();
     }
 
-    private void removeUnecessaryTags(Document document){
+    void removeUnecessaryTags(Document document){
         document.select(UNECESSARYTAGS).remove().text();
     }
 
-    private void removeFooterTags(Document document){
+    void removeFooterTags(Document document){
         Elements divs = document.select("div[id^=footer]");
         for (Element e : divs) {
             if (document.getElementById(e.id())!=null) {
@@ -32,7 +32,7 @@ public class WebPageCleaner {
         }
     }
 
-    private void removeUnecessaryAttribute(Document document){
+    void removeUnecessaryAttribute(Document document){
         Elements elements = document.getAllElements();
         for (Element element : elements){
             element.removeAttr("class");
