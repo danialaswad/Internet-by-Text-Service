@@ -13,14 +13,15 @@ import java.io.IOException;
  */
 public class Main {
 
-    public static void main(String args[]) throws IOException {
-        URLReader w = new URLReader("https://en.wikipedia.org/wiki/Vampire");
+    public static void main(String args[]) throws IOException, SMSLibException, InterruptedException {
+        //URLReader w = new URLReader("https://en.wikipedia.org/wiki/Vampire");
         //new WebPageCleaner().cleanWebPage(w.fetchFile());
         //Document document = w.fetchFile();
-        System.out.println(new WebPageCleaner().cleanWebPage(w.fetchFile(), w.getUrlString()));
+        //System.out.println(new WebPageCleaner().cleanWebPage(w.fetchFile(), w.getUrlString()));
+        testSmsServer();
     }
 
-    public void testSmsServer() throws InterruptedException, SMSLibException, IOException {
+    public static void testSmsServer() throws InterruptedException, SMSLibException, IOException {
 
         /*URLReader w = new URLReader("https://en.wikipedia.org/wiki/Vampire");
         System.out.println(new WebPageCleaner().cleanWebPage(w.fetchFile()));*/
