@@ -7,15 +7,13 @@ import org.jsoup.select.Elements;
 
 
 import java.util.ArrayList;
-//juste pac couper entre deux "<>"
-//recuperer tout jusqu 'au debut de la balise + la balise : doc.outerHtml.substring(0,mabalise.outterHtml.length)
 /**
  * Created by Antoine on 30/05/2017.
  */
 public class PageCutter {
 
     private Document page;
-    private int currentSize;
+    private int currentSize,posIni;
     private ArrayList<String> chunkList;
 
 
@@ -24,16 +22,34 @@ public class PageCutter {
     public PageCutter(String pageString){
         page=  Jsoup.parse(pageString);
         chunkList=new ArrayList<String>();
+        currentSize=0;
+        posIni=0;
     }
 
 
-    private String nextPackage(){
+    public String nextPackage(){
+        String result="";
+        //On veut le prochain élément trop gros à rajouter
+        Element tooBig=nextOverflowElement();
+        //on coupe jusqu'à lui
+        result=cutUntilElement()
+        //on ajoute ce que l'on peut
+
+        result=page.outerHtml().substring(posIni,posIni+currentSize);
+        posIni=posIni+currentSize+1;
+        currentSize=0;
+        return result;
+    }
+
+    public Element nextOverflowElement(){
         return null;
     }
 
-    public String cut(){
+    public String cutUntilElement(Element e){
         return null;
     }
+
+    public String add
 
     public ArrayList<String> getChunkList(){
         return chunkList;
