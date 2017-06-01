@@ -6,6 +6,7 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -109,4 +110,7 @@ public class WebPageCleaner {
         }
     }
 
+    public List<String> getAcceptableTags(){
+        return Collections.singletonList(ACCEPTABLETAGS);
+    }
 }

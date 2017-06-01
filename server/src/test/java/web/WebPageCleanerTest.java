@@ -5,6 +5,8 @@ import org.jsoup.nodes.Document;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
+
 
 public class WebPageCleanerTest {
 
