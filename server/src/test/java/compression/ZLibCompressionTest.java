@@ -17,10 +17,10 @@ public class ZLibCompressionTest {
     @Test
     public void compressToBase64Test(){
         String test = "Texte a compresser";
-        Assert.assertEquals("eJwLSa0oSVVIVEjOzy0oSi0uTi0CAD9QBu8=",ZLibCompression.compressToBase64(test, StandardCharsets.UTF_8));
+        Assert.assertEquals("eJwLSa0oSVVIVEjOzy0oSi0uTi0CAD9QBu8=",ZLibCompression.compressToBase64(test, "UTF-8"));
 
         String test2 = "é€<!04";
-        Assert.assertEquals("eJw7vPJR0xobRQMTABqpBD4=",ZLibCompression.compressToBase64(test2, StandardCharsets.UTF_8));
+        Assert.assertEquals("eJw7vPJR0xobRQMTABqpBD4=",ZLibCompression.compressToBase64(test2, "UTF-8"));
     }
 
     @Test
