@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsMessage;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -27,8 +26,8 @@ public class HomeActivity extends AppCompatActivity {
     private static ProgressBar mPbar;
 
 
-    String url = "";
-    static String smsContent = "";
+    String webSiteAsked = "";
+    static String existingPageContent = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +56,8 @@ public class HomeActivity extends AppCompatActivity {
         webArea.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.d("TESTO", url);
-                clearViewAndSend(url);
+                webSiteAsked = getString(R.string.GET) + url;
+                clearViewAndSend(webSiteAsked);
                 return true;
             }
 
@@ -73,8 +72,11 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Mise en place de la page d'accueil de l'application
+     */
     private void setTextViewAccueil() {
-        webArea.loadData("<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p>", "text/html", "UTF-8");
+        webArea.loadData(getString(R.string.Accueil), "text/html", "UTF-8");
     }
 
     /**
@@ -84,12 +86,55 @@ public class HomeActivity extends AppCompatActivity {
      */
     private void clearViewAndSend(String url) {
         webArea.loadUrl("about:blank");
-        smsContent = "";
+        existingPageContent = "";
         sendMessage(url);
     }
 
     /**
-     * Récupération des SMS et vérification qu'il correspond au numéro du serveur
+     * Callback du bouton d'envoi de l'URL
+     *
+     * @param view
+     */
+
+    void retrieveURL(View view) {
+        webSiteAsked = getString(R.string.GET) + URLArea.getText().toString();
+        URLArea.setText("");
+
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        sendMessage(webSiteAsked);
+    }
+
+    /**
+     * Callback du boutton afin de demander la suite d'une page chargée partiellement
+     *
+     * @param view
+     */
+    void askNext(View view) {
+        String message = getString(R.string.NEXT) + webSiteAsked;
+        sendMessage(message);
+    }
+
+    /**
+     * Envoie un SMS à un numéro prédéfini.
+     *
+     * @param msg le message qui doit être envoyé
+     */
+    void sendMessage(String msg) {
+        SmsUtility sr = new SmsUtility();
+        sr.sendMessage(PHONE_NUMBER, msg);
+    }
+
+
+    static void updateWebView(String messageReceived) {
+        existingPageContent += messageReceived;
+        webArea.loadData(existingPageContent, "text/html", "UTF-8");
+
+    }
+
+    /**
+     * Récupération des SMS déjà enregistrés et vérification qu'il correspond au numéro du serveur
+     * Pas utilisée pour l'instant
      *
      * @param cursor
      */
@@ -102,44 +147,16 @@ public class HomeActivity extends AppCompatActivity {
             for (int i = 0; i < cursor.getCount(); i++) {
                 String phone = cursor.getString(cursor.getColumnIndexOrThrow("address")).toString();
                 if (PHONE_NUMBER.equals(phone))
-                    smsContent += cursor.getString(cursor.getColumnIndexOrThrow("body")).toString();
+                    existingPageContent += cursor.getString(cursor.getColumnIndexOrThrow("body")).toString();
 
                 cursor.moveToPrevious();
             }
         }
         cursor.close();
-        webArea.loadData(smsContent, "text/html", "UTF-8");
+        webArea.loadData(existingPageContent, "text/html", "UTF-8");
     }
 
-    /**
-     * Callback du bouton d'envoi
-     *
-     * @param view
-     */
-
-    void retrieveURL(View view) {
-        //Récupérer l'URL
-
-        url = URLArea.getText().toString();
-        URLArea.setText("");
-
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        sendMessage(url);
-    }
-
-    void sendMessage(String msg) {
-        SmsUtility sr = new SmsUtility();
-        sr.sendMessage(PHONE_NUMBER, msg);
-    }
-
-    static void updateTextView(String msg) {
-        smsContent += msg;
-        webArea.loadData(smsContent, "text/html", "UTF-8");
-
-    }
-
-    public static class     SmsListener extends BroadcastReceiver {
+    public static class SmsListener extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle intentExtras = intent.getExtras();
@@ -155,7 +172,7 @@ public class HomeActivity extends AppCompatActivity {
                     String message = smsMessage.getMessageBody().toString();
 
                     if (phone.equals(PHONE_NUMBER)) {
-                        updateTextView(message);
+                        updateWebView(message);
                     }
                 }
             }
