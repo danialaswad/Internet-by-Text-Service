@@ -32,7 +32,6 @@ public class PageCutterTest {
                 "   <i> new </i> \n" +
                 "   <p class=\"unecessary\" id=\"ne",html.substring(8,75) );
         trimedPage = p.subHtmlTags(8,75);
-        System.out.println(trimedPage);
         String res = " <div>\n" +
                 "   Hello \n" +
                 "  <i> new </i> \n" + "  ";
