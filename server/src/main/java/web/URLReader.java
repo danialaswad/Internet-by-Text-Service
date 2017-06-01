@@ -14,20 +14,21 @@ public class URLReader {
         this.urlString = urlString;
         UrlValidator urlValidator = new UrlValidator();
         if (!urlValidator.isValid(this.urlString)) {
-            if (!urlString.startsWith("https://")) {
-                this.urlString = "https://" + this.urlString;
+            if (!urlString.startsWith("http://")) {
+                this.urlString = "http://" + this.urlString;
             }
         }
     }
 
 
     public Document fetchFile() {
+        if(urlString.equals("http://"))
+            return error();
         try {
             return Jsoup.connect(urlString).get();
         } catch (IOException e) {
             System.err.println(e.getMessage() + " is unreachable");
         }
-
         return error();
     }
 

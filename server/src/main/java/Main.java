@@ -21,23 +21,21 @@ public class Main {
         //new WebPageCleaner().cleanWebPage(w.fetchFile());
         //Document document = w.fetchFile();
         //System.out.println(new WebPageCleaner().cleanWebPage(w.fetchFile(), w.getUrlString()));
-        //testSmsServer();
+        testSmsServer();
     }
 
     public static void testSmsServer() throws InterruptedException, SMSLibException, IOException {
 
-        SmsServer app = new SmsServer();
+        SmsServer server = new SmsServer("0000","+33609001390","COM9");
         try
         {
-            app.run();
-
+            server.run();
         }
         catch (Exception e)
         {
-            app.stop();
+            server.stop();
             e.printStackTrace();
         }
-        //app.stop();
     }
 
 
