@@ -3,6 +3,8 @@ package compression;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 /**
@@ -13,7 +15,7 @@ import java.util.zip.InflaterInputStream;
  */
 public class ZLibCompression {
 
-    public static String compressToBase64(String entry, String encoding) {
+    public static String compressToBase64(String entry, Charset encoding) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             OutputStream out = new DeflaterOutputStream(baos);
