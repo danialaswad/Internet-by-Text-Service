@@ -30,6 +30,7 @@ public class Main {
         try
         {
             server.run();
+            //server.testSend("+33668639846","<header class=\"so-header js-so-header _fixed\">\n");
         }
         catch (Exception e)
         {

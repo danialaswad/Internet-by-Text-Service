@@ -10,8 +10,7 @@ import java.io.*;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
-public class ZLibCompression
-{
+public class ZLibCompression {
     public static String compressToBase64(String entry, String encoding) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
@@ -22,7 +21,10 @@ public class ZLibCompression
             throw new AssertionError(e);
         }
         byte[] b64 = Base64.encodeBase64(baos.toByteArray());
-        return new String(b64);
+        String output = new String(b64);
+        System.out.println("before length: "+entry.length());
+        System.out.println("cmp length: "+output.length());
+        return output;
     }
 
     public static String decompressFromBase64(String entry, String encoding) throws UnsupportedEncodingException {

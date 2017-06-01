@@ -1,6 +1,7 @@
 package engine;
 
 
+import compression.ZLibCompression;
 import org.smslib.*;
 import org.smslib.modem.SerialModemGateway;
 import web.URLReader;
@@ -16,8 +17,10 @@ import java.util.Collections;
 public class SmsServer {
 
     SerialModemGateway gateway;
+    PageManager pageManager;
 
     public SmsServer(String pin, String smscNumber, String comPort) throws GatewayException {
+        pageManager = new PageManager();
         OutboundNotification outboundNotification = new OutboundNotification();
         InboundNotification inboundNotification = new InboundNotification();
         gateway = new SerialModemGateway("modem.com9", comPort,125000, "", "");
@@ -48,7 +51,6 @@ public class SmsServer {
                 String originNumber = "+"+msg.getOriginator();
                 System.out.println(msg);
                 String msgBody = parseRequest(msg.getText());
-                //TODO decouper le string
                 sendMessage(originNumber,msgBody);
                 gateway.deleteMessage(msg);
             }
@@ -57,12 +59,12 @@ public class SmsServer {
     }
 
     private String parseRequest(String request){
+
         String [] arrayRequest = request.split(":",2);
         String msgBody ="";
         switch (arrayRequest[0]){
             case "GET" :
-                URLReader w = new URLReader(arrayRequest[1]);
-                msgBody = new WebPageCleaner().cleanWebPage(w.fetchFile(), w.getUrlString());
+                msgBody = pageManager.getWebpage(arrayRequest[1]);
                 break;
         }
         return msgBody;
@@ -99,6 +101,20 @@ public class SmsServer {
     public void stop() throws InterruptedException, SMSLibException, IOException {
         Service.getInstance().stopService();
         Service.getInstance().removeGateway(gateway);
+    }
+
+    public void testSend(String to, String body) throws InterruptedException, SMSLibException, IOException {
+        Service.getInstance().startService();
+        System.out.println();
+        System.out.println("Modem Information:");
+        System.out.println("  Manufacturer: " + gateway.getManufacturer());
+        System.out.println("  Model: " + gateway.getModel());
+        System.out.println("  SIM IMSI: " + gateway.getImsi());
+        System.out.println("  Signal Level: " + gateway.getSignalLevel() + " dBm");
+        System.out.println("  Battery Level: " + gateway.getBatteryLevel() + "%");
+        System.out.println();
+        sendMessage(to, ZLibCompression.compressToBase64(body,"UTF-8"));
+        System.out.println("ENVOIGER");
     }
 
 

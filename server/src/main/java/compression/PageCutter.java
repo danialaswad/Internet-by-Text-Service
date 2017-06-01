@@ -25,7 +25,7 @@ public class PageCutter {
         int tmpInd = 0;
         for (int i = end; i >= start ; i--){
             if (page.body().toString().charAt(i) == '<'){
-                tmpInd = i - 1;
+                tmpInd = i ;
                 if (isATag(end))
                     break;
             }
