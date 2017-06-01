@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsMessage;
@@ -14,8 +13,14 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 public class HomeActivity extends AppCompatActivity {
     public static final String PHONE_NUMBER = "+33628760946";
@@ -24,6 +29,7 @@ public class HomeActivity extends AppCompatActivity {
     private static WebView webArea;
     private static EditText URLArea;
     private static ProgressBar mPbar;
+    private static Button nextButton;
 
 
     String webSiteAsked = "";
@@ -32,50 +38,53 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_home);
-        IntentFilter filter = new IntentFilter(HomeActivity.SMS_RECEIVED);
-        SmsListener sl = new SmsListener();
-        registerReceiver(sl, filter);
 
+        //Enregistre le SMS listener
+        registerListener();
+
+        //Récupère webview,edittext... pour les modifier
+        viewTreatment();
+
+        //Lire et afficher les SMS déjà présents sur le téléphone. A améliorer pour le systeme de cache?
+        /*SmsUtility smsUtility = new SmsUtility();
+        Cursor cursor = smsUtility.getMessages(HomeActivity.this);
+        displaySms(cursor);*/
+
+
+    }
+
+    private void viewTreatment() {
         webArea = (WebView) findViewById(R.id.pageView);
         URLArea = (EditText) findViewById(R.id.urlEditor);
         mPbar = (ProgressBar) findViewById(R.id.web_view_progress);
+        mPbar.setVisibility(View.GONE);
+        nextButton = (Button) findViewById(R.id.nextButton);
+
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-
-        SmsUtility sr = new SmsUtility();
-
-        //Lire et afficher les SMS déjà présents sur le téléphone. A améliorer pour le systeme de cache? s
-        /*Cursor cursor = sr.getMessages(HomeActivity.this);
-        displaySms(cursor);*/
-
-        setTextViewAccueil();
-
-
         webArea.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                webSiteAsked = getString(R.string.GET) + url;
-                clearViewAndSend(webSiteAsked);
+                webSiteAsked = url;
+                clearViewAndSend(getString(R.string.GET) + webSiteAsked);
                 return true;
             }
-
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                mPbar.setVisibility(View.VISIBLE);
-            }
-
-            public void onPageFinished(WebView view, String url) {
-                mPbar.setVisibility(View.GONE);
-            }
         });
+        setHomeWebView();
+
+
+    }
+
+    private void registerListener() {
+        IntentFilter filter = new IntentFilter(HomeActivity.SMS_RECEIVED);
+        SmsListener sl = new SmsListener();
+        registerReceiver(sl, filter);
     }
 
     /**
-     * Mise en place de la page d'accueil de l'application
+     * Mise en place de la page d'accueil de l'application de SMS
      */
-    private void setTextViewAccueil() {
+    private void setHomeWebView() {
         webArea.loadData(getString(R.string.Accueil), "text/html", "UTF-8");
     }
 
@@ -85,7 +94,6 @@ public class HomeActivity extends AppCompatActivity {
      * @param url
      */
     private void clearViewAndSend(String url) {
-        webArea.loadUrl("about:blank");
         existingPageContent = "";
         sendMessage(url);
     }
@@ -97,12 +105,14 @@ public class HomeActivity extends AppCompatActivity {
      */
 
     void retrieveURL(View view) {
-        webSiteAsked = getString(R.string.GET) + URLArea.getText().toString();
-        URLArea.setText("");
+        webSiteAsked = URLArea.getText().toString();
+        mPbar.setVisibility(View.VISIBLE);
+        nextButton.setVisibility(View.GONE);
+
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        sendMessage(webSiteAsked);
+        sendMessage(getString(R.string.GET) + webSiteAsked);
     }
 
     /**
@@ -112,6 +122,8 @@ public class HomeActivity extends AppCompatActivity {
      */
     void askNext(View view) {
         String message = getString(R.string.NEXT) + webSiteAsked;
+        mPbar.setVisibility(View.VISIBLE);
+        nextButton.setVisibility(View.GONE);
         sendMessage(message);
     }
 
@@ -123,12 +135,27 @@ public class HomeActivity extends AppCompatActivity {
     void sendMessage(String msg) {
         SmsUtility sr = new SmsUtility();
         sr.sendMessage(PHONE_NUMBER, msg);
+        displayToast("Message sent!");
+    }
+
+    private void displayToast(String msg) {
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, msg, duration);
+        toast.show();
     }
 
 
     static void updateWebView(String messageReceived) {
-        existingPageContent += messageReceived;
-        webArea.loadData(existingPageContent, "text/html", "UTF-8");
+        webArea.loadUrl("about:blank");
+        mPbar.setVisibility(View.GONE);
+        if (!messageReceived.isEmpty()) {
+            existingPageContent += messageReceived;
+            webArea.loadDataWithBaseURL(null, existingPageContent, "text/html", "utf-8", null);
+            nextButton.setVisibility(View.VISIBLE);
+        } else
+            nextButton.setVisibility(View.GONE);
 
     }
 
@@ -164,17 +191,20 @@ public class HomeActivity extends AppCompatActivity {
             if (intentExtras != null) {
             /* Get Messages */
                 Object[] sms = (Object[]) intentExtras.get("pdus");
+                String compressedMessage="";
 
                 for (int i = 0; i < sms.length; ++i) {
                 /* Parse Each Message */
                     SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) sms[i], "3gpp");
                     String phone = smsMessage.getOriginatingAddress();
-                    String message = smsMessage.getMessageBody().toString();
 
                     if (phone.equals(PHONE_NUMBER)) {
-                        updateWebView(message);
+                        compressedMessage += smsMessage.getMessageBody().toString();
+
                     }
                 }
+                String decompressed = CompressionUtility.decompressFromBase64(compressedMessage, "UTF-8");
+                updateWebView(decompressed);
             }
         }
 
