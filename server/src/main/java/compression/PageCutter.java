@@ -32,25 +32,42 @@ public class PageCutter {
         //On veut le prochain élément trop gros à rajouter
         Element tooBig=nextOverflowElement();
         //on coupe jusqu'à lui
-        result=cutUntilElement()
+        cutUntilElement(tooBig);
         //on ajoute ce que l'on peut
+        addExtra(tooBig);
 
-        result=page.outerHtml().substring(posIni,posIni+currentSize);
+        result+=page.outerHtml().substring(posIni,posIni+currentSize);
         posIni=posIni+currentSize+1;
         currentSize=0;
         return result;
     }
 
+    /**
+     *
+     * @return le prochain élément dont l'ajout page.outerHtml().substring(posIni,posIni+currentSize) ferait dépasser
+     * CHUNK_SIZE
+     */
     public Element nextOverflowElement(){
         return null;
     }
 
-    public String cutUntilElement(Element e){
-        return null;
+    /**
+     * modifie currentsize, pour que la string page.outerHtml().substring(posIni,posIni+currentSize) s'arrête juste avant la
+     * balise de l'element donné en paramètre
+     */
+    public void cutUntilElement(Element e){
+
     }
 
-    public String add
+    public void addExtra(Element e){
 
+    }
+
+
+    /**
+     *
+     * @return la liste des morceaux de la page
+     */
     public ArrayList<String> getChunkList(){
         return chunkList;
     }
@@ -68,6 +85,11 @@ public class PageCutter {
         return openTag+htmlString+closeTag;
     }
 
+
+    /**
+     * Pour découper une nouvelle page
+     * @param pageString
+     */
     public void setPage(String pageString){
         page=  Jsoup.parse(pageString);
         chunkList.clear();
