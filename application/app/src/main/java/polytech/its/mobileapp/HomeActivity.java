@@ -23,8 +23,9 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 public class HomeActivity extends AppCompatActivity {
-    public static final String PHONE_NUMBER = "+33628760946";
+    public static final String PHONE_NUMBER = "+33785704525";
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
+    private final String HOME="<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p>";
 
     private static WebView webArea;
     private static EditText URLArea;
@@ -85,7 +86,7 @@ public class HomeActivity extends AppCompatActivity {
      * Mise en place de la page d'accueil de l'application de SMS
      */
     private void setHomeWebView() {
-        webArea.loadData(getString(R.string.Accueil), "text/html", "UTF-8");
+        webArea.loadData(HOME, "text/html", "UTF-8");
     }
 
     /**
