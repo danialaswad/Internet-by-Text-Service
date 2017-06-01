@@ -23,6 +23,6 @@ public class URLReaderTest {
     @Test
     public void completingURl(){
         URLReader reader = new URLReader("www.nicematin.com");
-        Assert.assertEquals("https://www.nicematin.com", reader.getUrlString());
+        Assert.assertEquals("http://www.nicematin.com", reader.getUrlString());
     }
 }
