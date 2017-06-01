@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">MobileApp</string>
+    <string name="app_name">ITS</string>
+    <string name="Accueil"><h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p></string>
+    <string name="GET">GET:</string>
+    <string name="NEXT">NEXT:</string>
 </resources>
