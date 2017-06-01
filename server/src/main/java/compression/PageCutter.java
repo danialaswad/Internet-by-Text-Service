@@ -7,8 +7,6 @@ import org.jsoup.select.Elements;
 
 
 import java.util.ArrayList;
-import java.util.Stack;
-
 //juste pac couper entre deux "<>"
 //recuperer tout jusqu 'au debut de la balise + la balise : doc.outerHtml.substring(0,mabalise.outterHtml.length)
 /**
@@ -25,12 +23,7 @@ public class PageCutter {
 
     public PageCutter(String pageString){
         page=  Jsoup.parse(pageString);
-        bodyChildren=page.select("body").first().children();
-        currentIndice=0;
-        size=0;
         chunkList=new ArrayList<String>();
-        /*currentElement =page.select("body").first().children().first();
-        elementStack = new Stack<>();*/
     }
 
 
@@ -63,5 +56,5 @@ public class PageCutter {
         page=  Jsoup.parse(pageString);
         chunkList.clear();
     }
-    
+
 }
