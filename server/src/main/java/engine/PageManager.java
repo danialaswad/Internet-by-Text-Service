@@ -7,29 +7,27 @@ import org.jsoup.nodes.Document;
 import web.URLReader;
 import web.WebPageCleaner;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 public class PageManager {
 
     private ITSDatabase database = ITSDatabase.instance();
 
     public String getWebpage(String url){
         URLReader reader = new URLReader(url);
-        if (database.webpages().keySet().contains(reader.getUrlString())){
-            return database.webpages().get(reader.getUrlString()).get(0);
-        }else {
-            Document document = reader.fetchFile();
-            String page = new WebPageCleaner().cleanWebPage(document,reader.getUrlString());
-            ArrayList<String> packages = new PageCutter(page).getPageChunkList();
-            database.webpages().put(reader.getUrlString(),packages);
-            return packages.get(0);
-        }
+        Document document = reader.fetchFile();
+        String page = new WebPageCleaner().cleanWebPage(document,reader.getUrlString());
+        database.webpages().put(reader.getUrlString(),new PageCutter(page).getPageChunkList());
+        return database.webpages().get(reader.getUrlString()).remove(0);
     }
 
-    public String nexWebPage(String url, int page){
-        //TODO
+    public String nexWebPage(String url){
+        URLReader reader = new URLReader(url);
+
+        if (database.webpages().containsKey(reader.getUrlString())){
+            if (database.webpages().get(reader.getUrlString()).size() > 0){
+                return database.webpages().get(reader.getUrlString()).remove(0);
+            }
+        }
+
         return "";
     }
 }

@@ -22,7 +22,7 @@ public class PageCutterTest {
                 "  <div>\n" +
                 "    Hell",html.substring(0,24));
 
-        String body = "<body> \n";
+        String body = "<body> \n"+ " ";
         Assert.assertEquals(body, trimedPage);
 
 
@@ -35,7 +35,7 @@ public class PageCutterTest {
         System.out.println(trimedPage);
         String res = " <div>\n" +
                 "   Hello \n" +
-                "  <i> new </i> \n" + " ";
+                "  <i> new </i> \n" + "  ";
         Assert.assertEquals(res, trimedPage);
     }
 }
