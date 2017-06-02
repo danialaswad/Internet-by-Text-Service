@@ -1,10 +1,16 @@
 package compression;
 
+import org.jsoup.Jsoup;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
-public class PageCutterTest {
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 
+public class PageCutterTest {
 
     @Test
     public void cutPageTest(){
@@ -36,5 +42,21 @@ public class PageCutterTest {
                 "   Hello \n" +
                 "  <i> new </i> \n" + "  ";
         Assert.assertEquals(res, trimedPage);
+    }
+
+    @Test
+    public void getChunkListTest(){
+        String pageTest="";
+        try {
+            pageTest= new String(Files.readAllBytes(Paths.get("./src/test/res/tmpClean.html")),"UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        PageCutter p = new PageCutter(pageTest);
+        ArrayList<String> chunkList = p.getPageChunkList();
+        for (String chunk:chunkList) {
+            Assert.assertTrue(chunk.length() <= 1000);
+        }
+
     }
 }
