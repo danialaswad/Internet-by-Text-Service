@@ -26,8 +26,7 @@ public class PageCutter {
         for (int i = end; i >= start ; i--){
             if (page.body().toString().charAt(i) == '<'){
                 tmpInd = i ;
-                if (isATag(tmpInd))
-                    break;
+                break;
             }
         }
 
@@ -67,22 +66,6 @@ public class PageCutter {
         return chunkList;
     }
 
-    /**
-     * Spécifie si le caractère à la position pos est une partie constituante d'une balise
-     * @param pos
-     * @return
-     */
-    private boolean isATag(int pos){
-        /*
-        On a la position à tester qui correcpond à la position de "<" - 1
-        on peut regarder si le mot qui suit directement c'est un p, a, h1, h2, h3, h4, table, th, td, i, tr, tbody, b, img, body, div, ul, li
-        si oui on regarde si on a un > avant un <
-         */
-
-
-        //TODO
-        return true;
-    }
 
     /**
      * Pour découper une nouvelle page
