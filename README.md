@@ -26,7 +26,7 @@ And of course ITS itself is open source with a [public repository][dill]
 
 ### Installation
 
-ITS server requires [Java jdk x86](https://nodejs.org/) and [Maven](https://maven.apache.org)to run.
+ITS server requires [Java jdk x86](https://nodejs.org/) and [Maven](https://maven.apache.org) to run.
 
 ```sh
 $ mvn clean package
