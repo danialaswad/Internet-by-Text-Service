@@ -12,7 +12,7 @@ ITS is a service that allows users to surf the internet using only SMS through o
 You can also:
   - Jump from one page to another (on page links are clickable)
   - Click on next to receive the sequence of a webpage
-  - Export documents as Markdown, HTML and PDF
+  
 
 
 ### Tech
@@ -28,7 +28,7 @@ And of course ITS itself is open source with a [public repository][dill]
 
 ### Installation
 
-ITS server requires [Java jdk x86](https://nodejs.org/) and [Maven](https://maven.apache.org)to run.
+ITS server requires [Java jdk x86](https://nodejs.org/) and [Maven](https://maven.apache.org) to run.
 
 ```sh
 $ mvn clean package
