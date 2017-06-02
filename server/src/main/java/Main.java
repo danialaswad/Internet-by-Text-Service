@@ -19,6 +19,7 @@ public class Main {
         //AIzaSyCPwDK5HD1C1kKJSLhLoRquom6mwv9Ydhs
         //URLReader w = new URLReader("http://anasghira.com/lorem");
         //new WebPageCleaner().cleanWebPage(w.fetchFile());
+
         //Document document = w.fetchFile();
         //System.out.println(new WebPageCleaner().cleanWebPage(w.fetchFile(), w.getUrlString()));
         testSmsServer();
