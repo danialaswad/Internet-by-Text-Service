@@ -12,7 +12,7 @@ ITS is a service that allows users to surf the internet using only SMS through o
 You can also:
   - Jump from one page to another (on page links are clickable)
   - Click on next to receive the sequence of a webpage
-  
+
 
 
 ### Tech
@@ -22,6 +22,8 @@ ITS uses a number of open source projects to work properly:
 * [Android Studio] - an IDE to develop application on android
 * [Intellij IDEA] - an IDE to develop programs on JAVA
 * [Jenkins] - automation server to support building, deploying and automating any project.
+
+The server needs a [usb gsm modem](https://www.amazon.fr/Hsdpa-7-2Mbps-Adaptateur-Réseau-Dongle/dp/B01K5P0WCA/ref=sr_1_2?ie=UTF8&qid=1496396243&sr=8-2&keywords=usb+gsm+dongle) that allows the application to send and receive SMS.
 
 And of course ITS itself is open source with a [public repository][dill]
  on GitHub.
@@ -65,4 +67,5 @@ Polytech Nice Sophia
    [Intellij IDEA]: <https://www.jetbrains.com/idea/>
    [Jenkins]: <https://jenkins.io>
    [dill]: <https://github.com/danialaswad/Internet-by-Text-Service>
+   [USB GSM modem]: <https://www.amazon.fr/Hsdpa-7-2Mbps-Adaptateur-Réseau-Dongle/dp/B01K5P0WCA/ref=sr_1_2?ie=UTF8&qid=1496396243&sr=8-2&keywords=usb+gsm+dongle>
    
