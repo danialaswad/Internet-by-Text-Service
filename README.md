@@ -12,8 +12,6 @@ ITS is a service that allows users to surf the internet using only SMS through o
 You can also:
   - Jump from one page to another (on page links are clickable)
   - Click on next to receive the sequence of a webpage
-  - Export documents as Markdown, HTML and PDF
-
 
 ### Tech
 
