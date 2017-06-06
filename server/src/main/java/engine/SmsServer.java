@@ -66,8 +66,16 @@ public class SmsServer {
             case "GET" :
                 msgBody = pageManager.getWebpage(arrayRequest[1]);
                 break;
+            case "NEXT" :
+                msgBody =pageManager.nexWebPage(arrayRequest[1]);
+                break;
+            default :
+                msgBody = "<h2>Mauvaise commande</h2>";
+                break;
         }
-        return msgBody;
+        System.out.println(msgBody);
+        String result = ZLibCompression.compressToBase64(msgBody,"UTF-8");
+        return result;
     }
 
     private void sendMessage(String to, String body) throws InterruptedException, TimeoutException, GatewayException, IOException {
@@ -114,7 +122,7 @@ public class SmsServer {
         System.out.println("  Battery Level: " + gateway.getBatteryLevel() + "%");
         System.out.println();
         sendMessage(to, ZLibCompression.compressToBase64(body,"UTF-8"));
-        System.out.println("ENVOIGER");
+        //System.out.println("ENVOIGER");
     }
 
 

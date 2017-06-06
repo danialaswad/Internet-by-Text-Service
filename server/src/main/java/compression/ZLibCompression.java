@@ -22,8 +22,8 @@ public class ZLibCompression {
         }
         byte[] b64 = Base64.encodeBase64(baos.toByteArray());
         String output = new String(b64);
-        System.out.println("before length: "+entry.length());
-        System.out.println("cmp length: "+output.length());
+        /*System.out.println("before length: "+entry.length());
+        System.out.println("cmp length: "+output.length());*/
         return output;
     }
 
