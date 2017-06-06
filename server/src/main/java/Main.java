@@ -2,7 +2,6 @@ import compression.ZLibCompression;
 import engine.SmsCommand;
 import engine.SmsServer;
 import org.smslib.SMSLibException;
-import twitter.TwitterTest;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import web.URLReader;
@@ -26,7 +25,7 @@ public class Main {
         //Document document = w.fetchFile();
         //System.out.println(new WebPageCleaner().cleanWebPage(w.fetchFile(), w.getUrlString()));
         //testSmsServer();
-        //testTwitter();
+        testTwitter();
     }
 
     public static void testSmsServer() throws InterruptedException, SMSLibException, IOException {
@@ -48,7 +47,7 @@ public class Main {
         SmsCommand smsCommand = new SmsCommand();
         String configResult = smsCommand.process("TWITTERCONF:941791010-bU9IpOXf8KgOPQ2OdXYAQw4qBKOtSG8a2qKGUdEg,LG8wAfcGVUoCgNCt44VLUJjx2rpbDLIfYHX2OHZnIy4ZT,941791010");
         System.out.println(configResult);
-        String timeline = smsCommand.process("TWITTERHOME:941791010");
+        String timeline = smsCommand.process("TWEET:941791010,ITSTest");
         System.out.println(timeline);
         System.out.println("FIN");
 

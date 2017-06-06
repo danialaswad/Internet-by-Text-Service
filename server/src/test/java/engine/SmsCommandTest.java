@@ -40,4 +40,10 @@ public class SmsCommandTest {
 
         Assert.assertEquals("TWITTERCONF:FAILURE", command.process("TWITTERCONF:hello,hello"));
     }
+
+    @Test
+    public void twitterHomeFailure(){
+        /*SmsCommand command = new SmsCommand();
+        Assert.assertEquals("TWITTERHOME:FAILURE",command.process("TWITTERHOME:1234"));*/
+    }
 }

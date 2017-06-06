@@ -31,21 +31,31 @@ public class TwitterManager {
         database.twitterTokens().put(id,accessToken);
     }
 
-    public String getHomeTimeline(String id){
+    public String getHomeTimeline(String id) throws TwitterException {
 
         AccessToken accessToken = database.twitterTokens().get(id);
         twitter.setOAuthAccessToken(accessToken);
         String result = "";
-        try {
             List<Status> statuses = twitter.getHomeTimeline();
             for (Status status : statuses) {
                 result += status.getUser().getName() + ":" +status.getText();
             }
-        } catch (TwitterException e) {
-            e.printStackTrace();
-        }
         twitter.setOAuthAccessToken(null);
         return result;
+    }
+
+    public boolean postTweet(String id, String tweet){
+        Status status = null;
+        AccessToken accessToken = database.twitterTokens().get(id);
+        twitter.setOAuthAccessToken(accessToken);
+        try {
+            status = twitter.updateStatus(tweet);
+        } catch (TwitterException e) {
+            e.printStackTrace();
+            return false;
+        }
+        System.out.println("Successfully updated the status to [" + status.getText() + "].");
+        return true;
     }
 
 
