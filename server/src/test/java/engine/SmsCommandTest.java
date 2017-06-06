@@ -31,4 +31,13 @@ public class SmsCommandTest {
 
     }
 
+    @Test
+    public void twitterConfTest(){
+        SmsCommand command = new SmsCommand();
+
+        Assert.assertEquals("TWITTERCONF:SUCCESS", command.twitterconf("hello,hello,12344"));
+
+
+        Assert.assertEquals("TWITTERCONF:FAILURE", command.twitterconf("hello,hello"));
+    }
 }

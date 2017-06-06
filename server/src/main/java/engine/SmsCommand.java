@@ -61,6 +61,11 @@ public class SmsCommand {
 
     public String twitterconf(String data){
         List<String> tmp = new ArrayList<>(Arrays.asList(data.split(",")));
+
+        if (tmp.size()!=3) {
+            return "TWITTERCONF:FAILURE";
+        }
+
         twitterManager.configureAccount(tmp.get(0),tmp.get(1),tmp.get(2));
         return "TWITTERCONF:SUCCESS";
     }
