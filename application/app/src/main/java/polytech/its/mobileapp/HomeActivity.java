@@ -25,8 +25,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.util.Timer;
-
 public class HomeActivity extends AppCompatActivity {
     public static final String PHONE_NUMBER = "+33628760946";
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
@@ -40,6 +38,8 @@ public class HomeActivity extends AppCompatActivity {
     private static View actionBarView;
     private static View mCustomView;
 
+    private static Context context;
+
 
     String webSiteAsked = "";
     static String existingPageContent = "";
@@ -50,6 +50,8 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        context = getApplicationContext();
 
         //Enregistre le SMS listener
         registerListener();
@@ -77,16 +79,16 @@ public class HomeActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 sendMessage("OK:?");
-                new CountDownTimer(30000, 1000) {
-
-                    public void onTick(long millisUntilFinished) {
-                    }
-
-                    public void onFinish() {
-                        if (available == false)
-                            showToast("SERVICE INDISPONIBLE");
-                    }
-                }.start();
+//                new CountDownTimer(30000, 1000) {
+//
+//                    public void onTick(long millisUntilFinished) {
+//                    }
+//
+//                    public void onFinish() {
+//                        if (available == false)
+//                            showToast("SERVICE INDISPONIBLE");
+//                    }
+//                }.start();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -196,8 +198,7 @@ public class HomeActivity extends AppCompatActivity {
         displayToast("Message sent!");
     }
 
-    private void displayToast(String msg) {
-        Context context = getApplicationContext();
+    private static void displayToast(String msg) {
         int duration = Toast.LENGTH_SHORT;
 
         Toast toast = Toast.makeText(context, msg, duration);
@@ -220,7 +221,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public static void showToast(String msg) {
-        showToast(msg);
+        displayToast(msg);
     }
 
     /**
