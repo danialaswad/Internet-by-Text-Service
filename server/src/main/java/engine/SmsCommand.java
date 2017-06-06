@@ -70,6 +70,11 @@ public class SmsCommand {
         return "TWITTERCONF:SUCCESS";
     }
 
+    public String twitterhome(String data){
+        String id = data;
+        return twitterManager.getHomeTimeline(id);
+    }
+
     private String error(){
         return  "<h2>Mauvaise commande</h2>";
     }
