@@ -7,58 +7,59 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.StrictMode;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.telephony.SmsMessage;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.Map;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
-import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 import twitter4j.conf.ConfigurationBuilder;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements WebFragment.OnFragmentInteractionListener {
     public static final String PHONE_NUMBER = "+33628760946";
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
-    private final String HOME = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.";
 
-    private static WebView webArea;
     private static EditText URLArea;
-    private static ProgressBar mPbar;
-    private static Button nextButton;
+    public static ProgressBar mPbar;
     private static ActionBar actionBar;
     private static View actionBarView;
     private static View mCustomView;
 
     private static Context context;
-
+    private static WebFragment webFragment;
 
     String webSiteAsked = "";
     static String existingPageContent = "";
-
-    private Twitter twitter;
-
     static boolean available = false;
+
+    public Twitter twitter;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         context = getApplicationContext();
-        if (android.os.Build.VERSION.SDK_INT > 17) {
+        if (Build.VERSION.SDK_INT > 17) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                     .permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -84,6 +85,9 @@ public class HomeActivity extends AppCompatActivity {
         displaySms(cursor);*/
 
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -105,7 +109,7 @@ public class HomeActivity extends AppCompatActivity {
 
                     public void onFinish() {
                         if (available == false) {
-                            clearAndUpdateView("<h1>Service indisponible</h1><br><p> Le serveur n'a pas répondu à la requête");
+                            webFragment.clearAndUpdateView("<h1>Service indisponible</h1><br><p> Le serveur n'a pas répondu à la requête");
                             showToast("SERVICE INDISPONIBLE");
                         }
                     }
@@ -119,6 +123,40 @@ public class HomeActivity extends AppCompatActivity {
 
         }
     }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+
+    private void viewTreatment() {
+        LayoutInflater mInflater = LayoutInflater.from(this);
+        mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
+        actionBarView = getSupportActionBar().getCustomView();
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setCustomView(mCustomView);
+        actionBar.setDisplayShowCustomEnabled(true);
+
+
+        URLArea = (EditText) mCustomView.findViewById(R.id.urlEditor);
+        mPbar = (ProgressBar) mCustomView.findViewById(R.id.web_view_progress);
+        mPbar.setVisibility(View.GONE);
+
+        URLArea.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                retrieveURL(v);
+            }
+        });
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        FragmentManager fm = getSupportFragmentManager();
+        webFragment = (WebFragment) fm.findFragmentById(R.id.fragment);
+
+    }
+
 
     private void twitterManagement() {
         //Faire un traitement si on est déjà connecté
@@ -146,7 +184,7 @@ public class HomeActivity extends AppCompatActivity {
         try {
             final RequestToken requestToken = twitter.getOAuthRequestToken("twitter-callback:///");
             final String url = requestToken.getAuthenticationURL();
-            WebView wv = (WebView) findViewById(R.id.pageView);
+            WebView wv = webFragment.webArea;
             wv.loadUrl(url);
         } catch (TwitterException exception) {
             exception.printStackTrace();
@@ -158,62 +196,6 @@ public class HomeActivity extends AppCompatActivity {
         return sharedPref.getAll();
     }
 
-    private void viewTreatment() {
-        LayoutInflater mInflater = LayoutInflater.from(this);
-        mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
-        actionBarView = getSupportActionBar().getCustomView();
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setCustomView(mCustomView, new Toolbar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        actionBar.setDisplayShowCustomEnabled(true);
-
-
-        webArea = (WebView) findViewById(R.id.pageView);
-        URLArea = (EditText) mCustomView.findViewById(R.id.urlEditor);
-        mPbar = (ProgressBar) mCustomView.findViewById(R.id.web_view_progress);
-        mPbar.setVisibility(View.GONE);
-        nextButton = (Button) mCustomView.findViewById(R.id.nextButton);
-
-        URLArea.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                retrieveURL(v);
-            }
-        });
-
-
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        webArea.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                webSiteAsked = url;
-                if (webSiteAsked.contains("twitter-callback:///") == true) {
-                    final Uri uri = Uri.parse(url);
-                    final String oauthVerifierParam = uri.getQueryParameter("oauth_verifier");
-                    try {
-                        final AccessToken accessToken = twitter.getOAuthAccessToken(oauthVerifierParam);
-                        String token = accessToken.getToken();
-                        String tokenSecret = accessToken.getTokenSecret();
-                        long userId = accessToken.getUserId();
-
-                        savePreferences(token, tokenSecret, userId);
-                        clearViewAndSend(getString(R.string.TwitterConf) + token + "," + tokenSecret + "," + userId);
-                    } catch (TwitterException e) {
-                        e.printStackTrace();
-                    }
-
-
-                } else {
-                    clearViewAndSend(getString(R.string.GET) + webSiteAsked);
-                }
-                return true;
-            }
-        });
-
-        setHomeWebView();
-
-
-    }
 
     private void registerListener() {
         IntentFilter filter = new IntentFilter(HomeActivity.SMS_RECEIVED);
@@ -221,19 +203,13 @@ public class HomeActivity extends AppCompatActivity {
         registerReceiver(sl, filter);
     }
 
-    /**
-     * Mise en place de la page d'accueil de l'application de SMS
-     */
-    private void setHomeWebView() {
-        webArea.loadDataWithBaseURL(null, HOME, "text/html", "UTF-8", null);
-    }
 
     /**
      * Nettoyage de la webview afin d'accueillir le futur site
      *
      * @param url
      */
-    private void clearViewAndSend(String url) {
+    public void clearViewAndSend(String url) {
         existingPageContent = "";
         sendMessage(url);
     }
@@ -247,7 +223,7 @@ public class HomeActivity extends AppCompatActivity {
     void retrieveURL(View view) {
         webSiteAsked = URLArea.getText().toString();
         mPbar.setVisibility(View.VISIBLE);
-        nextButton.setVisibility(View.GONE);
+        webFragment.nextButton.setVisibility(View.GONE);
 
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -255,17 +231,6 @@ public class HomeActivity extends AppCompatActivity {
         clearViewAndSend(getString(R.string.GET) + webSiteAsked);
     }
 
-    /**
-     * Callback du boutton afin de demander la suite d'une page chargée partiellement
-     *
-     * @param view
-     */
-    void askNext(View view) {
-        String message = getString(R.string.NEXT) + webSiteAsked;
-        mPbar.setVisibility(View.VISIBLE);
-        nextButton.setVisibility(View.GONE);
-        sendMessage(message);
-    }
 
     /**
      * Envoie un SMS à un numéro prédéfini.
@@ -285,44 +250,11 @@ public class HomeActivity extends AppCompatActivity {
         toast.show();
     }
 
-    static void clearAndUpdateView(String message) {
-        webArea.loadUrl("about:blank");
-        existingPageContent = "";
-        webArea.loadDataWithBaseURL(null, message, "text/html", "utf-8", null);
-
-
-    }
-
-
-    static void updateWebView(String messageReceived) {
-        webArea.loadUrl("about:blank");
-        mPbar.setVisibility(View.GONE);
-        if (!messageReceived.isEmpty()) {
-            existingPageContent += messageReceived;
-            webArea.loadDataWithBaseURL(null, existingPageContent, "text/html", "utf-8", null);
-            if (nextButton != null)
-                nextButton.setVisibility(View.VISIBLE);
-        } else {
-            webArea.loadDataWithBaseURL(null, existingPageContent, "text/html", "utf-8", null);
-            if (nextButton != null)
-                nextButton.setVisibility(View.GONE);
-        }
-
-    }
 
     public static void showToast(String msg) {
         displayToast(msg);
     }
 
-    public void savePreferences(String token, String secretToken, long userId) {
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        editor.putString(getString(R.string.secretToken), secretToken);
-        editor.putString(getString(R.string.token), token);
-        editor.putLong(getString(R.string.userId), userId);
-        editor.commit();
-    }
 
     /**
      * Récupération des SMS déjà enregistrés et vérification qu'il correspond au numéro du serveur
@@ -345,8 +277,9 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
         cursor.close();
-        webArea.loadDataWithBaseURL(null, existingPageContent, "text/html", "UTF-8", null);
+        //webFragment.webArea.loadDataWithBaseURL(null, existingPageContent, "text/html", "UTF-8", null);
     }
+
 
     public static class SmsListener extends BroadcastReceiver {
         @Override
@@ -373,7 +306,7 @@ public class HomeActivity extends AppCompatActivity {
                     showToast("The service is available");
                     available = true;
                 } else if (!decompressed.equals("ITS:AVAILABLE"))
-                    updateWebView(decompressed);
+                    webFragment.updateWebView(decompressed);
             }
         }
 
