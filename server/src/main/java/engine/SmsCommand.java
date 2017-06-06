@@ -25,7 +25,13 @@ public class SmsCommand {
         return map;
     }
 
-    public String process(String cmd, String data){
+    public String process(String request){
+        String [] arrayRequest = request.split(":",2);
+        String cmd = arrayRequest[0];
+        String data = "";
+        if(arrayRequest.length>1) {
+            data = arrayRequest[1];
+        }
         if (!commands.containsKey(cmd.toLowerCase())){ return error(); }
         Object o = null;
         Method m;
