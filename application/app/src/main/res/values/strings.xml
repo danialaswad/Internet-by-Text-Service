@@ -2,4 +2,10 @@
     <string name="app_name">ITS</string>
     <string name="GET">GET:</string>
     <string name="NEXT">NEXT:</string>
+    <string name="settings">Etat du service</string>
+    <string name="help">Aide</string>
+    <string-array name="menu_array">
+        <item>Verification Service</item>
+        <item>Paramètres</item>
+    </string-array>
 </resources>
