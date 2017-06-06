@@ -109,8 +109,4 @@ public class WebPageCleaner {
             attribute.setValue(url + attribute.getValue());
         }
     }
-
-    public List<String> getAcceptableTags(){
-        return Collections.singletonList(ACCEPTABLETAGS);
-    }
 }

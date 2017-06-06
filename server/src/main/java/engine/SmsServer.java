@@ -17,19 +17,19 @@ import java.util.Collections;
 public class SmsServer {
 
     SerialModemGateway gateway;
-    PageManager pageManager;
+    SmsCommand smsCommand;
 
     public SmsServer(String pin, String smscNumber, String comPort) throws GatewayException {
-        pageManager = new PageManager();
-        OutboundNotification outboundNotification = new OutboundNotification();
-        InboundNotification inboundNotification = new InboundNotification();
+        smsCommand = new SmsCommand();
+        /*OutboundNotification outboundNotification = new OutboundNotification();
+        InboundNotification inboundNotification = new InboundNotification();*/
         gateway = new SerialModemGateway("modem.com9", comPort,125000, "", "");
         gateway.setInbound(true);
         gateway.setOutbound(true);
         gateway.setSimPin(pin);
         gateway.setSmscNumber(smscNumber);
-        Service.getInstance().setOutboundMessageNotification(outboundNotification);
-        Service.getInstance().setInboundMessageNotification(inboundNotification);
+        //Service.getInstance().setOutboundMessageNotification(outboundNotification);
+        //Service.getInstance().setInboundMessageNotification(inboundNotification);
         Service.getInstance().addGateway(gateway);
     }
 
@@ -50,14 +50,15 @@ public class SmsServer {
             for (InboundMessage msg : msgList){
                 String originNumber = "+"+msg.getOriginator();
                 System.out.println(msg);
-                String msgBody = parseRequest(msg.getText());
-                sendMessage(originNumber,msgBody);
+                String msgBody = smsCommand.process(msg.getText());
+                String cryptedMsg = ZLibCompression.compressToBase64(msgBody,"UTF-8");
+                sendMessage(originNumber,cryptedMsg);
                 gateway.deleteMessage(msg);
             }
             msgList.clear();
         }
     }
-
+/*
     private String parseRequest(String request){
 
         String [] arrayRequest = request.split(":",2);
@@ -66,9 +67,17 @@ public class SmsServer {
             case "GET" :
                 msgBody = pageManager.getWebpage(arrayRequest[1]);
                 break;
+            case "NEXT" :
+                msgBody =pageManager.nexWebPage(arrayRequest[1]);
+                break;
+            default :
+                msgBody = "<h2>Mauvaise commande</h2>";
+                break;
         }
-        return msgBody;
-    }
+        System.out.println(msgBody);
+        String result = ZLibCompression.compressToBase64(msgBody,"UTF-8");
+        return result;
+    }*/
 
     private void sendMessage(String to, String body) throws InterruptedException, TimeoutException, GatewayException, IOException {
         OutboundMessage msg = new OutboundMessage(to, body);
@@ -76,7 +85,7 @@ public class SmsServer {
         System.out.println(msg);
     }
 
-    public class InboundNotification implements IInboundMessageNotification
+    /*public class InboundNotification implements IInboundMessageNotification
     {
         public void process(AGateway gateway, Message.MessageTypes msgType, InboundMessage msg)
         {
@@ -96,7 +105,7 @@ public class SmsServer {
             System.out.println("Outbound handler called from Gateway: " + gateway.getGatewayId());
             System.out.println(msg);
         }
-    }
+    }*/
 
     public void stop() throws InterruptedException, SMSLibException, IOException {
         Service.getInstance().stopService();
@@ -114,7 +123,7 @@ public class SmsServer {
         System.out.println("  Battery Level: " + gateway.getBatteryLevel() + "%");
         System.out.println();
         sendMessage(to, ZLibCompression.compressToBase64(body,"UTF-8"));
-        System.out.println("ENVOIGER");
+        //System.out.println("ENVOIGER");
     }
 
 
