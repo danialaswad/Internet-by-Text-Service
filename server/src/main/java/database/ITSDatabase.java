@@ -1,5 +1,7 @@
 package database;
 
+import twitter4j.auth.AccessToken;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +12,8 @@ public class ITSDatabase {
     private Map<String, ArrayList<String>> webpages = new HashMap<>();
 
     private static ITSDatabase instance = new ITSDatabase();
+
+    private Map<String,AccessToken>  twitterTokens = new HashMap<>();
 
     public ITSDatabase(){
 
@@ -22,5 +26,9 @@ public class ITSDatabase {
 
     public Map<String, ArrayList<String>> webpages(){
         return webpages;
+    }
+
+    public Map<String,AccessToken> getTwitterTokens(){
+        return twitterTokens;
     }
 }
