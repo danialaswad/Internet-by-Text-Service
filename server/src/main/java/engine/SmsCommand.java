@@ -1,18 +1,21 @@
 package engine;
 
+import twitter.TwitterManager;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class SmsCommand {
 
     private PageManager pageManager;
     private Map<String, Method> commands;
+    private TwitterManager twitterManager;
 
     public SmsCommand(){
         pageManager = new PageManager();
+        twitterManager = new TwitterManager();
         commands = initCommand();
     }
 
@@ -54,6 +57,12 @@ public class SmsCommand {
 
     public String ok(String data){
         return "ITS:AVAILABLE";
+    }
+
+    public String twitterconf(String data){
+        List<String> tmp = new ArrayList<>(Arrays.asList(data.split(",")));
+        twitterManager.configureAccount(tmp.get(0),tmp.get(1),tmp.get(2));
+        return "TWITTERCONF:SUCCESS";
     }
 
     private String error(){

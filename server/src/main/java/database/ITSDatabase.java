@@ -28,7 +28,7 @@ public class ITSDatabase {
         return webpages;
     }
 
-    public Map<String,AccessToken> getTwitterTokens(){
+    public Map<String,AccessToken> twitterTokens(){
         return twitterTokens;
     }
 }
