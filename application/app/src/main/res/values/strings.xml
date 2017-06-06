@@ -3,9 +3,19 @@
     <string name="GET">GET:</string>
     <string name="NEXT">NEXT:</string>
     <string name="settings">Etat du service</string>
+    <string name="twitter">Twitter</string>
     <string name="help">Aide</string>
+    <string name="token">TwitterToken</string>
+    <string name="secretToken">TwitterSecretToken</string>
+    <string name="consumer_key">pIi6kVnGy12GFjECWELC8R4VK</string>
+    <string name="consumer_secret">WsCcYqlpJJ15DaRsKd7AnviQUEEn9Rd1PugDt6uFcdUvCz2Fxa</string>
     <string-array name="menu_array">
         <item>Verification Service</item>
         <item>Paramètres</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="TwitterConf">TWITTERCONF:</string>
+    <string name="userId">TwitterUserId</string>
 </resources>

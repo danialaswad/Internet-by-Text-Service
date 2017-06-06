@@ -4,9 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +27,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import java.util.Map;
+
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
+import twitter4j.conf.ConfigurationBuilder;
 
 public class HomeActivity extends AppCompatActivity {
     public static final String PHONE_NUMBER = "+33628760946";
@@ -44,6 +56,8 @@ public class HomeActivity extends AppCompatActivity {
     String webSiteAsked = "";
     static String existingPageContent = "";
 
+    private Twitter twitter;
+
     static boolean available = false;
 
     @Override
@@ -52,6 +66,11 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         context = getApplicationContext();
+        if (android.os.Build.VERSION.SDK_INT > 17) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
 
         //Enregistre le SMS listener
         registerListener();
@@ -92,10 +111,51 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 }.start();
                 return true;
+
+            case R.id.action_twitter:
+                twitterManagement();
             default:
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    private void twitterManagement() {
+        //Faire un traitement si on est déjà connecté
+        Map<String, ?> credentials = retrieveTwitterCredentials();
+
+        if ((credentials.containsKey(getString(R.string.token))) &&
+                (credentials.containsKey(getString(R.string.secretToken))) &&
+                (credentials.containsKey(getString(R.string.userId)))) {
+            //Faire le traitement car on a déjà autorisé
+        } else {
+            twitterRegistration();
+        }
+    }
+
+    private void twitterRegistration() {
+
+        //Connexion etc
+        final ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+        configurationBuilder.setOAuthConsumerKey(getString(R.string.consumer_key));
+        configurationBuilder.setOAuthConsumerSecret(getString(R.string.consumer_secret));
+
+
+        final TwitterFactory twitterFactory = new TwitterFactory(configurationBuilder.build());
+        twitter = twitterFactory.getInstance();
+        try {
+            final RequestToken requestToken = twitter.getOAuthRequestToken("twitter-callback:///");
+            final String url = requestToken.getAuthenticationURL();
+            WebView wv = (WebView) findViewById(R.id.pageView);
+            wv.loadUrl(url);
+        } catch (TwitterException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    private Map<String, ?> retrieveTwitterCredentials() {
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        return sharedPref.getAll();
     }
 
     private void viewTreatment() {
@@ -127,7 +187,25 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 webSiteAsked = url;
-                clearViewAndSend(getString(R.string.GET) + webSiteAsked);
+                if (webSiteAsked.contains("twitter-callback:///") == true) {
+                    final Uri uri = Uri.parse(url);
+                    final String oauthVerifierParam = uri.getQueryParameter("oauth_verifier");
+                    try {
+                        final AccessToken accessToken = twitter.getOAuthAccessToken(oauthVerifierParam);
+                        String token = accessToken.getToken();
+                        String tokenSecret = accessToken.getTokenSecret();
+                        long userId = accessToken.getUserId();
+
+                        savePreferences(token, tokenSecret, userId);
+                        clearViewAndSend(getString(R.string.TwitterConf) + token + "," + tokenSecret + "," + userId);
+                    } catch (TwitterException e) {
+                        e.printStackTrace();
+                    }
+
+
+                } else {
+                    clearViewAndSend(getString(R.string.GET) + webSiteAsked);
+                }
                 return true;
             }
         });
@@ -207,9 +285,9 @@ public class HomeActivity extends AppCompatActivity {
         toast.show();
     }
 
-    static void clearAndUpdateView(String message){
+    static void clearAndUpdateView(String message) {
         webArea.loadUrl("about:blank");
-        existingPageContent="";
+        existingPageContent = "";
         webArea.loadDataWithBaseURL(null, message, "text/html", "utf-8", null);
 
 
@@ -222,16 +300,28 @@ public class HomeActivity extends AppCompatActivity {
         if (!messageReceived.isEmpty()) {
             existingPageContent += messageReceived;
             webArea.loadDataWithBaseURL(null, existingPageContent, "text/html", "utf-8", null);
-            nextButton.setVisibility(View.VISIBLE);
+            if (nextButton != null)
+                nextButton.setVisibility(View.VISIBLE);
         } else {
             webArea.loadDataWithBaseURL(null, existingPageContent, "text/html", "utf-8", null);
-            nextButton.setVisibility(View.GONE);
+            if (nextButton != null)
+                nextButton.setVisibility(View.GONE);
         }
 
     }
 
     public static void showToast(String msg) {
         displayToast(msg);
+    }
+
+    public void savePreferences(String token, String secretToken, long userId) {
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        editor.putString(getString(R.string.secretToken), secretToken);
+        editor.putString(getString(R.string.token), token);
+        editor.putLong(getString(R.string.userId), userId);
+        editor.commit();
     }
 
     /**
