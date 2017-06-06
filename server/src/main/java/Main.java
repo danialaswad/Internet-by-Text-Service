@@ -1,6 +1,9 @@
 import compression.ZLibCompression;
 import engine.SmsServer;
 import org.smslib.SMSLibException;
+import twitter.TwitterTest;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
 import web.URLReader;
 import web.WebPageCleaner;
 
@@ -15,13 +18,14 @@ import java.io.IOException;
  */
 public class Main {
 
-    public static void main(String args[]) throws InterruptedException, SMSLibException, IOException {
+    public static void main(String args[]) throws InterruptedException, SMSLibException, IOException, TwitterException {
         //AIzaSyCPwDK5HD1C1kKJSLhLoRquom6mwv9Ydhs
         //URLReader w = new URLReader("http://anasghira.com/lorem");
         //new WebPageCleaner().cleanWebPage(w.fetchFile());
         //Document document = w.fetchFile();
         //System.out.println(new WebPageCleaner().cleanWebPage(w.fetchFile(), w.getUrlString()));
-        testSmsServer();
+        //testSmsServer();
+        TwitterTest twitterTest = new TwitterTest();
     }
 
     public static void testSmsServer() throws InterruptedException, SMSLibException, IOException {
