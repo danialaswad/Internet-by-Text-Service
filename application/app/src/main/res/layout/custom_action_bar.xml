@@ -20,7 +20,7 @@
         android:background="#ffffff"
         android:selectAllOnFocus="true"
         android:inputType="textWebEmailAddress"
-         />
+        />
 
     <ProgressBar
         android:layout_width="match_parent"

@@ -8,11 +8,17 @@
         android:title="Send"/>
 
     <item
-        android:id="@+id/action_delete"
+        android:id="@+id/action_more"
         android:icon="@drawable/menu"
         app:showAsAction="ifRoom"
         android:title="Delete">
         <menu>
+
+            <item
+                android:id="@+id/action_twitter"
+                android:icon="@drawable/twitter"
+                android:title="@string/twitter"
+                app:showAsAction="ifRoom"/>
 
             <item
                 android:id="@+id/action_settings"
