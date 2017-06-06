@@ -79,16 +79,18 @@ public class HomeActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 sendMessage("OK:?");
-//                new CountDownTimer(30000, 1000) {
-//
-//                    public void onTick(long millisUntilFinished) {
-//                    }
-//
-//                    public void onFinish() {
-//                        if (available == false)
-//                            showToast("SERVICE INDISPONIBLE");
-//                    }
-//                }.start();
+                new CountDownTimer(10000, 1000) {
+
+                    public void onTick(long millisUntilFinished) {
+                    }
+
+                    public void onFinish() {
+                        if (available == false) {
+                            clearAndUpdateView("<h1>Service indisponible</h1><br><p> Le serveur n'a pas répondu à la requête");
+                            showToast("SERVICE INDISPONIBLE");
+                        }
+                    }
+                }.start();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -199,10 +201,18 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private static void displayToast(String msg) {
-        int duration = Toast.LENGTH_SHORT;
+        int duration = Toast.LENGTH_LONG;
 
         Toast toast = Toast.makeText(context, msg, duration);
         toast.show();
+    }
+
+    static void clearAndUpdateView(String message){
+        webArea.loadUrl("about:blank");
+        existingPageContent="";
+        webArea.loadDataWithBaseURL(null, message, "text/html", "utf-8", null);
+
+
     }
 
 
