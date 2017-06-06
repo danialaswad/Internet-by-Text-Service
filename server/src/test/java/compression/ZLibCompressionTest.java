@@ -22,19 +22,13 @@ public class ZLibCompressionTest {
         String test2 = "é€<!04";
         Assert.assertEquals("eJw7vPJR0xobRQMTABqpBD4=",ZLibCompression.compressToBase64(test2, "UTF-8"));
 
-
-
-
     }
 
     @Test
     public void decompressFromBase64Test() throws UnsupportedEncodingException {
-        String test = "Texte a compresser";
-        String r = ZLibCompression.decompressFromBase64("eJw7vPJR0xobRQMTABqpBD4=", "UTF-8");
-        Assert.assertEquals(test,r);
-
         String test2 = "é€<!04";
-        Assert.assertEquals(test2,ZLibCompression.decompressFromBase64("eJw7vPJR0xobRQMTABqpBD4=", "UTF-8"));
+        String r = ZLibCompression.decompressFromBase64("eJw7vPJR0xobRQMTABqpBD4=", "UTF-8");
+        Assert.assertEquals(test2,r);
     }
 
     @Test
