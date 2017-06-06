@@ -24,5 +24,11 @@ public class SmsCommandTest {
         Assert.assertEquals( "<h2>Mauvaise commande</h2>",s);
     }
 
+    @Test
+    public void okTest(){
+        SmsCommand command = new SmsCommand();
+        Assert.assertEquals("OK", command.process("OK",""));
+
+    }
 
 }

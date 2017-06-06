@@ -46,7 +46,11 @@ public class SmsCommand {
          return pageManager.nexWebPage(data);
     }
 
-    public String error(){
+    public String ok(String data){
+        return "OK";
+    }
+
+    private String error(){
         return  "<h2>Mauvaise commande</h2>";
     }
 }
