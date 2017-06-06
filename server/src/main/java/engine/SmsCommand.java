@@ -53,7 +53,7 @@ public class SmsCommand {
     }
 
     public String ok(String data){
-        return "OK";
+        return "ITS : AVAILABLE";
     }
 
     private String error(){
