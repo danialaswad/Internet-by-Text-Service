@@ -6,9 +6,16 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.telephony.SmsMessage;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
@@ -18,28 +25,33 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-
 public class HomeActivity extends AppCompatActivity {
-    public static final String PHONE_NUMBER = "+33785704525";
+    public static final String PHONE_NUMBER = "+33628760946";
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
-    private final String HOME="<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p>";
+    private final String HOME = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.";
 
     private static WebView webArea;
     private static EditText URLArea;
     private static ProgressBar mPbar;
     private static Button nextButton;
+    private static ActionBar actionBar;
+    private static View actionBarView;
+    private static View mCustomView;
+
+    private static Context context;
 
 
     String webSiteAsked = "";
     static String existingPageContent = "";
 
+    static boolean available = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        context = getApplicationContext();
 
         //Enregistre le SMS listener
         registerListener();
@@ -55,12 +67,60 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //ajoute les entrées de menu_test à l'ActionBar
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                sendMessage("OK:?");
+                new CountDownTimer(10000, 1000) {
+
+                    public void onTick(long millisUntilFinished) {
+                    }
+
+                    public void onFinish() {
+                        if (available == false) {
+                            clearAndUpdateView("<h1>Service indisponible</h1><br><p> Le serveur n'a pas répondu à la requête");
+                            showToast("SERVICE INDISPONIBLE");
+                        }
+                    }
+                }.start();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
     private void viewTreatment() {
+        LayoutInflater mInflater = LayoutInflater.from(this);
+        mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
+        actionBarView = getSupportActionBar().getCustomView();
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setCustomView(mCustomView, new Toolbar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        actionBar.setDisplayShowCustomEnabled(true);
+
+
         webArea = (WebView) findViewById(R.id.pageView);
-        URLArea = (EditText) findViewById(R.id.urlEditor);
-        mPbar = (ProgressBar) findViewById(R.id.web_view_progress);
+        URLArea = (EditText) mCustomView.findViewById(R.id.urlEditor);
+        mPbar = (ProgressBar) mCustomView.findViewById(R.id.web_view_progress);
         mPbar.setVisibility(View.GONE);
-        nextButton = (Button) findViewById(R.id.nextButton);
+        nextButton = (Button) mCustomView.findViewById(R.id.nextButton);
+
+        URLArea.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                retrieveURL(v);
+            }
+        });
+
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         webArea.setWebViewClient(new WebViewClient() {
@@ -71,6 +131,7 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             }
         });
+
         setHomeWebView();
 
 
@@ -86,7 +147,7 @@ public class HomeActivity extends AppCompatActivity {
      * Mise en place de la page d'accueil de l'application de SMS
      */
     private void setHomeWebView() {
-        webArea.loadData(HOME, "text/html", "UTF-8");
+        webArea.loadDataWithBaseURL(null, HOME, "text/html", "UTF-8", null);
     }
 
     /**
@@ -113,7 +174,7 @@ public class HomeActivity extends AppCompatActivity {
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        sendMessage(getString(R.string.GET) + webSiteAsked);
+        clearViewAndSend(getString(R.string.GET) + webSiteAsked);
     }
 
     /**
@@ -139,12 +200,19 @@ public class HomeActivity extends AppCompatActivity {
         displayToast("Message sent!");
     }
 
-    private void displayToast(String msg) {
-        Context context = getApplicationContext();
-        int duration = Toast.LENGTH_SHORT;
+    private static void displayToast(String msg) {
+        int duration = Toast.LENGTH_LONG;
 
         Toast toast = Toast.makeText(context, msg, duration);
         toast.show();
+    }
+
+    static void clearAndUpdateView(String message){
+        webArea.loadUrl("about:blank");
+        existingPageContent="";
+        webArea.loadDataWithBaseURL(null, message, "text/html", "utf-8", null);
+
+
     }
 
 
@@ -155,9 +223,15 @@ public class HomeActivity extends AppCompatActivity {
             existingPageContent += messageReceived;
             webArea.loadDataWithBaseURL(null, existingPageContent, "text/html", "utf-8", null);
             nextButton.setVisibility(View.VISIBLE);
-        } else
+        } else {
+            webArea.loadDataWithBaseURL(null, existingPageContent, "text/html", "utf-8", null);
             nextButton.setVisibility(View.GONE);
+        }
 
+    }
+
+    public static void showToast(String msg) {
+        displayToast(msg);
     }
 
     /**
@@ -181,7 +255,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
         cursor.close();
-        webArea.loadData(existingPageContent, "text/html", "UTF-8");
+        webArea.loadDataWithBaseURL(null, existingPageContent, "text/html", "UTF-8", null);
     }
 
     public static class SmsListener extends BroadcastReceiver {
@@ -192,7 +266,7 @@ public class HomeActivity extends AppCompatActivity {
             if (intentExtras != null) {
             /* Get Messages */
                 Object[] sms = (Object[]) intentExtras.get("pdus");
-                String compressedMessage="";
+                String compressedMessage = "";
 
                 for (int i = 0; i < sms.length; ++i) {
                 /* Parse Each Message */
@@ -205,9 +279,14 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 }
                 String decompressed = CompressionUtility.decompressFromBase64(compressedMessage, "UTF-8");
-                updateWebView(decompressed);
+                if (decompressed.equals("ITS:AVAILABLE") && available == false) {
+                    showToast("The service is available");
+                    available = true;
+                } else if (!decompressed.equals("ITS:AVAILABLE"))
+                    updateWebView(decompressed);
             }
         }
+
 
     }
 }

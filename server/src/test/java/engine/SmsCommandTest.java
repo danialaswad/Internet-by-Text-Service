@@ -27,7 +27,7 @@ public class SmsCommandTest {
     @Test
     public void okTest(){
         SmsCommand command = new SmsCommand();
-        Assert.assertEquals("OK", command.process("OK:"));
+        Assert.assertEquals("ITS : AVAILABLE", command.process("OK:"));
 
     }
 
