@@ -1,6 +1,7 @@
 package engine;
 
 import twitter.TwitterManager;
+import twitter4j.TwitterException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -68,6 +69,27 @@ public class SmsCommand {
 
         twitterManager.configureAccount(tmp.get(0),tmp.get(1),tmp.get(2));
         return "TWITTERCONF:SUCCESS";
+    }
+
+    public String twitterhome(String data){
+        String id = data;
+        try {
+            return twitterManager.getHomeTimeline(id);
+        } catch (TwitterException e) {
+            e.printStackTrace();
+            return "TWITTERHOME:FAILURE";
+        }
+    }
+
+    public String tweet(String data){
+        String [] dataArray = data.split(",");
+        if (dataArray.length != 2) {
+            return "TWEET:FAILURE";
+        }
+        if(twitterManager.postTweet(dataArray[0],dataArray[1]))
+            return "TWEET:SUCCESS";
+        else
+            return "TWEET:FAILURE";
     }
 
     private String error(){
