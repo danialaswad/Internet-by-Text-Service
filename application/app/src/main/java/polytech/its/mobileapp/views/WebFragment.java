@@ -98,6 +98,16 @@ public class WebFragment extends Fragment {
 
         webArea = (WebView) view.findViewById(R.id.pageView);
 
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = getString(R.string.NEXT) + home.webSiteAsked;
+                home.mPbar.setVisibility(View.VISIBLE);
+                nextButton.setVisibility(View.GONE);
+                home.sendMessage(message);
+            }
+        });
+
         webArea.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -165,18 +175,6 @@ public class WebFragment extends Fragment {
         webArea.loadUrl("about:blank");
         existingPageContent = "";
         webArea.loadDataWithBaseURL(null, message, "text/html", "utf-8", null);
-    }
-
-    /**
-     * Callback du boutton afin de demander la suite d'une page chargée partiellement
-     *
-     * @param view
-     */
-    void askNext(View view) {
-        String message = getString(R.string.NEXT) + home.webSiteAsked;
-        home.mPbar.setVisibility(View.VISIBLE);
-        nextButton.setVisibility(View.GONE);
-        home.sendMessage(message);
     }
 
     public void savePreferences(String token, String secretToken, long userId) {

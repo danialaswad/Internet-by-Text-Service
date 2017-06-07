@@ -1,13 +1,19 @@
 package polytech.its.mobileapp.views;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +33,7 @@ import polytech.its.mobileapp.twitter.TwitterAdapter;
  */
 public class TwitterListFragment extends Fragment {
     ListView listTweet;
+    HomeActivity home = ((HomeActivity) getActivity());
 
     private OnFragmentInteractionListener mListener;
 
@@ -55,15 +62,50 @@ public class TwitterListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (container != null) {
+            container.removeAllViews();
+        }
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_twitter_list, container, false);
-        listTweet = (ListView) getActivity().findViewById(R.id.listView);
 
-        List<Tweet> tweets = new ArrayList<>();
+        View v = inflater.inflate(R.layout.fragment_twitter_list, container, false);
+        listTweet = (ListView) v.findViewById(R.id.listView);
+
+        Button next = (Button) v.findViewById(R.id.nextTweets);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = getString(R.string.TWITTERNEXT) + getTwitterId() + "," + home.webSiteAsked;
+                home.sendMessage(message);
+            }
+        });
+
+        String tweetsString = getArguments().getString("TweetsContent");
+
+        List<Tweet> tweets = retrieveTweet(tweetsString);
         TwitterAdapter adapter = new TwitterAdapter(getActivity(), tweets);
         listTweet.setAdapter(adapter);
         return v;
 
+    }
+
+    public long getTwitterId() {
+        SharedPreferences sharedPref = home.getPreferences(Context.MODE_PRIVATE);
+        return sharedPref.getLong(getString(R.string.userId), 0);
+
+    }
+
+    private List<Tweet> retrieveTweet(String tweetsString) {
+        List<Tweet> listTweets = new ArrayList<>();
+        try {
+            JSONArray tweetArray = new JSONArray(tweetsString);
+            for (int i = 0; i < tweetArray.length(); i++) {
+                JSONObject jo = tweetArray.getJSONObject(i);
+                listTweets.add(new Tweet(jo.getString("un"), "@" + jo.getString("usn"), jo.getString("text")));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return listTweets;
     }
 
 

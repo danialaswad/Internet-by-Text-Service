@@ -9,8 +9,10 @@ public class Tweet {
     private String userScreenName; //@karimmature
     private String tweetText;
 
-    public Tweet(String username) {
+    public Tweet(String username, String userScreenName, String tweetText) {
         this.username = username;
+        this.userScreenName = userScreenName;
+        this.tweetText = tweetText;
     }
 
     public String getUsername() {

@@ -33,7 +33,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import java.util.Map;
 
 import polytech.its.mobileapp.R;
-import polytech.its.mobileapp.twitter.TwitterFragment;
 import polytech.its.mobileapp.utils.CompressionUtility;
 import polytech.its.mobileapp.utils.SmsUtility;
 import twitter4j.Twitter;
@@ -42,30 +41,27 @@ import twitter4j.TwitterFactory;
 import twitter4j.auth.RequestToken;
 import twitter4j.conf.ConfigurationBuilder;
 
-public class HomeActivity extends AppCompatActivity implements WebFragment.OnFragmentInteractionListener, TwitterFragment.OnFragmentInteractionListener {
+public class HomeActivity extends AppCompatActivity implements WebFragment.OnFragmentInteractionListener, TwitterFragment.OnFragmentInteractionListener, TwitterListFragment.OnFragmentInteractionListener {
     public static final String PHONE_NUMBER = "+33628760946";
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
 
-    private static EditText URLArea;
-    public static ProgressBar mPbar;
-    private static ActionBar actionBar;
-    private static View actionBarView;
-    private static View mCustomView;
+    private EditText URLArea;
+    public ProgressBar mPbar;
 
     private static Context context;
     private static WebFragment webFragment;
+    private static FragmentManager fragmentManager;
 
     String webSiteAsked = "";
     static String existingPageContent = "";
     static boolean available = false;
 
     public Twitter twitter;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    private GoogleApiClient client;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +88,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        GoogleApiClient client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -113,7 +109,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                     }
 
                     public void onFinish() {
-                        if (available == false) {
+                        if (!available) {
                             webFragment.clearAndUpdateView("<h1>Service indisponible</h1><br><p> Le serveur n'a pas répondu à la requête");
                             showToast("SERVICE INDISPONIBLE");
                         }
@@ -137,13 +133,14 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
 
     private void viewTreatment() {
         LayoutInflater mInflater = LayoutInflater.from(this);
-        mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
-        actionBarView = getSupportActionBar().getCustomView();
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setCustomView(mCustomView);
-        actionBar.setDisplayShowCustomEnabled(true);
+        View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setCustomView(mCustomView);
+            actionBar.setDisplayShowCustomEnabled(true);
 
+        }
 
         URLArea = (EditText) mCustomView.findViewById(R.id.urlEditor);
         mPbar = (ProgressBar) mCustomView.findViewById(R.id.web_view_progress);
@@ -157,8 +154,8 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         });
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        FragmentManager fm = getSupportFragmentManager();
-        webFragment = (WebFragment) fm.findFragmentById(R.id.fragment);
+        fragmentManager = getSupportFragmentManager();
+        webFragment = (WebFragment) fragmentManager.findFragmentById(R.id.fragment);
 
     }
 
@@ -171,10 +168,9 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                 (credentials.containsKey(getString(R.string.secretToken))) &&
                 (credentials.containsKey(getString(R.string.userId)))) {
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            TwitterFragment hello = new TwitterFragment();
-            fragmentTransaction.add(R.id.fragment, hello, "TWITTER");
+            TwitterFragment twitterFragment = new TwitterFragment();
+            fragmentTransaction.add(R.id.fragment, twitterFragment, "TWITTER");
             fragmentTransaction.commit();
         } else {
             twitterRegistration();
@@ -241,6 +237,17 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         clearViewAndSend(getString(R.string.GET) + webSiteAsked);
     }
 
+    private static void showTweets(String decompressed) {
+        int indexOfSplit = context.getString(R.string.TWITTERHOME).length();
+        decompressed = decompressed.substring(indexOfSplit);
+        Bundle bundle = new Bundle();
+        bundle.putString("TweetsContent", decompressed);
+        TwitterListFragment tlf = new TwitterListFragment();
+        tlf.setArguments(bundle);
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.add(R.id.fragment, tlf, "TWITTERLIST");
+        ft.commit();
+    }
 
     /**
      * Envoie un SMS à un numéro prédéfini.
@@ -314,8 +321,17 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                 if (decompressed.equals("ITS:AVAILABLE") && available == false) {
                     showToast("The service is available");
                     available = true;
-                } else if (!decompressed.equals("ITS:AVAILABLE"))
+                } else if (decompressed.contains("TWITTERCONF:SUCCESS")) {
+                    showToast("Le compte Twitter a été enregistré");
+                } else if (decompressed.contains("TWITTERHOME:")) {
+                    showTweets(decompressed);
+
+                } else if (decompressed.contains("TWITTERNEXT:")) {
+
+                } else if (decompressed.equals("WEB:")) {
                     webFragment.updateWebView(decompressed);
+                }
+
             }
         }
 

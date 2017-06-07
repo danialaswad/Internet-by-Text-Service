@@ -19,4 +19,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="TwitterConf">TWITTERCONF:</string>
     <string name="userId">TwitterUserId</string>
+    <string name="TWITTERHOME">TWITTERHOME:</string>
+    <string name="TWITTERNEXT">TWITTERNEXT:</string>
 </resources>
