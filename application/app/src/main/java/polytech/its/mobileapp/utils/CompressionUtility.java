@@ -1,4 +1,4 @@
-package polytech.its.mobileapp;
+package polytech.its.mobileapp.utils;
 
 
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;

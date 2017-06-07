@@ -1,4 +1,4 @@
-package polytech.its.mobileapp;
+package polytech.its.mobileapp.views;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -32,6 +32,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.Map;
 
+import polytech.its.mobileapp.R;
+import polytech.its.mobileapp.twitter.TwitterFragment;
+import polytech.its.mobileapp.utils.CompressionUtility;
+import polytech.its.mobileapp.utils.SmsUtility;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;

@@ -1,4 +1,4 @@
-package polytech.its.mobileapp;
+package polytech.its.mobileapp.utils;
 
 import android.app.Activity;
 import android.content.Context;

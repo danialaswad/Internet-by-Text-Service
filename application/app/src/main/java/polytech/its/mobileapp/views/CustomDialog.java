@@ -1,4 +1,4 @@
-package polytech.its.mobileapp;
+package polytech.its.mobileapp.views;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -14,6 +14,9 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import polytech.its.mobileapp.R;
+import polytech.its.mobileapp.views.HomeActivity;
 
 /**
  * @author: Abdelkarim Andolerzak
@@ -59,7 +62,7 @@ public class CustomDialog extends DialogFragment {
             public void afterTextChanged(Editable s) {
 
                 // This sets a textview to the current length
-                // mTextView.setText(String.valueOf(s.length()));
+                // mTextView.setTweetText(String.valueOf(s.length()));
 
             }
         });

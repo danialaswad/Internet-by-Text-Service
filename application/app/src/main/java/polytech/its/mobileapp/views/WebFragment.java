@@ -1,4 +1,4 @@
-package polytech.its.mobileapp;
+package polytech.its.mobileapp.views;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,6 +12,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 
+import polytech.its.mobileapp.R;
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 
