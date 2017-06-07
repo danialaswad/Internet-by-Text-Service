@@ -1,7 +1,8 @@
 package polytech.its.mobileapp;
 
-import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -15,7 +16,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 /**
- * Created by Karim on 07/06/2017.
+ * @author: Abdelkarim Andolerzak
  */
 
 public class CustomDialog extends DialogFragment {
@@ -62,12 +63,14 @@ public class CustomDialog extends DialogFragment {
 
             }
         });
-
         home = ((HomeActivity) getActivity());
+
+        final long twitterId = getTwitterId();
+
         sendTweetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                home.sendMessage(getString(R.string.TWEET) + tweetArea.getText());
+                home.sendMessage(getString(R.string.TWEET) + twitterId + "," + tweetArea.getText());
             }
         });
         // Build dialog
@@ -76,5 +79,11 @@ public class CustomDialog extends DialogFragment {
         builder.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         builder.setContentView(view);
         return builder;
+    }
+
+    public long getTwitterId() {
+        SharedPreferences sharedPref = home.getPreferences(Context.MODE_PRIVATE);
+        return sharedPref.getLong(getString(R.string.userId), 0);
+
     }
 }
