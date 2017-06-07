@@ -1,17 +1,16 @@
 package twitter;
 
 import database.ITSDatabase;
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
+import org.json.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import twitter4j.*;
 import twitter4j.auth.AccessToken;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by danial on 06/06/2017.
- */
+
 public class TwitterManager {
 
     private static final String APIKEY = "pIi6kVnGy12GFjECWELC8R4VK";
@@ -33,16 +32,43 @@ public class TwitterManager {
 
     public String getHomeTimeline(String id) throws TwitterException {
 
+        return getHomeTimeline(id,"");
+    }
+
+    public String getNextHomeTimeline(String id) throws TwitterException {
+
+        return getHomeTimeline(id,database.maxTweetId().get(id));
+    }
+
+    String getHomeTimeline(String id, String maxId) throws TwitterException {
+
         AccessToken accessToken = database.twitterTokens().get(id);
         twitter.setOAuthAccessToken(accessToken);
-        String result = "";
-            List<Status> statuses = twitter.getHomeTimeline();
-            for (Status status : statuses) {
-                result += status.getUser().getName() + ":" +status.getText();
-            }
+
+        Paging paging = new Paging(1,5);
+        if ( !maxId.isEmpty()) {
+            paging.setMaxId(Long.parseLong(maxId));
+        }
+
+        List<Status> statuses = twitter.getHomeTimeline(paging);
+        JSONArray jsonArray = new JSONArray();
+
+        for (Status status : statuses) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("un",status.getUser().getName());
+            jsonObject.put("usn", status.getUser().getScreenName());
+            jsonObject.put("text", status.getText());
+            jsonArray.put(jsonObject);
+        }
+
+        Long m = statuses.get(statuses.size()-1).getId() -1;
+        database.maxTweetId().put(id,m.toString());
+
         twitter.setOAuthAccessToken(null);
-        return result;
+
+        return jsonArray.toString();
     }
+
 
     public boolean postTweet(String id, String tweet){
         Status status = null;

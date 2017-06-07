@@ -1,6 +1,8 @@
 import compression.ZLibCompression;
 import engine.SmsCommand;
 import engine.SmsServer;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.smslib.SMSLibException;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -8,6 +10,8 @@ import web.URLReader;
 import web.WebPageCleaner;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * https://blogserius.blogspot.fr
@@ -47,8 +51,13 @@ public class Main {
         SmsCommand smsCommand = new SmsCommand();
         String configResult = smsCommand.process("TWITTERCONF:941791010-bU9IpOXf8KgOPQ2OdXYAQw4qBKOtSG8a2qKGUdEg,LG8wAfcGVUoCgNCt44VLUJjx2rpbDLIfYHX2OHZnIy4ZT,941791010");
         System.out.println(configResult);
-        String timeline = smsCommand.process("TWEET:941791010,ITSTest");
-        System.out.println(timeline);
+        String home  = smsCommand.process("TWITTERHOME:941791010");
+        System.out.println(home);
+        System.out.println(home.length());
+
+        home = smsCommand.process("NEXTTWITTERHOME:941791010");
+        System.out.println(home);
+        System.out.println(home.length());
         System.out.println("FIN");
 
     }

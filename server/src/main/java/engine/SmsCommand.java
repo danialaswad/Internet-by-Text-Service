@@ -80,6 +80,15 @@ public class SmsCommand {
             return "TWITTERHOME:FAILURE";
         }
     }
+    public String nexttwitterhome(String data){
+        String id = data;
+        try {
+            return twitterManager.getNextHomeTimeline(id);
+        } catch (TwitterException e) {
+            e.printStackTrace();
+            return "NEXTTWITTERHOME:FAILURE";
+        }
+    }
 
     public String tweet(String data){
         String [] dataArray = data.split(",");
@@ -91,6 +100,7 @@ public class SmsCommand {
         else
             return "TWEET:FAILURE";
     }
+
 
     private String error(){
         return  "<h2>Mauvaise commande</h2>";

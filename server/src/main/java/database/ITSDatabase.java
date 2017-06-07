@@ -15,6 +15,8 @@ public class ITSDatabase {
 
     private Map<String,AccessToken>  twitterTokens = new HashMap<>();
 
+    private Map<String, String> maxId = new HashMap<>();
+
     public ITSDatabase(){
 
     }
@@ -31,4 +33,6 @@ public class ITSDatabase {
     public Map<String,AccessToken> twitterTokens(){
         return twitterTokens;
     }
+
+    public Map<String, String> maxTweetId(){return maxId; }
 }
