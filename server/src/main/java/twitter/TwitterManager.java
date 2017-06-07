@@ -22,7 +22,11 @@ public class TwitterManager {
 
     public TwitterManager(){
         twitter = TwitterFactory.getSingleton();
-        twitter.setOAuthConsumer(APIKEY,APISECRET);
+        try {
+            twitter.setOAuthConsumer(APIKEY, APISECRET);
+        }catch (IllegalStateException e){
+            System.out.println(e.toString());
+        }
     }
 
     public void configureAccount(String token, String tokenSecret, String id){

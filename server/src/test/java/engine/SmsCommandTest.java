@@ -2,6 +2,7 @@ package engine;
 
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 public class SmsCommandTest {
@@ -12,7 +13,6 @@ public class SmsCommandTest {
         SmsCommand command = new SmsCommand();
 
         String s = command.process("hello:null");
-
         Assert.assertEquals( "<h2>Mauvaise commande</h2>",s);
 
         s = command.process("nothing:null");
