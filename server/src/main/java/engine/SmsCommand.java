@@ -2,6 +2,7 @@ package engine;
 
 import twitter.TwitterManager;
 import twitter4j.TwitterException;
+import web.PageManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -74,19 +75,19 @@ public class SmsCommand {
     public String twitterhome(String data){
         String id = data;
         try {
-            return twitterManager.getHomeTimeline(id);
+            return "TWITTERHOME:"+twitterManager.getHomeTimeline(id);
         } catch (TwitterException e) {
             e.printStackTrace();
             return "TWITTERHOME:FAILURE";
         }
     }
-    public String nexttwitterhome(String data){
+    public String twitternext(String data){
         String id = data;
         try {
-            return twitterManager.getNextHomeTimeline(id);
+            return "TWITTERNEXT:"+twitterManager.getNextHomeTimeline(id);
         } catch (TwitterException e) {
             e.printStackTrace();
-            return "NEXTTWITTERHOME:FAILURE";
+            return "TWITTERNEXT:FAILURE";
         }
     }
 

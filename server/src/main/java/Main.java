@@ -55,7 +55,7 @@ public class Main {
         System.out.println(home);
         System.out.println(home.length());
 
-        home = smsCommand.process("NEXTTWITTERHOME:941791010");
+        home = smsCommand.process("TWITTERNEXT:941791010");
         System.out.println(home);
         System.out.println(home.length());
         System.out.println("FIN");

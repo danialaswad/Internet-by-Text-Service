@@ -1,9 +1,8 @@
-package compression;
+package web;
 
-import org.jsoup.Jsoup;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+import web.PageCutter;
 
 import java.io.IOException;
 import java.nio.file.Files;
