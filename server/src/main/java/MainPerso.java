@@ -1,4 +1,4 @@
-import compression.PageCutter;
+import web.PageCutter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
