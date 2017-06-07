@@ -1,19 +1,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@color/cardview_light_background"
+    android:orientation="vertical"
     android:weightSum="1">
+
     <EditText
         android:id="@+id/tweetArea"
-        android:inputType="textEmailAddress"
         android:layout_width="408dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="4dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="13.10"
         android:hint="Tweet"
-        android:layout_weight="13.10" />
+        android:inputType="textEmailAddress" />
 
     <Button
         android:id="@+id/sendTweetButton"

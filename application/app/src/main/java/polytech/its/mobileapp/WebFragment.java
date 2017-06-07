@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.ProgressBar;
 
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;

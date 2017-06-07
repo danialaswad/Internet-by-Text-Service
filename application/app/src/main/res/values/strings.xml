@@ -2,6 +2,7 @@
     <string name="app_name">ITS</string>
     <string name="GET">GET:</string>
     <string name="NEXT">NEXT:</string>
+    <string name="TWEET">TWEET:</string>
     <string name="settings">Etat du service</string>
     <string name="twitter">Twitter</string>
     <string name="help">Aide</string>
