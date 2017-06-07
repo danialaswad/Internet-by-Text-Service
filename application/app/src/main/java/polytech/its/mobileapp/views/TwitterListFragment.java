@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -33,7 +33,10 @@ import polytech.its.mobileapp.twitter.TwitterAdapter;
  */
 public class TwitterListFragment extends Fragment {
     ListView listTweet;
-    HomeActivity home = ((HomeActivity) getActivity());
+    HomeActivity home;
+    List<Tweet> listOfTweets;
+    TwitterAdapter adapter;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -69,20 +72,20 @@ public class TwitterListFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_twitter_list, container, false);
         listTweet = (ListView) v.findViewById(R.id.listView);
-
-        Button next = (Button) v.findViewById(R.id.nextTweets);
+        home = (HomeActivity) this.getActivity();
+        ImageButton next = (ImageButton) v.findViewById(R.id.nextTweets);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String message = getString(R.string.TWITTERNEXT) + getTwitterId() + "," + home.webSiteAsked;
+                String message = getString(R.string.TWITTERNEXT) + getTwitterId();
                 home.sendMessage(message);
             }
         });
 
         String tweetsString = getArguments().getString("TweetsContent");
 
-        List<Tweet> tweets = retrieveTweet(tweetsString);
-        TwitterAdapter adapter = new TwitterAdapter(getActivity(), tweets);
+        listOfTweets = retrieveTweet(tweetsString);
+        adapter = new TwitterAdapter(getActivity(), listOfTweets);
         listTweet.setAdapter(adapter);
         return v;
 
@@ -107,6 +110,13 @@ public class TwitterListFragment extends Fragment {
         }
         return listTweets;
     }
+
+    public void setTweetsToHandle(String tweetsToHandle) {
+        List newTweets = retrieveTweet(tweetsToHandle);
+        listOfTweets.addAll(newTweets);
+        adapter.notifyDataSetChanged();
+    }
+
 
 
     @Override

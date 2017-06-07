@@ -245,8 +245,15 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         TwitterListFragment tlf = new TwitterListFragment();
         tlf.setArguments(bundle);
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.add(R.id.fragment, tlf, "TWITTERLIST");
+        ft.add(R.id.fragment, tlf, "twitter_list_fragment");
         ft.commit();
+    }
+
+    private static void showNextTweets(String decompressed) {
+        int indexOfSplit = context.getString(R.string.TWITTERNEXT).length();
+        decompressed = decompressed.substring(indexOfSplit);
+        TwitterListFragment tlf = (TwitterListFragment) fragmentManager.findFragmentByTag("twitter_list_fragment");
+        tlf.setTweetsToHandle(decompressed);
     }
 
     /**
@@ -323,10 +330,11 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                     available = true;
                 } else if (decompressed.contains("TWITTERCONF:SUCCESS")) {
                     showToast("Le compte Twitter a été enregistré");
-                } else if (decompressed.contains("TWITTERHOME:")) {
+                } else if (decompressed.contains(context.getString(R.string.TWITTERHOME))) {
                     showTweets(decompressed);
 
-                } else if (decompressed.contains("TWITTERNEXT:")) {
+                } else if (decompressed.contains(context.getString(R.string.TWITTERNEXT))) {
+                    showNextTweets(decompressed);
 
                 } else if (decompressed.equals("WEB:")) {
                     webFragment.updateWebView(decompressed);
