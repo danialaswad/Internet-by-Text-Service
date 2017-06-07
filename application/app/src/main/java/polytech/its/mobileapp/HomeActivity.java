@@ -12,7 +12,9 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsMessage;
 import android.view.LayoutInflater;
@@ -37,7 +39,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.auth.RequestToken;
 import twitter4j.conf.ConfigurationBuilder;
 
-public class HomeActivity extends AppCompatActivity implements WebFragment.OnFragmentInteractionListener {
+public class HomeActivity extends AppCompatActivity implements WebFragment.OnFragmentInteractionListener, TwitterFragment.OnFragmentInteractionListener {
     public static final String PHONE_NUMBER = "+33628760946";
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
 
@@ -165,7 +167,12 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         if ((credentials.containsKey(getString(R.string.token))) &&
                 (credentials.containsKey(getString(R.string.secretToken))) &&
                 (credentials.containsKey(getString(R.string.userId)))) {
-            //Faire le traitement car on a déjà autorisé
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            TwitterFragment hello = new TwitterFragment();
+            fragmentTransaction.add(R.id.fragment, hello, "TWITTER");
+            fragmentTransaction.commit();
         } else {
             twitterRegistration();
         }
@@ -254,7 +261,6 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
     public static void showToast(String msg) {
         displayToast(msg);
     }
-
 
     /**
      * Récupération des SMS déjà enregistrés et vérification qu'il correspond au numéro du serveur
