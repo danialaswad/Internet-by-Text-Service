@@ -21,4 +21,10 @@
     <string name="userId">TwitterUserId</string>
     <string name="TWITTERHOME">TWITTERHOME:</string>
     <string name="TWITTERNEXT">TWITTERNEXT:</string>
+    <string name="save">Sauvegarder Page</string>
+    <string name="history">Sites enregistrés</string>
+    <string name="web">WEB:</string>
+    <string name="next">WEBNEXT:</string>
+    <string name="avalable">ITS:AVAILABLE</string>
+    <string name="twitterSuccess">TWITTERCONF:SUCCESS</string>
 </resources>

@@ -15,7 +15,7 @@ public class Tweet {
         this.tweetText = tweetText;
     }
 
-    public String getUsername() {
+    String getUsername() {
         return username;
     }
 
@@ -23,7 +23,7 @@ public class Tweet {
         this.username = username;
     }
 
-    public String getUserScreenName() {
+    String getUserScreenName() {
         return userScreenName;
     }
 
@@ -31,7 +31,7 @@ public class Tweet {
         this.userScreenName = userScreenName;
     }
 
-    public String getTweetText() {
+    String getTweetText() {
         return tweetText;
     }
 

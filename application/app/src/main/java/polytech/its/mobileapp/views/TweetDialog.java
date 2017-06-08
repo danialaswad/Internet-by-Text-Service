@@ -16,19 +16,18 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import polytech.its.mobileapp.R;
-import polytech.its.mobileapp.views.HomeActivity;
 
 /**
  * @author: Abdelkarim Andolerzak
  */
 
-public class CustomDialog extends DialogFragment {
+public class TweetDialog extends DialogFragment {
     public EditText tweetArea;
     public Button sendTweetButton;
     public String initialButtonText;
     public HomeActivity home;
 
-    public CustomDialog() {
+    public TweetDialog() {
     }
 
     @Override
@@ -74,6 +73,7 @@ public class CustomDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 home.sendMessage(getString(R.string.TWEET) + twitterId + "," + tweetArea.getText());
+                dismiss();
             }
         });
         // Build dialog

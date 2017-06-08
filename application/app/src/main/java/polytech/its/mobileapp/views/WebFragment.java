@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import polytech.its.mobileapp.R;
 import twitter4j.TwitterException;
@@ -25,24 +26,15 @@ import twitter4j.auth.AccessToken;
  * Use the {@link WebFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+@SuppressWarnings("deprecation")
 public class WebFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private final String HOME = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.";
-
     private String existingPageContent = "";
 
     public WebView webArea;
-    public Button nextButton;
+    public ImageButton nextButton;
 
     HomeActivity home;
 
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -61,27 +53,19 @@ public class WebFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static WebFragment newInstance(String param1, String param2) {
         WebFragment fragment = new WebFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
     }
 
     /**
      * Mise en place de la page d'accueil de l'application de SMS
      */
     private void setHomeWebView() {
+        String HOME = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.";
         webArea.loadDataWithBaseURL(null, HOME, "text/html", "UTF-8", null);
     }
 
@@ -93,7 +77,7 @@ public class WebFragment extends Fragment {
 
 
         //home.mPbar.setVisibility(View.GONE);
-        nextButton = (Button) view.findViewById(R.id.nextButton);
+        nextButton = (ImageButton) view.findViewById(R.id.nextButton);
         home = ((HomeActivity) getActivity());
 
         webArea = (WebView) view.findViewById(R.id.pageView);
@@ -155,9 +139,10 @@ public class WebFragment extends Fragment {
         mListener = null;
     }
 
-    void updateWebView(String messageReceived) {
+    void updateWebView(String messageReceived, String typePage) {
         webArea.loadUrl("about:blank");
         home.mPbar.setVisibility(View.GONE);
+        messageReceived = messageReceived.substring(typePage.length());
         if (!messageReceived.isEmpty()) {
             existingPageContent += messageReceived;
             webArea.loadDataWithBaseURL(null, existingPageContent, "text/html", "utf-8", null);
@@ -184,7 +169,7 @@ public class WebFragment extends Fragment {
         editor.putString(getString(R.string.secretToken), secretToken);
         editor.putString(getString(R.string.token), token);
         editor.putLong(getString(R.string.userId), userId);
-        editor.commit();
+        editor.apply();
     }
 
 
@@ -198,7 +183,7 @@ public class WebFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
