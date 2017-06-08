@@ -2,12 +2,13 @@ package database;
 
 import twitter4j.auth.AccessToken;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class ITSDatabase {
+public class ITSDatabase implements Serializable{
 
     private Map<String, ArrayList<String>> webpages = new HashMap<>();
 

@@ -1,6 +1,8 @@
 import compression.ZLibCompression;
+import database.ITSDatabase;
 import engine.SmsCommand;
 import engine.SmsServer;
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smslib.SMSLibException;
@@ -9,7 +11,7 @@ import twitter4j.TwitterFactory;
 import web.URLReader;
 import web.WebPageCleaner;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +31,9 @@ public class Main {
         //Document document = w.fetchFile();
         //System.out.println(new WebPageCleaner().cleanWebPage(w.fetchFile(), w.getUrlString()));
         //testSmsServer();
-        testTwitter();
+        //testTwitter();
+        //testDB();
+        writeDB();
     }
 
     public static void testSmsServer() throws InterruptedException, SMSLibException, IOException {
@@ -48,7 +52,7 @@ public class Main {
     }
 
     public static void testTwitter(){
-        SmsCommand smsCommand = new SmsCommand();
+       /* SmsCommand smsCommand = new SmsCommand();
         String configResult = smsCommand.process("TWITTERCONF:941791010-bU9IpOXf8KgOPQ2OdXYAQw4qBKOtSG8a2qKGUdEg,LG8wAfcGVUoCgNCt44VLUJjx2rpbDLIfYHX2OHZnIy4ZT,941791010");
         System.out.println(configResult);
         String home  = smsCommand.process("TWITTERHOME:941791010");
@@ -58,7 +62,46 @@ public class Main {
         home = smsCommand.process("TWITTERNEXT:941791010");
         System.out.println(home);
         System.out.println(home.length());
-        System.out.println("FIN");
+        System.out.println("FIN");*/
+        Logger logger = Logger.getLogger(Main.class);
+        logger.debug("Here is some DEBUG");
+        logger.info("Here is some INFO");
+        logger.warn("Here is some WARN");
+        logger.error("Here is some ERROR");
+        logger.fatal("Here is some FATAL");
+
+    }
+
+    public static void testDB(){
+        ITSDatabase db = ITSDatabase.instance();
+        db.maxTweetId().put("hello","hello");
+        db.maxTweetId().put("anasse","con");
+
+        try (ObjectOutputStream oos =
+                     new ObjectOutputStream(new FileOutputStream("test.txt"))) {
+
+            oos.writeObject(db);
+            System.out.println("Done");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    public static void writeDB(){
+        ITSDatabase db = null;
+
+        try (ObjectInputStream ois
+                     = new ObjectInputStream(new FileInputStream("test.txt"))) {
+
+            db = (ITSDatabase) ois.readObject();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        System.out.println(db.maxTweetId().toString());
 
     }
 

@@ -1,13 +1,12 @@
 package twitter;
 
 import database.ITSDatabase;
-import org.json.*;
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import twitter4j.*;
 import twitter4j.auth.AccessToken;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -15,6 +14,9 @@ public class TwitterManager {
 
     private static final String APIKEY = "pIi6kVnGy12GFjECWELC8R4VK";
     private static final String APISECRET = "WsCcYqlpJJ15DaRsKd7AnviQUEEn9Rd1PugDt6uFcdUvCz2Fxa";
+
+
+    private final static Logger LOG = org.apache.log4j.Logger.getLogger(TwitterManager.class);
 
     private ITSDatabase database = ITSDatabase.instance();
 
@@ -25,7 +27,7 @@ public class TwitterManager {
         try {
             twitter.setOAuthConsumer(APIKEY, APISECRET);
         }catch (IllegalStateException e){
-            System.out.println(e.toString());
+            LOG.warn(e.getMessage());
         }
     }
 
@@ -69,7 +71,7 @@ public class TwitterManager {
         database.maxTweetId().put(id,m.toString());
 
         twitter.setOAuthAccessToken(null);
-
+        LOG.info("[" + id + "] Tweets retrieve");
         return jsonArray.toString();
     }
 
@@ -81,10 +83,10 @@ public class TwitterManager {
         try {
             status = twitter.updateStatus(tweet);
         } catch (TwitterException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
             return false;
         }
-        System.out.println("Successfully updated the status to [" + status.getText() + "].");
+        LOG.info("[" +id + "] status updated to : \"" + status.getText() + "\"");
         return true;
     }
 

@@ -1,5 +1,6 @@
 package engine;
 
+import org.apache.log4j.Logger;
 import twitter.TwitterManager;
 import twitter4j.TwitterException;
 import web.PageManager;
@@ -10,6 +11,8 @@ import java.util.*;
 
 
 public class SmsCommand {
+
+    private static final Logger LOG = Logger.getLogger(SmsCommand.class);
 
     private PageManager pageManager;
     private Map<String, Method> commands;
@@ -34,27 +37,33 @@ public class SmsCommand {
         String [] arrayRequest = request.split(":",2);
         String cmd = arrayRequest[0];
         String data = "";
+
         if(arrayRequest.length>1) {
             data = arrayRequest[1];
         }
-        if (!commands.containsKey(cmd.toLowerCase())){ return error(); }
+
+        if (!commands.containsKey(cmd.toLowerCase())){
+            LOG.error("command " +cmd.toLowerCase() + " not exist");
+            return error();
+        }
         Object o = null;
         Method m;
         try {
             m = this.getClass().getMethod(commands.get(cmd.toLowerCase()).getName(),commands.get(cmd.toLowerCase()).getParameterTypes());
             o = m.invoke(this, data);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            LOG.error(e.getMessage());
             return error();
         }
         return (String) o;
     }
 
     public String get(String data){
-        return pageManager.getWebpage(data);
+        return "WEB:"+pageManager.getWebpage(data);
     }
 
     public String next(String data){
-         return pageManager.nexWebPage(data);
+         return "WEBNEXT:" + pageManager.nexWebPage(data);
     }
 
     public String ok(String data){
@@ -77,7 +86,7 @@ public class SmsCommand {
         try {
             return "TWITTERHOME:"+twitterManager.getHomeTimeline(id);
         } catch (TwitterException e) {
-            e.printStackTrace();
+            LOG.warn(e.getMessage());
             return "TWITTERHOME:FAILURE";
         }
     }
@@ -86,7 +95,7 @@ public class SmsCommand {
         try {
             return "TWITTERNEXT:"+twitterManager.getNextHomeTimeline(id);
         } catch (TwitterException e) {
-            e.printStackTrace();
+            LOG.warn(e.getMessage());
             return "TWITTERNEXT:FAILURE";
         }
     }
@@ -104,6 +113,6 @@ public class SmsCommand {
 
 
     private String error(){
-        return  "<h2>Mauvaise commande</h2>";
+        return  "WEB:<h2>Mauvaise commande</h2>";
     }
 }
