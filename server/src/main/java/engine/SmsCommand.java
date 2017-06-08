@@ -101,7 +101,7 @@ public class SmsCommand {
     }
 
     public String tweet(String data){
-        String [] dataArray = data.split(",");
+        String [] dataArray = data.split(",",2);
         if (dataArray.length != 2) {
             return "TWEET:FAILURE";
         }

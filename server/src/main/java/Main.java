@@ -25,15 +25,10 @@ import java.util.List;
 public class Main {
 
     public static void main(String args[]) throws InterruptedException, SMSLibException, IOException, TwitterException {
-        //AIzaSyCPwDK5HD1C1kKJSLhLoRquom6mwv9Ydhs
-        //URLReader w = new URLReader("http://anasghira.com/lorem");
-        //new WebPageCleaner().cleanWebPage(w.fetchFile());
-        //Document document = w.fetchFile();
-        //System.out.println(new WebPageCleaner().cleanWebPage(w.fetchFile(), w.getUrlString()));
-        //testSmsServer();
+        testSmsServer();
         //testTwitter();
         //testDB();
-        writeDB();
+        //writeDB();
     }
 
     public static void testSmsServer() throws InterruptedException, SMSLibException, IOException {
@@ -69,39 +64,6 @@ public class Main {
         logger.warn("Here is some WARN");
         logger.error("Here is some ERROR");
         logger.fatal("Here is some FATAL");
-
-    }
-
-    public static void testDB(){
-        ITSDatabase db = ITSDatabase.instance();
-        db.maxTweetId().put("hello","hello");
-        db.maxTweetId().put("anasse","con");
-
-        try (ObjectOutputStream oos =
-                     new ObjectOutputStream(new FileOutputStream("test.txt"))) {
-
-            oos.writeObject(db);
-            System.out.println("Done");
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-    }
-
-    public static void writeDB(){
-        ITSDatabase db = null;
-
-        try (ObjectInputStream ois
-                     = new ObjectInputStream(new FileInputStream("test.txt"))) {
-
-            db = (ITSDatabase) ois.readObject();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        System.out.println(db.maxTweetId().toString());
 
     }
 
