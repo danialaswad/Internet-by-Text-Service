@@ -1,6 +1,7 @@
-package polytech.its.mobileapp.twitter;
+package polytech.its.mobileapp.views;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import polytech.its.mobileapp.views.CustomDialog;
 import polytech.its.mobileapp.R;
 
 
@@ -26,6 +26,8 @@ public class TwitterFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private static HomeActivity home;
 
 
     private OnFragmentInteractionListener mListener;
@@ -68,6 +70,7 @@ public class TwitterFragment extends Fragment {
 
     private void viewTreatment(View v) {
         LinearLayout sendTweet = (LinearLayout) v.findViewById(R.id.linearSendTweet);
+        home = ((HomeActivity) getActivity());
         sendTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,10 +81,10 @@ public class TwitterFragment extends Fragment {
         });
 
         LinearLayout retrieveLayout = (LinearLayout) v.findViewById(R.id.linearShowTweets);
-        sendTweet.setOnClickListener(new View.OnClickListener() {
+        retrieveLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                home.sendMessage(getString(R.string.TWITTERHOME) + getTwitterId());
             }
         });
 
@@ -105,11 +108,11 @@ public class TwitterFragment extends Fragment {
         mListener = null;
     }
 
-
-    public void sendTweet(View view) {
+    public long getTwitterId() {
+        SharedPreferences sharedPref = home.getPreferences(Context.MODE_PRIVATE);
+        return sharedPref.getLong(getString(R.string.userId), 0);
 
     }
-
 
     /**
      * This interface must be implemented by activities that contain this

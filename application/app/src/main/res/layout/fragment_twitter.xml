@@ -39,7 +39,7 @@
                 android:background="?android:selectableItemBackground"
                 android:fontFamily="sans-serif"
                 android:padding="20dp"
-                android:tweetText="Envoyer un Tweet"
+                android:text="Envoyer un Tweet"
                 android:textColor="#333"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -84,7 +84,7 @@
                 android:background="?android:selectableItemBackground"
                 android:fontFamily="sans-serif"
                 android:padding="20dp"
-                android:tweetText="Afficher le feed"
+                android:text="Afficher le feed"
                 android:textColor="#333"
                 android:textSize="18sp" />
         </LinearLayout>

@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:tweetText="Delka"
+        android:text="Delka"
         android:textColor="@android:color/black"
         android:textStyle="bold" />
 
@@ -24,7 +24,7 @@
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/pseudo"
         android:layout_toRightOf="@+id/pseudo"
-        android:tweetText="\@Karimmature"/>
+        android:text="\@Karimmature"/>
 
     <TextView
         android:id="@+id/tweetText"
@@ -33,7 +33,7 @@
         android:layout_alignLeft="@+id/pseudo"
         android:layout_below="@+id/pseudo"
         android:textColor="@android:color/black"
-        tools:tweetText="Texte de mon tweet" />
+        tools:text="Texte de mon tweet" />
 
 
 
