@@ -2,6 +2,7 @@ package database;
 
 import twitter4j.auth.AccessToken;
 
+import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +10,8 @@ import java.util.Map;
 
 
 public class ITSDatabase implements Serializable{
+
+    private  static  final  long serialVersionUID =  1350092881346723535L;
 
     private Map<String, ArrayList<String>> webpages = new HashMap<>();
 
@@ -26,6 +29,10 @@ public class ITSDatabase implements Serializable{
         return instance;
     }
 
+    public static void setInstance(ITSDatabase instance) {
+        ITSDatabase.instance = instance;
+    }
+
 
     public Map<String, ArrayList<String>> webpages(){
         return webpages;
@@ -36,4 +43,6 @@ public class ITSDatabase implements Serializable{
     }
 
     public Map<String, String> maxTweetId(){return maxId; }
+
+
 }

@@ -2,128 +2,150 @@ package engine;
 
 
 import compression.ZLibCompression;
+import database.ITSDatabase;
+import org.apache.log4j.Logger;
 import org.smslib.*;
 import org.smslib.modem.SerialModemGateway;
-import web.URLReader;
-import web.WebPageCleaner;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Created by Anasse on 30/05/2017.
  */
-public class SmsServer {
+public class SmsServer  implements Runnable {
 
-    SerialModemGateway gateway;
-    SmsCommand smsCommand;
+    private SerialModemGateway gateway;
+    private SmsCommand smsCommand;
+    private Boolean shutdown = false;
+
+    private static final Logger LOG = Logger.getLogger(SmsServer.class);
+
+    private static final String DBFILE = "database.txt";
+
+    private ITSDatabase database = ITSDatabase.instance();
 
     public SmsServer(String pin, String smscNumber, String comPort) throws GatewayException {
-        smsCommand = new SmsCommand();
-        /*OutboundNotification outboundNotification = new OutboundNotification();
-        InboundNotification inboundNotification = new InboundNotification();*/
         gateway = new SerialModemGateway("modem.com9", comPort,125000, "", "");
         gateway.setInbound(true);
         gateway.setOutbound(true);
         gateway.setSimPin(pin);
         gateway.setSmscNumber(smscNumber);
-        //Service.getInstance().setOutboundMessageNotification(outboundNotification);
-        //Service.getInstance().setInboundMessageNotification(inboundNotification);
         Service.getInstance().addGateway(gateway);
     }
 
 
-    public void run() throws Exception {
-        Service.getInstance().startService();
-        System.out.println();
-        System.out.println("Modem Information:");
-        System.out.println("  Manufacturer: " + gateway.getManufacturer());
-        System.out.println("  Model: " + gateway.getModel());
-        System.out.println("  SIM IMSI: " + gateway.getImsi());
-        System.out.println("  Signal Level: " + gateway.getSignalLevel() + " dBm");
-        System.out.println("  Battery Level: " + gateway.getBatteryLevel() + "%");
-        System.out.println();
-        ArrayList<InboundMessage> msgList = new ArrayList<InboundMessage>();
-        while(true){
-            Service.getInstance().readMessages(msgList, InboundMessage.MessageClasses.ALL);
-            for (InboundMessage msg : msgList){
-                String originNumber = "+"+msg.getOriginator();
-                System.out.println(msg);
-                String msgBody = smsCommand.process(msg.getText());
-                String cryptedMsg = ZLibCompression.compressToBase64(msgBody,"UTF-8");
-                sendMessage(originNumber,cryptedMsg);
-                gateway.deleteMessage(msg);
+    public void run() {
+        try {
+            readDatabase();
+            smsCommand = new SmsCommand();
+            Service.getInstance().startService();
+            logModemInfo();
+            ArrayList<InboundMessage> msgList = new ArrayList<>();
+            while(!shutdown){
+                Service.getInstance().readMessages(msgList, InboundMessage.MessageClasses.ALL);
+                for (InboundMessage msg : msgList){
+                    LOG.info("Sender : " +  msg.getOriginator());
+                    LOG.info("Message : " +  msg.getText());
+                    String cryptedMsg = ZLibCompression.compressToBase64(smsCommand.process(msg.getText()),"UTF-8");
+                    sendMessage("+"+msg.getOriginator(),cryptedMsg);
+                    gateway.deleteMessage(msg);
+                }
+                msgList.clear();
             }
-            msgList.clear();
+            saveDatabase();
+            Service.getInstance().stopService();
+            Service.getInstance().removeGateway(gateway);
+
+        } catch (SMSLibException | InterruptedException | IOException e) {
+            e.printStackTrace();
         }
     }
-/*
-    private String parseRequest(String request){
 
-        String [] arrayRequest = request.split(":",2);
-        String msgBody ="";
-        switch (arrayRequest[0]){
-            case "GET" :
-                msgBody = pageManager.getWebpage(arrayRequest[1]);
-                break;
-            case "NEXT" :
-                msgBody =pageManager.nexWebPage(arrayRequest[1]);
-                break;
-            default :
-                msgBody = "<h2>Mauvaise commande</h2>";
-                break;
-        }
-        System.out.println(msgBody);
-        String result = ZLibCompression.compressToBase64(msgBody,"UTF-8");
-        return result;
-    }*/
+    private void logModemInfo() throws InterruptedException, TimeoutException, GatewayException, IOException {
+        LOG.info("Modem Manufacturer: " + gateway.getManufacturer());
+        LOG.info("Modem Model: " + gateway.getModel());
+        LOG.info("Modem SIM IMSI: " + gateway.getImsi());
+        LOG.info("Modem Signal Level: " + gateway.getSignalLevel() + " dBm");
+        LOG.info("Modem Battery Level: " + gateway.getBatteryLevel() + "%");
+    }
+
+
 
     private void sendMessage(String to, String body) throws InterruptedException, TimeoutException, GatewayException, IOException {
         OutboundMessage msg = new OutboundMessage(to, body);
         Service.getInstance().sendMessage(msg);
-        System.out.println(msg);
+        LOG.info("Sender : " +  msg.getFrom());
+        LOG.info("Message : " +  msg.getText());
     }
 
-    /*public class InboundNotification implements IInboundMessageNotification
-    {
-        public void process(AGateway gateway, Message.MessageTypes msgType, InboundMessage msg)
-        {
-            if (msgType == Message.MessageTypes.INBOUND) {
+    private void saveDatabase(){
 
-                System.out.println(">>> New Inbound message detected from Gateway: " + gateway.getGatewayId());
+        FileOutputStream fout = null;
+        ObjectOutputStream oos = null;
+        try {
+            fout = new FileOutputStream(DBFILE);
+            oos = new ObjectOutputStream(fout);
+            // sérialization de l'objet
+            oos.writeObject(database) ;
+            LOG.info("Database stored in file " + DBFILE);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (fout != null) {
+                try {
+                    fout.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            else if (msgType == Message.MessageTypes.STATUSREPORT) System.out.println(">>> New Inbound Status Report message detected from Gateway: " + gateway.getGatewayId());
-            System.out.println(msg);
+
+            if (oos != null) {
+                try {
+                    oos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
-    public class OutboundNotification implements IOutboundMessageNotification
-    {
-        public void process(AGateway gateway, OutboundMessage msg)
-        {
-            System.out.println("Outbound handler called from Gateway: " + gateway.getGatewayId());
-            System.out.println(msg);
+    private void readDatabase(){
+
+        FileInputStream fin = null;
+        ObjectInputStream ois = null;
+        try {
+            fin = new FileInputStream(DBFILE);
+            ois = new ObjectInputStream(fin);
+            database = (ITSDatabase) ois.readObject();
+            ITSDatabase.setInstance(database);
+            LOG.info("Database retrieve from file " + DBFILE);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+
+            if (fin != null) {
+                try {
+                    fin.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (ois != null) {
+                try {
+                    ois.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
-    }*/
+    }
 
     public void stop() throws InterruptedException, SMSLibException, IOException {
-        Service.getInstance().stopService();
-        Service.getInstance().removeGateway(gateway);
-    }
-
-    public void testSend(String to, String body) throws InterruptedException, SMSLibException, IOException {
-        Service.getInstance().startService();
-        System.out.println();
-        System.out.println("Modem Information:");
-        System.out.println("  Manufacturer: " + gateway.getManufacturer());
-        System.out.println("  Model: " + gateway.getModel());
-        System.out.println("  SIM IMSI: " + gateway.getImsi());
-        System.out.println("  Signal Level: " + gateway.getSignalLevel() + " dBm");
-        System.out.println("  Battery Level: " + gateway.getBatteryLevel() + "%");
-        System.out.println();
-        sendMessage(to, ZLibCompression.compressToBase64(body,"UTF-8"));
-        //System.out.println("ENVOIGER");
+        shutdown = true;
     }
 
 
