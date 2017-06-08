@@ -43,7 +43,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.auth.RequestToken;
 import twitter4j.conf.ConfigurationBuilder;
 
-public class HomeActivity extends AppCompatActivity implements WebFragment.OnFragmentInteractionListener, TwitterFragment.OnFragmentInteractionListener, TwitterListFragment.OnFragmentInteractionListener {
+public class HomeActivity extends AppCompatActivity implements WebFragment.OnFragmentInteractionListener, TwitterFragment.OnFragmentInteractionListener, TwitterListFragment.OnFragmentInteractionListener, HistoryFragment.OnFragmentInteractionListener {
     public static final String PHONE_NUMBER = "+33628760946";
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
 
@@ -54,8 +54,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
     private static WebFragment webFragment;
     private static FragmentManager fragmentManager;
 
-    String webSiteAsked = "";
-    static String existingPageContent = "";
+    String webSiteAsked = "www.localhost.fr";
     static boolean available = false;
 
     public Twitter twitter;
@@ -127,14 +126,18 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                 return true;
             case R.id.action_save:
                 try {
-                    new CacheUtility().saveWebsite(this, webSiteAsked, existingPageContent);
+                    new CacheUtility().saveWebsite(this, webSiteAsked, webFragment.getExistingPageContent());
                     return true;
                 } catch (IOException e) {
                     e.printStackTrace();
                     return false;
                 }
             case R.id.action_history:
-
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                HistoryFragment historyFragment = new HistoryFragment();
+                fragmentTransaction.add(R.id.fragment, historyFragment, "HISTORY");
+                fragmentTransaction.commit();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -221,16 +224,6 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
 
 
     /**
-     * Nettoyage de la webview afin d'accueillir le futur site
-     *
-     * @param url de la page à afficher
-     */
-    public void clearViewAndSend(String url) {
-        existingPageContent = "";
-        sendMessage(url);
-    }
-
-    /**
      * Callback du bouton d'envoi de l'URL
      */
 
@@ -242,7 +235,8 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         View view = this.findViewById(android.R.id.content);
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        clearViewAndSend(getString(R.string.GET) + webSiteAsked);
+
+        webFragment.clearViewAndSend(getString(R.string.GET) + webSiteAsked);
     }
 
     private static void showTweets(String decompressed) {
@@ -303,9 +297,9 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
             for (int i = 0; i < cursor.getCount(); i++) {
                 String phone = cursor.getString(cursor.getColumnIndexOrThrow("address"));
                 if (PHONE_NUMBER.equals(phone))
-                    existingPageContent += cursor.getString(cursor.getColumnIndexOrThrow("body"));
+                    //existingPageContent += cursor.getString(cursor.getColumnIndexOrThrow("body"));
 
-                cursor.moveToPrevious();
+                    cursor.moveToPrevious();
             }
         }
         cursor.close();

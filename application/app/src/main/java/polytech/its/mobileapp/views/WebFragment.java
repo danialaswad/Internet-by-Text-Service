@@ -66,6 +66,7 @@ public class WebFragment extends Fragment {
      */
     private void setHomeWebView() {
         String HOME = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.";
+        existingPageContent = HOME;
         webArea.loadDataWithBaseURL(null, HOME, "text/html", "UTF-8", null);
     }
 
@@ -105,14 +106,14 @@ public class WebFragment extends Fragment {
                         long userId = accessToken.getUserId();
 
                         savePreferences(token, tokenSecret, userId);
-                        home.clearViewAndSend(getString(R.string.TwitterConf) + token + "," + tokenSecret + "," + userId);
+                        clearViewAndSend(getString(R.string.TwitterConf) + token + "," + tokenSecret + "," + userId);
                     } catch (TwitterException e) {
                         e.printStackTrace();
                     }
 
 
                 } else {
-                    home.clearViewAndSend(getString(R.string.GET) + url);
+                    clearViewAndSend(getString(R.string.GET) + url);
                 }
                 return true;
             }
@@ -162,6 +163,16 @@ public class WebFragment extends Fragment {
         webArea.loadDataWithBaseURL(null, message, "text/html", "utf-8", null);
     }
 
+    /**
+     * Nettoyage de la webview afin d'accueillir le futur site
+     *
+     * @param url de la page à afficher
+     */
+    public void clearViewAndSend(String url) {
+        existingPageContent = "";
+        home.sendMessage(url);
+    }
+
     public void savePreferences(String token, String secretToken, long userId) {
         SharedPreferences sharedPref = this.getActivity().getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -170,6 +181,10 @@ public class WebFragment extends Fragment {
         editor.putString(getString(R.string.token), token);
         editor.putLong(getString(R.string.userId), userId);
         editor.apply();
+    }
+
+    public String getExistingPageContent() {
+        return existingPageContent;
     }
 
 

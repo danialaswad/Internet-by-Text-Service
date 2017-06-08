@@ -4,12 +4,16 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import polytech.its.mobileapp.R;
@@ -57,10 +61,23 @@ public class HistoryFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_history, container, false);
 
-        ListView listView = (ListView) getActivity().findViewById(R.id.listCache);
-        List<History> websiteSaved = new CacheUtility().retrieveWebsites();
-        ArrayAdapter<History> adapter = new ArrayAdapter<>(getActivity(), 0, websiteSaved);
-        //Listview.setAdapter(adapter)
+        ListView listView = (ListView) v.findViewById(R.id.listCache);
+        List<History> websiteSaved = new ArrayList<>();
+        try {
+            websiteSaved = new CacheUtility().retrieveWebsites(getContext());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+            ArrayAdapter<History> adapter = new ArrayAdapter<>(getActivity(), 0, websiteSaved);
+        listView.setAdapter(adapter);
+
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                String nameFile = adapter.getItem(position).getNameFile();
+//                Log.d("Nom du fichier", nameFile);
+//            }
+//        });
 
         return v;
 

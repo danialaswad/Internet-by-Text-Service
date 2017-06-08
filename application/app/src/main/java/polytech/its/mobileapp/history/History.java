@@ -5,7 +5,20 @@ package polytech.its.mobileapp.history;
  */
 
 public class History {
-
     String nameFile;
     String content;
+
+    public History(String name, String content) {
+        nameFile = name;
+        this.content = content;
+    }
+
+    public String getNameFile() {
+        return nameFile;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
 }

@@ -18,18 +18,18 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:background="#ffffff"
-        android:selectAllOnFocus="true"
         android:inputType="textWebEmailAddress"
-        />
+        android:selectAllOnFocus="true" />
 
     <ProgressBar
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/web_view_progress"
         style="?android:attr/progressBarStyleHorizontal"
-        android:indeterminateOnly="true"
-        android:layout_alignLeft="@+id/urlEditor"
-        android:layout_alignStart="@+id/urlEditor"
-        android:layout_alignTop="@+id/urlEditor" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_below="@id/urlEditor"
+        android:indeterminateOnly="true" />
 
 </RelativeLayout>
