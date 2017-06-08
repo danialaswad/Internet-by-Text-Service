@@ -1,13 +1,12 @@
 package polytech.its.mobileapp.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.telephony.SmsManager;
 
 /**
- * Created by Karim on 30/05/2017.
+ * @author: Abdelkarim Andolerzak
  */
 public class SmsUtility {
 

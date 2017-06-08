@@ -10,7 +10,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import polytech.its.mobileapp.R;
-import polytech.its.mobileapp.twitter.Tweet;
 
 /**
  * @author: Abdelkarim Andolerzak
@@ -42,17 +41,19 @@ public class TwitterAdapter extends ArrayAdapter<Tweet> {
         Tweet tweet = getItem(position);
 
         //il ne reste plus qu'à remplir notre vue
-        viewHolder.pseudo.setText(tweet.getUsername());
-        viewHolder.nom.setText(tweet.getUserScreenName());
-        viewHolder.text.setText(tweet.getTweetText());
+        if (tweet != null) {
+            viewHolder.pseudo.setText(tweet.getUsername());
+            viewHolder.nom.setText(tweet.getUserScreenName());
+            viewHolder.text.setText(tweet.getTweetText());
+        }
 
         return convertView;
     }
 
     private class TweetViewHolder {
-        public TextView pseudo;
-        public TextView nom;
-        public TextView text;
+        TextView pseudo;
+        TextView nom;
+        TextView text;
     }
 
 }

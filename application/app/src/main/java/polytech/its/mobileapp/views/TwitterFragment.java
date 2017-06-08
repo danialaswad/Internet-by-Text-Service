@@ -65,6 +65,9 @@ public class TwitterFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_twitter, container, false);
         viewTreatment(v);
+        if (container != null) {
+            container.removeAllViews();
+        }
         return v;
     }
 
@@ -74,7 +77,7 @@ public class TwitterFragment extends Fragment {
         sendTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final CustomDialog dialog = new CustomDialog();
+                final TweetDialog dialog = new TweetDialog();
                 dialog.show(getFragmentManager(), "dialog");
 
             }
@@ -124,7 +127,7 @@ public class TwitterFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }

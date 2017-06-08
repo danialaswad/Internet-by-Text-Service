@@ -52,8 +52,7 @@ public class TwitterListFragment extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static TwitterListFragment newInstance() {
-        TwitterListFragment fragment = new TwitterListFragment();
-        return fragment;
+        return new TwitterListFragment();
     }
 
     @Override
@@ -147,7 +146,7 @@ public class TwitterListFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
