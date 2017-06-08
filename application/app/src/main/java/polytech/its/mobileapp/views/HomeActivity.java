@@ -108,11 +108,12 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                 retrieveURL();
                 return true;
             case R.id.action_stop:
-                sendMessage("ENDWEBSITE:YES");
-                webFragment.nextButton.setVisibility(View.GONE);
+                sendMessage(getString(R.string.end));
+                if (webFragment.nextButton.getVisibility() == View.VISIBLE)
+                    webFragment.nextButton.setVisibility(View.INVISIBLE);
                 return true;
             case R.id.action_settings:
-                sendMessage("OK:?");
+                sendMessage(getString(R.string.isOk));
                 new CountDownTimer(10000, 1000) {
 
                     public void onTick(long millisUntilFinished) {
@@ -352,6 +353,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                 available = true;
             } else if (decompressed.contains(context.getString(R.string.twitterSuccess))) {
                 showToast("Le compte Twitter a été enregistré");
+                fragmentManager.beginTransaction().replace(R.id.fragment, new TwitterFragment()).commit();
                 //TODO: Afficher la vue fragment twitter
 
             } else if (decompressed.contains(context.getString(R.string.TWITTERHOME))) {
