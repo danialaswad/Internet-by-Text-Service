@@ -10,7 +10,7 @@
     tools:context="polytech.its.mobileapp.views.HomeActivity">
 
 
-    <fragment
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:name="polytech.its.mobileapp.views.WebFragment"
@@ -20,5 +20,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:orientation="horizontal" />
 </RelativeLayout>

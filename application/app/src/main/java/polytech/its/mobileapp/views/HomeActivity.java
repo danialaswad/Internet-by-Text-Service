@@ -56,6 +56,8 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
 
     String webSiteAsked = "www.localhost.fr";
     static boolean available = false;
+    final String HOME = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.";
+
 
     public Twitter twitter;
 
@@ -168,7 +170,11 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         fragmentManager = getSupportFragmentManager();
-        webFragment = (WebFragment) fragmentManager.findFragmentById(R.id.fragment);
+        webFragment = new WebFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("content", HOME);
+        webFragment.setArguments(bundle);
+        fragmentManager.beginTransaction().replace(R.id.fragment, webFragment).addToBackStack(null).commit();
 
     }
 

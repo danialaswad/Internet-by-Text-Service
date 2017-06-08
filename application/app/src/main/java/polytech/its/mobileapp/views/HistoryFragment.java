@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -80,7 +80,6 @@ public class HistoryFragment extends Fragment {
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
             fileNames.add((String) pair.getKey());
-            it.remove(); // avoids a ConcurrentModificationException
         }
 
 
@@ -99,7 +98,7 @@ public class HistoryFragment extends Fragment {
                 WebFragment fragobj = new WebFragment();
                 fragobj.setArguments(bundle);
 
-                getFragmentManager().beginTransaction().add(fragobj, "web_fragment").commit();
+                getFragmentManager().beginTransaction().replace(R.id.fragment, fragobj).addToBackStack(null).commit();
 
             }
         });

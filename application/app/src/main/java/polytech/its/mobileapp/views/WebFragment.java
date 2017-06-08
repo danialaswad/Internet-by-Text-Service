@@ -33,7 +33,6 @@ public class WebFragment extends Fragment {
     public WebView webArea;
     public ImageButton nextButton;
 
-    final String HOME = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.";
 
     HomeActivity home;
 
@@ -75,12 +74,13 @@ public class WebFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        View view = inflater.inflate(R.layout.fragment_web, container, false);
-        String content = "";
-        if (this != null) {
-            content = getArguments().getString("content");
+        if (container != null) {
+            container.removeAllViews();
         }
+        View view = inflater.inflate(R.layout.fragment_web, container, false);
+
+        String content = getArguments().getString("content");
+
 
         //home.mPbar.setVisibility(View.GONE);
         nextButton = (ImageButton) view.findViewById(R.id.nextButton);
@@ -123,10 +123,9 @@ public class WebFragment extends Fragment {
                 return true;
             }
         });
-        if (content.equals(""))
-            setHomeWebView(HOME);
-        else
-            setHomeWebView(content);
+        // final String content = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.";
+
+        setHomeWebView(content);
 
         return view;
     }
