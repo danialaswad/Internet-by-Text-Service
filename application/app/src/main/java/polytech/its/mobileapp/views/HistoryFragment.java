@@ -14,7 +14,10 @@ import android.widget.ListView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import polytech.its.mobileapp.R;
 import polytech.its.mobileapp.history.History;
@@ -59,25 +62,47 @@ public class HistoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        if (container != null) {
+            container.removeAllViews();
+        }
         View v = inflater.inflate(R.layout.fragment_history, container, false);
 
         ListView listView = (ListView) v.findViewById(R.id.listCache);
-        List<History> websiteSaved = new ArrayList<>();
+        Map<String, History> websiteSaved = new HashMap<>();
         try {
             websiteSaved = new CacheUtility().retrieveWebsites(getContext());
         } catch (IOException e) {
             e.printStackTrace();
         }
-            ArrayAdapter<History> adapter = new ArrayAdapter<>(getActivity(), 0, websiteSaved);
+
+        List<String> fileNames = new ArrayList<>();
+        Iterator it = websiteSaved.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            fileNames.add((String) pair.getKey());
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+
+
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.simple_layout, fileNames);
         listView.setAdapter(adapter);
 
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                String nameFile = adapter.getItem(position).getNameFile();
-//                Log.d("Nom du fichier", nameFile);
-//            }
-//        });
+        final Map<String, History> finalWebsiteSaved = websiteSaved;
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String nameFile = adapter.getItem(position);
+                History h = finalWebsiteSaved.get(nameFile);
+                String content = h.getContent();
+                Bundle bundle = new Bundle();
+                bundle.putString("content", content);
+                WebFragment fragobj = new WebFragment();
+                fragobj.setArguments(bundle);
+
+                getFragmentManager().beginTransaction().add(fragobj, "web_fragment").commit();
+
+            }
+        });
 
         return v;
 

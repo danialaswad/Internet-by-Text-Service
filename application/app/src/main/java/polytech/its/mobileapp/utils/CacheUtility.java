@@ -9,7 +9,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import polytech.its.mobileapp.history.History;
 
@@ -26,11 +28,11 @@ public class CacheUtility {
         fos.close();
     }
 
-    public List<History> retrieveWebsites(Context context) throws IOException {
+    public Map<String, History> retrieveWebsites(Context context) throws IOException {
         File directory = context.getCacheDir();
         File[] files = directory.listFiles();
         ArrayList<File> list = new ArrayList<>(Arrays.asList(files));
-        List<History> savedSites = new ArrayList<>();
+        Map<String, History> savedSites = new HashMap<>();
         for (File f : list) {
             if (!f.isDirectory()) {
                 String name = f.getName();
@@ -44,7 +46,7 @@ public class CacheUtility {
                     content += Character.toString((char) size);
                 }
                 History h = new History(name, content);
-                savedSites.add(h);
+                savedSites.put(name, h);
                 fis.close();
             }
         }

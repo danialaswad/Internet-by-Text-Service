@@ -33,6 +33,8 @@ public class WebFragment extends Fragment {
     public WebView webArea;
     public ImageButton nextButton;
 
+    final String HOME = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.";
+
     HomeActivity home;
 
 
@@ -64,18 +66,21 @@ public class WebFragment extends Fragment {
     /**
      * Mise en place de la page d'accueil de l'application de SMS
      */
-    private void setHomeWebView() {
-        String HOME = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.";
-        existingPageContent = HOME;
-        webArea.loadDataWithBaseURL(null, HOME, "text/html", "UTF-8", null);
+    private void setHomeWebView(String page) {
+        existingPageContent = page;
+        webArea.loadDataWithBaseURL(null, page, "text/html", "UTF-8", null);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_web, container, false);
 
+        View view = inflater.inflate(R.layout.fragment_web, container, false);
+        String content = "";
+        if (this != null) {
+            content = getArguments().getString("content");
+        }
 
         //home.mPbar.setVisibility(View.GONE);
         nextButton = (ImageButton) view.findViewById(R.id.nextButton);
@@ -118,7 +123,11 @@ public class WebFragment extends Fragment {
                 return true;
             }
         });
-        setHomeWebView();
+        if (content.equals(""))
+            setHomeWebView(HOME);
+        else
+            setHomeWebView(content);
+
         return view;
     }
 
