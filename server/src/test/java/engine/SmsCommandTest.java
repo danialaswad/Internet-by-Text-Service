@@ -13,15 +13,15 @@ public class SmsCommandTest {
         SmsCommand command = new SmsCommand();
 
         String s = command.process("hello:null");
-        Assert.assertEquals( "<h2>Mauvaise commande</h2>",s);
+        Assert.assertEquals( "WEB:<h2>Mauvaise commande</h2>",s);
 
         s = command.process("nothing:null");
 
-        Assert.assertEquals( "<h2>Mauvaise commande</h2>",s);
+        Assert.assertEquals( "WEB:<h2>Mauvaise commande</h2>",s);
 
         s = command.process("null");
 
-        Assert.assertEquals( "<h2>Mauvaise commande</h2>",s);
+        Assert.assertEquals( "WEB:<h2>Mauvaise commande</h2>",s);
     }
 
     @Test
