@@ -107,6 +107,10 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
             case R.id.action_send:
                 retrieveURL();
                 return true;
+            case R.id.action_stop:
+                sendMessage("ENDWEBSITE:YES");
+                webFragment.nextButton.setVisibility(View.GONE);
+                return true;
             case R.id.action_settings:
                 sendMessage("OK:?");
                 new CountDownTimer(10000, 1000) {
