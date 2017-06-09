@@ -121,7 +121,14 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
 
                     public void onFinish() {
                         if (!available) {
-                            webFragment.clearAndUpdateView("<h1>Service indisponible</h1><br><p> Le serveur n'a pas répondu à la requête");
+                            if (!(fragmentManager.findFragmentById(R.id.fragment) instanceof WebFragment)) {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("content", "<h1>Service indisponible</h1><br><p> Le serveur n'a pas répondu à la requête");
+                                WebFragment webfrag = new WebFragment();
+                                webfrag.setArguments(bundle);
+                                fragmentManager.beginTransaction().replace(R.id.fragment, webfrag).commit();
+                            }
+                            webFragment.clearAndUpdateView("e");
                             showToast("SERVICE INDISPONIBLE");
                         }
                     }

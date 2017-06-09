@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
