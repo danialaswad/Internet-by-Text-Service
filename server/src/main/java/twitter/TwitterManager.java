@@ -6,8 +6,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import twitter4j.*;
 import twitter4j.auth.AccessToken;
-
 import java.util.List;
+
+/**
+ * TwitterManager class
+ * @Author : ITS Team
+ */
 
 
 public class TwitterManager {
