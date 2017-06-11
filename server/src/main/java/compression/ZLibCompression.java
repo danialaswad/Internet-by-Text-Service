@@ -1,14 +1,14 @@
-package compression; /**
- * Created by Antoine on 29/05/2017.
- * Inspired by http://stackoverflow.com/q/6173920/600500.
- */
-
-
+package compression;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.*;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
+
+/**
+ * ZLibCompression class
+ * @Author : ITS Team
+ */
 
 public class ZLibCompression {
     public static String compressToBase64(String entry, String encoding) {

@@ -4,10 +4,14 @@ import org.apache.log4j.Logger;
 import twitter.TwitterManager;
 import twitter4j.TwitterException;
 import web.PageManager;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+
+/**
+ * SmsCommand class
+ * @Author : ITS Team
+ */
 
 
 public class SmsCommand {
@@ -109,6 +113,11 @@ public class SmsCommand {
             return "TWEET:SUCCESS";
         else
             return "TWEET:FAILURE";
+    }
+
+    public String endwebsite(String data){
+        pageManager.removeWebPage(data);
+        return "ENDWEBSITE:SUCCESS";
     }
 
 

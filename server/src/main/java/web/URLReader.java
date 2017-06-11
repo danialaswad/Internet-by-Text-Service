@@ -6,6 +6,11 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 
+/**
+ * URLReader class
+ * @Author : ITS Team
+ */
+
 public class URLReader {
 
     private String urlString;

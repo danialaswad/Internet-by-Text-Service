@@ -16,11 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * https://blogserius.blogspot.fr
- *
- * http://www.nicematin.com
- * http://www.apple.com
- * https://en.wikipedia.org/wiki/Silverio_Pérez
+ * Main class
+ * @Author : ITS Team
  */
 public class Main {
 
