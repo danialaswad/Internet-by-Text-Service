@@ -1,4 +1,5 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
@@ -10,13 +11,13 @@
     <item
         android:id="@+id/action_stop"
         android:icon="@drawable/cancel"
-        android:title="Send"
-        app:showAsAction="ifRoom" />
+        android:title="Stop"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_more"
         android:icon="@drawable/menu"
-        android:title="Delete"
+        android:title="More"
         app:showAsAction="ifRoom">
         <menu>
 
@@ -24,12 +25,6 @@
                 android:id="@+id/action_twitter"
                 android:icon="@drawable/twitter"
                 android:title="@string/twitter"
-                app:showAsAction="ifRoom" />
-
-            <item
-                android:id="@+id/action_settings"
-                android:icon="@android:drawable/ic_menu_preferences"
-                android:title="@string/settings"
                 app:showAsAction="ifRoom" />
 
             <item
@@ -44,6 +39,36 @@
                 android:title="@string/save"
                 app:showAsAction="ifRoom" />
 
+            <item
+                android:id="@+id/action_countries"
+                android:icon="@android:drawable/ic_menu_preferences"
+                android:title="Pays"
+                app:showAsAction="ifRoom">
+                <menu>
+                    <item
+                        android:id="@+id/action_country1"
+                        android:icon="@drawable/france"
+                        android:title="@string/pays"
+                        app:showAsAction="ifRoom" />
+
+                    <item
+                        android:id="@+id/action_country2"
+                        android:icon="@drawable/france"
+                        android:title="@string/pays"
+                        app:showAsAction="ifRoom" />
+                </menu>
+            </item>
+            <item
+                android:id="@+id/action_check"
+                android:icon="@android:drawable/ic_popup_reminder"
+                android:title="@string/settings"
+                app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/action_help"
+                android:icon="@android:drawable/ic_menu_help"
+                android:title="@string/help"
+                app:showAsAction="ifRoom" />
 
         </menu>
 

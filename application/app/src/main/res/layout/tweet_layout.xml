@@ -24,7 +24,7 @@
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/pseudo"
         android:layout_toRightOf="@+id/pseudo"
-        android:text="\@Karimmature"/>
+        android:text="\@Karimmature" />
 
     <TextView
         android:id="@+id/tweetText"
@@ -34,7 +34,6 @@
         android:layout_below="@+id/pseudo"
         android:textColor="@android:color/black"
         tools:text="Texte de mon tweet" />
-
 
 
 </RelativeLayout>

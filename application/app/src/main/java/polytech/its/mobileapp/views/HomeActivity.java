@@ -5,12 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.StrictMode;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -44,19 +43,19 @@ import twitter4j.auth.RequestToken;
 import twitter4j.conf.ConfigurationBuilder;
 
 public class HomeActivity extends AppCompatActivity implements WebFragment.OnFragmentInteractionListener, TwitterFragment.OnFragmentInteractionListener, TwitterListFragment.OnFragmentInteractionListener, HistoryFragment.OnFragmentInteractionListener {
-    public static final String PHONE_NUMBER = "+33628760946";
+    public static String PHONE_NUMBER = "+33628760946";
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
 
     private EditText URLArea;
     public ProgressBar mPbar;
 
     private static Context context;
-    private static WebFragment webFragment;
+    public static WebFragment webFragment;
     private static FragmentManager fragmentManager;
 
     String webSiteAsked = "www.localhost.fr";
     static boolean available = false;
-    final String HOME = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.";
+    final String HOME = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.<br><img alt=\"Image de film\" src=\"http://andokarim.fr/images/film.jpg\"></img>";
 
 
     public Twitter twitter;
@@ -71,23 +70,15 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         setContentView(R.layout.activity_home);
 
         context = getApplicationContext();
-        if (Build.VERSION.SDK_INT > 17) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                    .permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                .permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         //Enregistre le SMS listener
         registerListener();
 
         //Récupère webview,edittext... pour les modifier
         viewTreatment();
-
-        //Lire et afficher les SMS déjà présents sur le téléphone. A améliorer pour le systeme de cache?
-        /*SmsUtility smsUtility = new SmsUtility();
-        Cursor cursor = smsUtility.getMessages(HomeActivity.this);
-        displaySms(cursor);*/
-
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -108,11 +99,11 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                 retrieveURL();
                 return true;
             case R.id.action_stop:
-                sendMessage(getString(R.string.end));
+                sendMessage(getString(R.string.end) + webSiteAsked);
                 if (webFragment.nextButton.getVisibility() == View.VISIBLE)
                     webFragment.nextButton.setVisibility(View.INVISIBLE);
                 return true;
-            case R.id.action_settings:
+            case R.id.action_check:
                 sendMessage(getString(R.string.isOk));
                 new CountDownTimer(10000, 1000) {
 
@@ -120,16 +111,16 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                     }
 
                     public void onFinish() {
+                        String message = "<h1>Service indisponible</h1><br><p> Le serveur n'a pas répondu à la requête";
                         if (!available) {
                             if (!(fragmentManager.findFragmentById(R.id.fragment) instanceof WebFragment)) {
                                 Bundle bundle = new Bundle();
-                                bundle.putString("content", "<h1>Service indisponible</h1><br><p> Le serveur n'a pas répondu à la requête");
-                                WebFragment webfrag = new WebFragment();
-                                webfrag.setArguments(bundle);
-                                fragmentManager.beginTransaction().replace(R.id.fragment, webfrag).commit();
+                                bundle.putString("content", message);
+                                webFragment.setArguments(bundle);
+                                fragmentManager.beginTransaction().replace(R.id.fragment, webFragment).commit();
                             }
-                            webFragment.clearAndUpdateView("e");
-                            showToast("SERVICE INDISPONIBLE");
+                            webFragment.clearAndUpdateView(message);
+                            showToast(getString(R.string.service_unavailable));
                         }
                     }
                 }.start();
@@ -141,6 +132,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
             case R.id.action_save:
                 try {
                     new CacheUtility().saveWebsite(this, webSiteAsked, webFragment.getExistingPageContent());
+                    showToast(getString(R.string.web_saved));
                     return true;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -152,6 +144,19 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                 fragmentTransaction.add(R.id.fragment, historyFragment, "HISTORY");
                 fragmentTransaction.commit();
                 return true;
+
+            case R.id.action_country1:
+                PHONE_NUMBER = "+33628760946";
+                return true;
+            case R.id.action_country2:
+                PHONE_NUMBER = "+33666360803";
+                return true;
+            case R.id.action_help:
+                if (!(fragmentManager.findFragmentById(R.id.fragment) instanceof WebFragment)) {
+                    fragmentManager.beginTransaction().replace(R.id.fragment, webFragment).commit();
+                }
+                webFragment.showHelp();
+                showToast(getString(R.string.service_unavailable));
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -186,7 +191,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         Bundle bundle = new Bundle();
         bundle.putString("content", HOME);
         webFragment.setArguments(bundle);
-        fragmentManager.beginTransaction().replace(R.id.fragment, webFragment).addToBackStack(null).commit();
+        fragmentManager.beginTransaction().add(R.id.fragment, webFragment).addToBackStack(null).commit();
 
     }
 
@@ -245,7 +250,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
      * Callback du bouton d'envoi de l'URL
      */
 
-    void retrieveURL() {
+    String retrieveURL() {
         webSiteAsked = URLArea.getText().toString();
         mPbar.setVisibility(View.VISIBLE);
         webFragment.nextButton.setVisibility(View.GONE);
@@ -255,6 +260,8 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
         webFragment.clearViewAndSend(getString(R.string.GET) + webSiteAsked);
+
+        return webSiteAsked;
     }
 
     private static void showTweets(String decompressed) {
@@ -277,6 +284,21 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         tlf.setTweetsToHandle(decompressed);
     }
 
+    private static void updateWebFragment(String decompressed, String string) {
+
+        Fragment f = fragmentManager.findFragmentById(R.id.fragment);
+        String content = decompressed.substring(string.length());
+        if (!(f instanceof WebFragment)) {
+            WebFragment fragobj = HomeActivity.webFragment;
+            Bundle bundle = fragobj.getArguments();
+            bundle.putString("content", content);
+            fragmentManager.beginTransaction().remove(f).commit();
+            fragmentManager.beginTransaction().remove(fragobj).commit();
+            fragmentManager.beginTransaction().add(R.id.fragment, fragobj).commit();
+        } else
+            webFragment.updateWebView(decompressed);
+    }
+
     /**
      * Envoie un SMS à un numéro prédéfini.
      *
@@ -285,10 +307,10 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
     void sendMessage(String msg) {
         SmsUtility sr = new SmsUtility();
         sr.sendMessage(PHONE_NUMBER, msg);
-        displayToast("Message sent!");
+        displayToast("Message envoyé!");
     }
 
-    private static void displayToast(String msg) {
+    public static void displayToast(String msg) {
         int duration = Toast.LENGTH_LONG;
 
         Toast toast = Toast.makeText(context, msg, duration);
@@ -299,31 +321,6 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
     public static void showToast(String msg) {
         displayToast(msg);
     }
-
-    /**
-     * Récupération des SMS déjà enregistrés et vérification qu'il correspond au numéro du serveur
-     * Pas utilisée pour l'instant
-     *
-     * @param cursor Curseur de SMS
-     */
-    private void displaySms(Cursor cursor) {
-        if (!cursor.moveToFirst()) { /* false = cursor is empty */
-            return;
-        }
-
-        if (cursor.moveToLast()) {
-            for (int i = 0; i < cursor.getCount(); i++) {
-                String phone = cursor.getString(cursor.getColumnIndexOrThrow("address"));
-                if (PHONE_NUMBER.equals(phone))
-                    //existingPageContent += cursor.getString(cursor.getColumnIndexOrThrow("body"));
-
-                    cursor.moveToPrevious();
-            }
-        }
-        cursor.close();
-        //webFragment.webArea.loadDataWithBaseURL(null, existingPageContent, "text/html", "UTF-8", null);
-    }
-
 
     public static class SmsListener extends BroadcastReceiver {
         @Override
@@ -354,26 +351,36 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
             }
         }
 
-        private void filterResponse(String decompressed) {
-            if (decompressed.equals(context.getString(R.string.avalable)) && !available) {
-                showToast("The service is available");
+        String filterResponse(String decompressed) {
+            if (decompressed.equals(context.getString(R.string.available)) && !available) {
+                showToast(context.getString(R.string.disponible));
                 available = true;
+                return "Check service";
             } else if (decompressed.contains(context.getString(R.string.twitterSuccess))) {
-                showToast("Le compte Twitter a été enregistré");
-                fragmentManager.beginTransaction().replace(R.id.fragment, new TwitterFragment()).commit();
-                //TODO: Afficher la vue fragment twitter
+                showToast(context.getString(R.string.TwitterRegisterSuccess));
+                fragmentManager.beginTransaction().replace(R.id.fragment, new TwitterFragment(), "TWITTERVIEW").commit();
+                return "Twitter OK";
 
             } else if (decompressed.contains(context.getString(R.string.TWITTERHOME))) {
                 showTweets(decompressed);
+                return "Show Timeline";
 
             } else if (decompressed.contains(context.getString(R.string.TWITTERNEXT))) {
                 showNextTweets(decompressed);
+                return "Show Next Tweets";
 
             } else if (decompressed.contains(context.getString(R.string.web))) {
-                webFragment.updateWebView(decompressed, context.getString(R.string.web));
-            } else if (decompressed.equals(context.getString(R.string.next))) {
-                webFragment.updateWebView(decompressed, context.getString(R.string.next));
+                updateWebFragment(decompressed, context.getString(R.string.web));
+                return "Show page";
+            } else if (decompressed.contains(context.getString(R.string.next))) {
+                updateWebFragment(decompressed, context.getString(R.string.next));
+                return "Show next page";
 
+            } else if (decompressed.contains(context.getString(R.string.tweetSuccess))) {
+                showToast(context.getString(R.string.SuccessTweet));
+                return "Tweet sent";
+            } else {
+                return "Commande incomprise";
             }
 
         }
