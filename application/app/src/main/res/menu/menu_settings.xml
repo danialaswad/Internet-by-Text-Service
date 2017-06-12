@@ -28,7 +28,7 @@
                 app:showAsAction="ifRoom" />
 
             <item
-                android:id="@+id/meteo"
+                android:id="@+id/action_weather"
                 android:icon="@drawable/weather"
                 android:title="@string/weather" />
 
