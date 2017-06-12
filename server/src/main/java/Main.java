@@ -19,7 +19,8 @@ public class Main {
         //testDB();
         //writeDB();
         //ImgReader.generateSMSFromImage("http://anasghira.com/test.png");
-        WeatherProxy.getWeather("Nice");
+
+        System.out.println(WeatherProxy.getWeather("Nice"));
     }
 
     public static void testSmsServer() throws InterruptedException, SMSLibException, IOException {
