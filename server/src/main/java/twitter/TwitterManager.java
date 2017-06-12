@@ -1,11 +1,15 @@
 package twitter;
 
 import database.ITSDatabase;
+import database.ITSDatabaseSQL;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import twitter4j.*;
 import twitter4j.auth.AccessToken;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +26,6 @@ public class TwitterManager {
 
     private final static Logger LOG = org.apache.log4j.Logger.getLogger(TwitterManager.class);
 
-    private ITSDatabase database = ITSDatabase.instance();
 
     private Twitter twitter;
 
@@ -36,8 +39,13 @@ public class TwitterManager {
     }
 
     public void configureAccount(String token, String tokenSecret, String id){
-        AccessToken accessToken = new AccessToken(token, tokenSecret,Long.parseLong(id));
-        database.twitterTokens().put(id,accessToken);
+        //AccessToken accessToken = new AccessToken(token, tokenSecret,Long.parseLong(id));
+        try {
+            ITSDatabaseSQL.addTwitterToken(id,token,tokenSecret);
+        } catch (SQLException e) {
+            LOG.error(e.getMessage());
+        }
+        //database.twitterTokens().put(id,accessToken);
     }
 
     public String getHomeTimeline(String id) throws TwitterException {
@@ -46,47 +54,66 @@ public class TwitterManager {
     }
 
     public String getNextHomeTimeline(String id) throws TwitterException {
-
-        return getHomeTimeline(id,database.maxTweetId().get(id));
+        String maxTweet = "";
+        try {
+            maxTweet = ITSDatabaseSQL.getMaxTweetID(id);
+            return getHomeTimeline(id,maxTweet);
+        } catch (SQLException e) {
+            LOG.error(e.getMessage());
+        }
+        return "";
     }
 
     String getHomeTimeline(String id, String maxId) throws TwitterException {
 
-        AccessToken accessToken = database.twitterTokens().get(id);
-        twitter.setOAuthAccessToken(accessToken);
-
-        Paging paging = new Paging(1,5);
-        if ( !maxId.isEmpty()) {
-            paging.setMaxId(Long.parseLong(maxId));
-        }
-
-        List<Status> statuses = twitter.getHomeTimeline(paging);
         JSONArray jsonArray = new JSONArray();
+        try {
+            ArrayList<String> list = ITSDatabaseSQL.getTwitterToken(id);
+            AccessToken accessToken = new AccessToken(list.get(0),list.get(1),Long.parseLong(id));
+            //AccessToken accessToken = database.twitterTokens().get(id);
+            twitter.setOAuthAccessToken(accessToken);
 
-        for (Status status : statuses) {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("un",status.getUser().getName());
-            jsonObject.put("usn", status.getUser().getScreenName());
-            jsonObject.put("text", status.getText());
-            jsonArray.put(jsonObject);
+
+
+            Paging paging = new Paging(1,5);
+            if ( !maxId.isEmpty()) {
+                paging.setMaxId(Long.parseLong(maxId));
+            }
+
+            List<Status> statuses = twitter.getHomeTimeline(paging);
+
+            for (Status status : statuses) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("un",status.getUser().getName());
+                jsonObject.put("usn", status.getUser().getScreenName());
+                jsonObject.put("text", status.getText());
+                jsonArray.put(jsonObject);
+            }
+
+            Long m = statuses.get(statuses.size()-1).getId() -1;
+            //database.maxTweetId().put(id,m.toString());
+
+            ITSDatabaseSQL.addMaxTweet(id,m.toString());
+            twitter.setOAuthAccessToken(null);
+            LOG.info("[" + id + "] Tweets retrieve");
+            return jsonArray.toString();
+        } catch (SQLException e) {
+            LOG.error(e.getMessage());
         }
 
-        Long m = statuses.get(statuses.size()-1).getId() -1;
-        database.maxTweetId().put(id,m.toString());
-
-        twitter.setOAuthAccessToken(null);
-        LOG.info("[" + id + "] Tweets retrieve");
         return jsonArray.toString();
     }
 
 
     public boolean postTweet(String id, String tweet){
         Status status = null;
-        AccessToken accessToken = database.twitterTokens().get(id);
-        twitter.setOAuthAccessToken(accessToken);
+        ArrayList<String> list = null;
         try {
+            list = ITSDatabaseSQL.getTwitterToken(id);
+            AccessToken accessToken = new AccessToken(list.get(0),list.get(1),Long.parseLong(id));
+            twitter.setOAuthAccessToken(accessToken);
             status = twitter.updateStatus(tweet);
-        } catch (TwitterException e) {
+        } catch (TwitterException | SQLException e) {
             LOG.error(e.getMessage());
             return false;
         }
