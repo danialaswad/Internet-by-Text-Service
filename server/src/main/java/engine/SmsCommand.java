@@ -1,9 +1,11 @@
 package engine;
 
+import compression.ZLibCompression;
 import org.apache.log4j.Logger;
 import twitter.TwitterManager;
 import twitter4j.TwitterException;
 import weather.WeatherProxy;
+import web.ImgReader;
 import web.PageManager;
 
 import java.io.IOException;
@@ -128,8 +130,14 @@ public class SmsCommand {
     }
 
     public String getimg(String data){
-        //TODO
-        return "";
+        try {
+            byte[] img = ImgReader.getImageArray(data);
+            String encodedImage = ZLibCompression.encodeImage(img);
+            return "IMG:"+encodedImage;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String getweather(String data){

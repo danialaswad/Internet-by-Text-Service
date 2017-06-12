@@ -11,6 +11,7 @@ import java.util.zip.InflaterInputStream;
  */
 
 public class ZLibCompression {
+
     public static String compressToBase64(String entry, String encoding) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
@@ -22,10 +23,9 @@ public class ZLibCompression {
         }
         byte[] b64 = Base64.encodeBase64(baos.toByteArray());
         String output = new String(b64);
-        /*System.out.println("before length: "+entry.length());
-        System.out.println("cmp length: "+output.length());*/
         return output;
     }
+
 
     public static String decompressFromBase64(String entry, String encoding) throws UnsupportedEncodingException {
 
@@ -41,5 +41,21 @@ public class ZLibCompression {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
+    }
+
+    public static String encodeImage(byte[] array){
+        return Base64.encodeBase64String(array);
+    }
+
+    public static byte[] decodeImage(String img){
+        return Base64.decodeBase64(img);
+        /*import org.apache.commons.codec.binary.Base64;
+        ...
+        String retVal = Base64.encodeBase64String(digest);
+        by:
+
+        import android.util.Base64;
+        ...
+        String retVal = Base64.encodeToString(digest, Base64.DEFAULT);*/
     }
 }
