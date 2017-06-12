@@ -19,14 +19,7 @@ public class Main {
 
     public static void main(String args[]) throws InterruptedException, SMSLibException, IOException, TwitterException {
         //testSmsServer();
-        //testTwitter();
-        //testDB();
-        //writeDB();
-        //ImgReader.test("http://anasghira.com/test.png");
-        //ImgReader.test("http://www.ca-stomer.fr/var/ptic/storage/images/media/caroussel-page-d-accueil/image-test-1/96100-1-fre-FR/Image-test-1_large.jpg");
-        //ImgReader.decodingImg("eJzz9HW3er9/b4CfOy+XFBcDAwOvp4dLEJBmBWEOJiDJxAtUAERApq6ni2NIBZCdDMSpqUAiPalKG0gxOfLIQFRBEIcdnFmvDJIPYb3SDaTZgVhSQoIhpV40F8qFmMzg6ernAmQ6JQAJADLtQ64=");
-        //System.out.println(WeatherProxy.getWeather("Nice"));
-        //testIMG("GETIMG:http://anasghira.com/test.png");
+        testIMG("GETIMG:http://www.welovebuzz.com/wp-content/uploads/2016/05/cropped-paysage-maroc.jpg");
     }
 
     public static void testSmsServer() throws InterruptedException, SMSLibException, IOException {
@@ -57,6 +50,4 @@ public class Main {
         ImgReader.decodingImg(res);
         System.out.println("test");
     }
-
-
 }
