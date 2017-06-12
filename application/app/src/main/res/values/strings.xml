@@ -10,12 +10,6 @@
     <string name="secretToken">TwitterSecretToken</string>
     <string name="consumer_key">pIi6kVnGy12GFjECWELC8R4VK</string>
     <string name="consumer_secret">WsCcYqlpJJ15DaRsKd7AnviQUEEn9Rd1PugDt6uFcdUvCz2Fxa</string>
-    <string-array name="menu_array">
-        <item>Verification Service</item>
-        <item>Paramètres</item>
-    </string-array>
-
-    <!-- TODO: Remove or change this placeholder tweetText -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="TwitterConf">TWITTERCONF:</string>
     <string name="userId">TwitterUserId</string>
@@ -25,8 +19,20 @@
     <string name="history">Sites enregistrés</string>
     <string name="web">WEB:</string>
     <string name="next">WEBNEXT:</string>
-    <string name="avalable">ITS:AVAILABLE</string>
+    <string name="available">ITS:AVAILABLE</string>
     <string name="twitterSuccess">TWITTERCONF:SUCCESS</string>
-    <string name="end">ENDWEBSITE:YES</string>
+    <string name="end">ENDWEBSITE:</string>
     <string name="isOk">OK:?</string>
+    <string name="tweetSuccess">TWEET:SUCCESS</string>
+    <string name="disponible">ITS est disponible!</string>
+    <string name="TwitterRegisterSuccess">Le compte Twitter a été enregistré</string>
+    <string name="SuccessTweet">Tweet envoyé</string>
+    <string name="getImage">GETIMG:</string>
+    <string name="imageError">L\'image est indisponible</string>
+    <string name="imageDownload">L\'image est en téléchargement</string>
+    <string name="pays">france</string>
+    <string name="service_unavailable">SERVICE INDISPONIBLE</string>
+    <string name="web_saved">Site sauvegardé</string>
+    <string name="service_changed">Service remplacé</string>
+    <string name="weather">Méteo</string>
 </resources>

@@ -9,8 +9,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,12 +24,18 @@ import polytech.its.mobileapp.history.History;
 
 public class CacheUtility {
 
-    public void saveWebsite(Context context, String filename, String content) throws IOException {
+    public File saveWebsite(Context context, String filename, String content) throws IOException {
         File mydir = context.getDir("cachedSites", Context.MODE_PRIVATE); //Creating an internal dir;
-        File f = new File(mydir, filename);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        String currentDateAndTime = sdf.format(new Date());
+        File f = new File(mydir, filename + "_" + currentDateAndTime);
         FileOutputStream fos = new FileOutputStream(f);
         fos.write(content.getBytes());
         fos.close();
+
+        return f;
+
+
     }
 
     public Map<String, History> retrieveWebsites(Context context) throws IOException {

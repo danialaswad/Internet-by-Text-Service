@@ -92,12 +92,11 @@ public class HistoryFragment extends Fragment {
                 String nameFile = adapter.getItem(position);
                 History h = finalWebsiteSaved.get(nameFile);
                 String content = h.getContent();
-                Bundle bundle = new Bundle();
+                WebFragment fragobj = HomeActivity.webFragment;
+                Bundle bundle = fragobj.getArguments();
                 bundle.putString("content", content);
-                WebFragment fragobj = new WebFragment();
-                fragobj.setArguments(bundle);
-
-                getFragmentManager().beginTransaction().replace(R.id.fragment, fragobj).addToBackStack(null).commit();
+                getFragmentManager().beginTransaction().remove(fragobj).commit();
+                getFragmentManager().beginTransaction().replace(R.id.fragment, fragobj).commit();
 
             }
         });

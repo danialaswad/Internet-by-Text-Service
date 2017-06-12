@@ -1,0 +1,22 @@
+<h1>Aide ITS</h1>
+<h2>Navigateur web</h2>
+<ul>
+<li>Entrez le lien d&eacute;sir&eacute; dans la barre de recherche, puis appuyer sur le boutton d'envoi</li>
+<li>Vous n'avez plus qu'&agrave; attendre la r&eacute;ponse, elle s'affichera automatiquement.&nbsp;</li>
+<li>Si vous voulez lire la suite du site, cliquez sur le bouton "suivant" situ&eacute; en bas de page.</li>
+</ul>
+<h2>Twitter</h2>
+<p>Lors de votre premi&egrave;re utilisation, vous devrez poss&eacute;der internet afin d'autoriser l'application ITS &agrave; utiliser Twitter. Ensuite, tout se fera par SMS!&nbsp;</p>
+<p>Vous pourrez effectuer deux actions sur Twitter:</p>
+<ul>
+<li>Envoyer un Tweet</li>
+<li>Afficher votre fil d'actualit&eacute;. Si vous voulez lire plus de tweet, cliquez sur le bouton "suivant" situ&eacute; en bas de page.&nbsp;</li>
+</ul>
+<h2>Historique</h2>
+<p>Lors de votre navigation sur internet, vous pouvez enregistrer un article que vous n'avez pas eu le temps de finir, ou que vous consultez souvent. Ainsi vous gagnez en temps, puisque la page est sauvegard&eacute; localement sur votre t&eacute;l&eacute;phone.&nbsp;</p>
+<p>Vous pouvez enregistrer autant de site que vous le voulez!</p>
+<p>&nbsp;</p>
+<h2>Choix du pays</h2>
+<p>L'application &eacute;tant distribu&eacute;e &agrave; travers le monde, il est normal de choisir son pays dans les pr&eacute;f&eacute;rences, afin de communiquer avec le serveur pr&eacute;sent dans son pays. Ainsi, vous paierez moins cher, voir pas du tout en fonction du forfait que vous poss&eacute;dez.&nbsp;<br /><br /></p>
+<h2>Etat du service</h2>
+<p>&nbsp;Si vous remarquez des lenteurs sur l'utilisation de l'application, utilisez cette option afin de savoir si les serveurs sont disponibles. Si les serveurs ont du mal &agrave; vous r&eacute;pondre, nous prenons en compte votre requ&ecirc;te et faisons de notre mieux afin d'am&eacute;liorer la qualit&eacute; de nos services.</p>

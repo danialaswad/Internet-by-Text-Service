@@ -5,17 +5,20 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import polytech.its.mobileapp.R;
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
+
+import static android.webkit.WebView.HitTestResult.IMAGE_TYPE;
 
 
 /**
@@ -66,8 +69,8 @@ public class WebFragment extends Fragment {
      * Mise en place de la page d'accueil de l'application de SMS
      */
     private void setHomeWebView(String page) {
-        existingPageContent = page;
-        webArea.loadDataWithBaseURL(null, page, "text/html", "UTF-8", null);
+        clearAndUpdateView(page);
+        //webArea.loadDataWithBaseURL(null, page, "text/html", "UTF-8", null);
     }
 
     @Override
@@ -93,10 +96,14 @@ public class WebFragment extends Fragment {
             public void onClick(View v) {
                 String message = getString(R.string.NEXT) + home.webSiteAsked;
                 home.mPbar.setVisibility(View.VISIBLE);
-                nextButton.setVisibility(View.GONE);
+                nextButton.setVisibility(View.INVISIBLE);
                 home.sendMessage(message);
             }
         });
+
+        WebSettings ws = webArea.getSettings();
+        ws.setLoadsImagesAutomatically(false);
+
 
         webArea.setWebViewClient(new WebViewClient() {
             @Override
@@ -121,6 +128,25 @@ public class WebFragment extends Fragment {
                     clearViewAndSend(getString(R.string.GET) + url);
                 }
                 return true;
+            }
+        });
+
+        webArea.setOnLongClickListener(new View.OnLongClickListener() {
+            public boolean onLongClick(View v) {
+
+                final WebView webview = (WebView) v;
+                final WebView.HitTestResult result = webview.getHitTestResult();
+
+                if (result.getType() == IMAGE_TYPE) {
+                    Log.d("LONGPRESSSS", result.getExtra());
+                    if (result.getExtra() != null) {
+                        home.sendMessage(getString(R.string.getImage) + result.getExtra());
+                        home.showToast(getString(R.string.imageDownload));
+                    } else
+                        home.showToast(getString(R.string.imageError));
+                }
+
+                return false;
             }
         });
         // final String content = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.";
@@ -148,10 +174,9 @@ public class WebFragment extends Fragment {
         mListener = null;
     }
 
-    void updateWebView(String messageReceived, String typePage) {
+    void updateWebView(String messageReceived) {
         webArea.loadUrl("about:blank");
         home.mPbar.setVisibility(View.GONE);
-        messageReceived = messageReceived.substring(typePage.length());
         if (!messageReceived.isEmpty()) {
             existingPageContent += messageReceived;
             webArea.loadDataWithBaseURL(null, existingPageContent, "text/html", "utf-8", null);
@@ -162,7 +187,6 @@ public class WebFragment extends Fragment {
             if (nextButton != null)
                 nextButton.setVisibility(View.GONE);
         }
-
     }
 
     void clearAndUpdateView(String message) {
@@ -193,6 +217,11 @@ public class WebFragment extends Fragment {
 
     public String getExistingPageContent() {
         return existingPageContent;
+    }
+
+    public void showHelp(String help) {
+        clearAndUpdateView(help);
+
     }
 
 

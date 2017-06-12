@@ -9,6 +9,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * WebPageCleaner class
+ * @Author : ITS Team
+ */
 
 public class WebPageCleaner {
 

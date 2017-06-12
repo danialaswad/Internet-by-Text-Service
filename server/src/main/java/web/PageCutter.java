@@ -6,6 +6,11 @@ import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;
 
+/**
+ * PageCutter class
+ * @Author : ITS Team
+ */
+
 public class PageCutter {
 
     private Document page;

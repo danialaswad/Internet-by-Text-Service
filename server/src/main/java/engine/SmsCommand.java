@@ -3,11 +3,18 @@ package engine;
 import org.apache.log4j.Logger;
 import twitter.TwitterManager;
 import twitter4j.TwitterException;
+import weather.WeatherProxy;
 import web.PageManager;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+
+/**
+ * SmsCommand class
+ * @Author : ITS Team
+ */
 
 
 public class SmsCommand {
@@ -66,6 +73,11 @@ public class SmsCommand {
          return "WEBNEXT:" + pageManager.nexWebPage(data);
     }
 
+    public String endwebsite(String data){
+        pageManager.removeWebPage(data);
+        return "ENDWEBSITE:SUCCESS";
+    }
+
     public String ok(String data){
         return "ITS:AVAILABLE";
     }
@@ -111,6 +123,20 @@ public class SmsCommand {
             return "TWEET:FAILURE";
     }
 
+    public String getimg(String data){
+        //TODO
+        return "";
+    }
+
+    public String getweather(String data){
+        String result = null;
+        try {
+            result = WeatherProxy.getWeather(data);
+        } catch (IOException e) {
+            return "WEATHER:FAILURE";
+        }
+        return "WEATHER:"+result;
+    }
 
     private String error(){
         return  "WEB:<h2>Mauvaise commande</h2>";

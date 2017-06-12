@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * ITSDatabase class
+ * @Author : ITS Team
+ */
 
 public class ITSDatabase implements Serializable{
 

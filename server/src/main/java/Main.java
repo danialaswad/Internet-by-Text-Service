@@ -1,26 +1,14 @@
-import compression.ZLibCompression;
-import database.ITSDatabase;
-import engine.SmsCommand;
 import engine.SmsServer;
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.smslib.SMSLibException;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import web.URLReader;
-import web.WebPageCleaner;
+import weather.WeatherProxy;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * https://blogserius.blogspot.fr
- *
- * http://www.nicematin.com
- * http://www.apple.com
- * https://en.wikipedia.org/wiki/Silverio_Pérez
+ * Main class
+ * @Author : ITS Team
  */
 public class Main {
 
@@ -29,6 +17,8 @@ public class Main {
         //testTwitter();
         //testDB();
         //writeDB();
+        /*String test = WeatherProxy.getWeather("Nice");
+        System.out.println(test);*/
     }
 
     public static void testSmsServer() throws InterruptedException, SMSLibException, IOException {

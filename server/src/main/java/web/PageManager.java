@@ -4,6 +4,11 @@ package web;
 import database.ITSDatabase;
 import org.jsoup.nodes.Document;
 
+/**
+ * PageManager class
+ * @Author : ITS Team
+ */
+
 public class PageManager {
 
     private ITSDatabase database = ITSDatabase.instance();
@@ -26,5 +31,9 @@ public class PageManager {
         }
 
         return "";
+    }
+
+    public void removeWebPage(String url) {
+        database.webpages().remove(url);
     }
 }

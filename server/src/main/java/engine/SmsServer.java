@@ -1,18 +1,18 @@
 package engine;
 
-
 import compression.ZLibCompression;
 import database.ITSDatabase;
 import org.apache.log4j.Logger;
 import org.smslib.*;
 import org.smslib.modem.SerialModemGateway;
-
 import java.io.*;
 import java.util.ArrayList;
 
 /**
- * Created by Anasse on 30/05/2017.
+ * SmsServer class
+ * @Author : ITS Team
  */
+
 public class SmsServer  implements Runnable {
 
     private SerialModemGateway gateway;
@@ -45,8 +45,9 @@ public class SmsServer  implements Runnable {
             while(!shutdown){
                 Service.getInstance().readMessages(msgList, InboundMessage.MessageClasses.ALL);
                 for (InboundMessage msg : msgList){
-                    LOG.info("Sender : " +  msg.getOriginator());
-                    LOG.info("Message : " +  msg.getText());
+                    LOG.info("Input Message :");
+                    LOG.info("\tMessage : " +  msg.getText());
+                    LOG.info("\tSender : " +  msg.getOriginator());
                     String cryptedMsg = ZLibCompression.compressToBase64(smsCommand.process(msg.getText()),"UTF-8");
                     sendMessage("+"+msg.getOriginator(),cryptedMsg);
                     gateway.deleteMessage(msg);
@@ -75,8 +76,8 @@ public class SmsServer  implements Runnable {
     private void sendMessage(String to, String body) throws InterruptedException, TimeoutException, GatewayException, IOException {
         OutboundMessage msg = new OutboundMessage(to, body);
         Service.getInstance().sendMessage(msg);
-        LOG.info("Sender : " +  msg.getFrom());
-        LOG.info("Message : " +  msg.getText());
+        LOG.info("Output Message :");
+        LOG.info("\tMessage : " +  msg.getText());
     }
 
     private void saveDatabase(){
