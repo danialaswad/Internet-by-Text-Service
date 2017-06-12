@@ -44,33 +44,30 @@ public class SmsServer  implements Runnable {
             smsCommand = new SmsCommand();
             Service.getInstance().startService();
             logModemInfo();
-            ArrayList<InboundMessage> msgList = new ArrayList<>();
+            List<InboundMessage> inputMessages = new ArrayList<>();
+            List<String> outputMessages = new ArrayList<>();
 
             //Pool
-            ExecutorService executor = Executors.newFixedThreadPool(2);
+            ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()); //ou Executors.newFixedThreadPool(2)
             //Runnables
-            SmsProcesserRunnable smsProcesserRunnable = new SmsProcesserRunnable();
-            SmsReceiverRunnable smsReceiverRunnable = new SmsReceiverRunnable();
+            SmsReceiverRunnable smsReceiverRunnable = new SmsReceiverRunnable(shutdown,inputMessages,outputMessages);
+            SmsSenderRunnable smsSenderRunnable = new SmsSenderRunnable(shutdown,outputMessages);
+            executor.execute(smsReceiverRunnable);
+            executor.execute(smsSenderRunnable);
             while(!shutdown){
-
-                executor.execute(smsReceiverRunnable);
-                executor.execute(smsProcesserRunnable);
-                //attente de la terminaison de toutes les taches
-                executor.shutdown(); //normalement on arrive pas ici
-                Service.getInstance().readMessages(msgList, InboundMessage.MessageClasses.ALL);
-                for (InboundMessage msg : msgList){
+                Service.getInstance().readMessages(inputMessages, InboundMessage.MessageClasses.ALL);
+                /*for (InboundMessage msg : msgList){
                     LOG.info("Input Message :");
                     LOG.info("\tMessage : " +  msg.getText());
                     LOG.info("\tSender : " +  msg.getOriginator());
                     String cryptedMsg = ZLibCompression.compressToBase64(smsCommand.process(msg.getText()),"UTF-8");
                     sendMessage("+"+msg.getOriginator(),cryptedMsg);
                     gateway.deleteMessage(msg);
-                }
+                }*/
             }
-            //arrête les threads en cours et renvoie ceux qui étaient en attentes
-            List<Runnable> awaitingExecution = executor.shutdownNow();
             //nettoye la liste de demande
-            msgList.clear();
+            outputMessages.clear();
+            inputMessages.clear();
             //sauvegarde la database pour la prochaine utilisation
             saveDatabase();
             Service.getInstance().stopService();
