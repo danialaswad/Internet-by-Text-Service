@@ -20,10 +20,12 @@ public class WeatherProxy {
         String weather = result.select("weather").first().attr("value");
         String weatherID = result.select("weather").first().attr("number");
         String vent = result.select("speed").first().attr("value");
-        double ventKM = Float.parseFloat(vent)*3.6;
+        int ventKM = (int)(Float.parseFloat(vent)*3.6);
         String humidite = result.select("humidity").first().attr("value");
-        String sunrise = result.select("sun").first().attr("rise");
-        String sunset = result.select("sun").first().attr("set");
-        return temp+"°C,"+weatherID+","+weather+","+vent+","+humidite+","+sunrise+","+sunset;
+        String sunrise = result.select("sun").first().attr("rise").split("T")[1];
+        String sunset = result.select("sun").first().attr("set").split("T")[1];
+        String name = result.select("city").first().attr("name");
+        String output = name+","+temp+"°C,"+weatherID+","+weather+","+ventKM+" Km/h,"+humidite+"%,"+sunrise+" (UTC),"+sunset+" (UTC)";
+        return output;
     }
 }
