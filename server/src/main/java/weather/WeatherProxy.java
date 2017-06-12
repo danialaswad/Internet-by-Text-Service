@@ -15,9 +15,14 @@ public class WeatherProxy {
 
     public static String getWeather(String city) throws IOException {
         String urlString = urlAPI + city;
-        Document test = Jsoup.connect(urlString).get();
-        String temp = test.select("temperature").first().attr("value");
-        String weather = test.select("weather").first().attr("value");
-        return temp+","+weather;
+        Document result = Jsoup.connect(urlString).get();
+        String temp = result.select("temperature").first().attr("value");
+        String weather = result.select("weather").first().attr("value");
+        String weatherID = result.select("weather").first().attr("number");
+        String vent = result.select("speed").first().attr("value");
+        String humidite = result.select("humidity").first().attr("value");
+        String sunrise = result.select("sun").first().attr("rise");
+        String sunset = result.select("sun").first().attr("set");
+        return temp+","+weatherID+","+weather+","+vent+","+humidite+","+sunrise+","+sunset;
     }
 }
