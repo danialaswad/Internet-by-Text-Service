@@ -7,6 +7,9 @@ import org.smslib.*;
 import org.smslib.modem.SerialModemGateway;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * SmsServer class
@@ -42,10 +45,19 @@ public class SmsServer  implements Runnable {
             Service.getInstance().startService();
             logModemInfo();
             ArrayList<InboundMessage> msgList = new ArrayList<>();
+
+            //Pool
+            ExecutorService executor = Executors.newFixedThreadPool(2);
+            //Runnables
+            SmsProcesserRunnable smsProcesserRunnable = new SmsProcesserRunnable();
+            SmsReceiverRunnable smsReceiverRunnable = new SmsReceiverRunnable();
             while(!shutdown){
-                synchronized (this) {
-                    Service.getInstance().readMessages(msgList, InboundMessage.MessageClasses.ALL);
-                }
+
+                executor.execute(smsReceiverRunnable);
+                executor.execute(smsProcesserRunnable);
+                //attente de la terminaison de toutes les taches
+                executor.shutdown(); //normalement on arrive pas ici
+                Service.getInstance().readMessages(msgList, InboundMessage.MessageClasses.ALL);
                 for (InboundMessage msg : msgList){
                     LOG.info("Input Message :");
                     LOG.info("\tMessage : " +  msg.getText());
@@ -54,8 +66,12 @@ public class SmsServer  implements Runnable {
                     sendMessage("+"+msg.getOriginator(),cryptedMsg);
                     gateway.deleteMessage(msg);
                 }
-                msgList.clear();
             }
+            //arrête les threads en cours et renvoie ceux qui étaient en attentes
+            List<Runnable> awaitingExecution = executor.shutdownNow();
+            //nettoye la liste de demande
+            msgList.clear();
+            //sauvegarde la database pour la prochaine utilisation
             saveDatabase();
             Service.getInstance().stopService();
             Service.getInstance().removeGateway(gateway);
