@@ -3,6 +3,7 @@ import org.apache.log4j.Logger;
 import org.smslib.SMSLibException;
 import twitter4j.TwitterException;
 import weather.WeatherProxy;
+import web.ImgReader;
 
 import java.io.*;
 
@@ -13,12 +14,12 @@ import java.io.*;
 public class Main {
 
     public static void main(String args[]) throws InterruptedException, SMSLibException, IOException, TwitterException {
-        testSmsServer();
+        //testSmsServer();
         //testTwitter();
         //testDB();
         //writeDB();
-        /*String test = WeatherProxy.getWeather("Nice");
-        System.out.println(test);*/
+        //ImgReader.generateSMSFromImage("http://anasghira.com/test.png");
+        WeatherProxy.getWeather("Nice");
     }
 
     public static void testSmsServer() throws InterruptedException, SMSLibException, IOException {
