@@ -2,8 +2,12 @@ package engine;
 
 import compression.ZLibCompression;
 import org.apache.log4j.Logger;
+import org.smslib.GatewayException;
 import org.smslib.InboundMessage;
+import org.smslib.Service;
+import org.smslib.TimeoutException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,11 +28,22 @@ public class SmsProcesserRunnable implements Runnable {
 
     @Override
     public void run() {
-        LOG.info("Input Message :");
-        LOG.info("\tMessage : " +  msg.getText());
-        LOG.info("\tSender : " +  msg.getOriginator());
-        //mutex?
-        String compressMsg = ZLibCompression.compressToBase64(smsCommand.process(msg.getText()),"UTF-8");
-        outputMessages.put("+"+msg.getOriginator(),compressMsg);
+        try {
+            LOG.info("Input Message :");
+            LOG.info("\tMessage : " +  msg.getText());
+            LOG.info("\tSender : " +  msg.getOriginator());
+            //mutex?
+            String compressMsg = ZLibCompression.compressToBase64(smsCommand.process(msg.getText()),"UTF-8");
+            outputMessages.put("+"+msg.getOriginator(),compressMsg);
+            Service.getInstance().deleteMessage(msg);
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        } catch (GatewayException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -7,6 +7,7 @@ import org.smslib.modem.SerialModemGateway;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -26,18 +27,21 @@ public class SmsSenderRunnable implements Runnable {
     @Override
     public void run() {
         for(;!shutdown;){
-            for (HashMap.Entry<String,String> entry : outputMessages.entrySet()) {
-                try {
-                    sendMessage(entry.getKey(),entry.getValue());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (TimeoutException e) {
-                    e.printStackTrace();
-                } catch (GatewayException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            try {
+                Iterator iterator = outputMessages.entrySet().iterator();
+                while (iterator.hasNext()){
+                    HashMap.Entry<String,String> pair = (HashMap.Entry<String,String>)iterator.next();
+                    sendMessage(pair.getKey(),pair.getValue());
+                    iterator.remove();
                 }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            } catch (GatewayException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

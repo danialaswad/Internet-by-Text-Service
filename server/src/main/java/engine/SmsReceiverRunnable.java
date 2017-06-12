@@ -7,6 +7,7 @@ import org.smslib.modem.SerialModemGateway;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -27,9 +28,12 @@ public class SmsReceiverRunnable implements Runnable{
     @Override
     public void run() {
         for(;!shutdown;){
-            for (InboundMessage msg : inputMessages){
+            Iterator iterator = inputMessages.iterator();
+            while (iterator.hasNext()){
+                InboundMessage msg = (InboundMessage) iterator.next();
                 SmsProcesserRunnable smsProcesserRunnable = new SmsProcesserRunnable(msg,outputMessages,smsCommand);
                 smsProcesserRunnable.run();
+                inputMessages.remove(msg);
             }
         }
     }

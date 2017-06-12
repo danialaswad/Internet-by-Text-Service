@@ -56,7 +56,6 @@ public class SmsServer  implements Runnable {
             while(!shutdown){
                 Service.getInstance().readMessages(inputMessages, InboundMessage.MessageClasses.ALL);
             }
-
             //nettoye la liste des demandes et des réponses
             outputMessages.clear();
             inputMessages.clear();
