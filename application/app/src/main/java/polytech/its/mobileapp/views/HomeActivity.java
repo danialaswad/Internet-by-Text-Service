@@ -100,7 +100,11 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         String newPhone = "";
         switch (item.getItemId()) {
             case R.id.action_send:
-                retrieveURL();
+                Fragment f = fragmentManager.findFragmentById(R.id.fragment);
+                if (f instanceof WeatherFragment)
+                    retrieveCity();
+                else
+                    retrieveURL();
                 return true;
             case R.id.action_stop:
                 sendMessage(getString(R.string.end) + webSiteAsked);
@@ -285,6 +289,17 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         webFragment.clearViewAndSend(getString(R.string.GET) + webSiteAsked);
 
         return webSiteAsked;
+    }
+
+    public void retrieveCity() {
+        String cityAsked = URLArea.getText().toString();
+
+        View view = this.findViewById(android.R.id.content);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+        sendMessage(getString(R.string.getweather)+cityAsked);
+
     }
 
     private static void showTweets(String decompressed) {
