@@ -15,7 +15,6 @@ import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 
 import polytech.its.mobileapp.R;
-import polytech.its.mobileapp.utils.FileManager;
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 
