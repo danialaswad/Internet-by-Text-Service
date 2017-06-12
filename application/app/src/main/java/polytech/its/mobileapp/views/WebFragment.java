@@ -70,7 +70,7 @@ public class WebFragment extends Fragment {
      * Mise en place de la page d'accueil de l'application de SMS
      */
     private void setHomeWebView(String page) {
-        updateWebView(page);
+        clearAndUpdateView(page);
         //webArea.loadDataWithBaseURL(null, page, "text/html", "UTF-8", null);
     }
 
