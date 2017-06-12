@@ -26,7 +26,7 @@ public class Main {
         //ImgReader.test("http://www.ca-stomer.fr/var/ptic/storage/images/media/caroussel-page-d-accueil/image-test-1/96100-1-fre-FR/Image-test-1_large.jpg");
         //ImgReader.decodingImg("eJzz9HW3er9/b4CfOy+XFBcDAwOvp4dLEJBmBWEOJiDJxAtUAERApq6ni2NIBZCdDMSpqUAiPalKG0gxOfLIQFRBEIcdnFmvDJIPYb3SDaTZgVhSQoIhpV40F8qFmMzg6ernAmQ6JQAJADLtQ64=");
         //System.out.println(WeatherProxy.getWeather("Nice"));
-        testIMG("GETIMG:http://anasghira.com/test.png");
+        //testIMG("GETIMG:http://anasghira.com/test.png");
     }
 
     public static void testSmsServer() throws InterruptedException, SMSLibException, IOException {
@@ -44,27 +44,6 @@ public class Main {
         }
     }
 
-    public static void testTwitter(){
-       /* SmsCommand smsCommand = new SmsCommand();
-        String configResult = smsCommand.process("TWITTERCONF:941791010-bU9IpOXf8KgOPQ2OdXYAQw4qBKOtSG8a2qKGUdEg,LG8wAfcGVUoCgNCt44VLUJjx2rpbDLIfYHX2OHZnIy4ZT,941791010");
-        System.out.println(configResult);
-        String home  = smsCommand.process("TWITTERHOME:941791010");
-        System.out.println(home);
-        System.out.println(home.length());
-
-        home = smsCommand.process("TWITTERNEXT:941791010");
-        System.out.println(home);
-        System.out.println(home.length());
-        System.out.println("FIN");*/
-        Logger logger = Logger.getLogger(Main.class);
-        logger.debug("Here is some DEBUG");
-        logger.info("Here is some INFO");
-        logger.warn("Here is some WARN");
-        logger.error("Here is some ERROR");
-        logger.fatal("Here is some FATAL");
-
-    }
-
 
     public static void testIMG(String text) throws IOException {
         SmsCommand smsCommand = new SmsCommand();
@@ -76,12 +55,6 @@ public class Main {
         if(!res.equals(cryptedMsg.split(":")[1]))
             System.out.println("not");
         ImgReader.decodingImg(res);
-        /*int [] data = ImgReader.SMS("http://anasghira.com/test.png");
-        ByteBuffer byteBuffer = ByteBuffer.allocate(data.length * 4);
-        IntBuffer intBuffer = byteBuffer.asIntBuffer();
-        intBuffer.put(data);
-
-        byte[] array = byteBuffer.array();*/
         System.out.println("test");
     }
 

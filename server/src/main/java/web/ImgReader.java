@@ -39,10 +39,8 @@ public class ImgReader {
     }
 
     public static void decodingImg(String txt) throws IOException {
+        //TODO
         byte[] decodedText = ZLibCompression.decodeImage(txt);
-
-        /*String img = decodedText.split(":")[1];
-        byte[] bytes = img.getBytes("UTF-8");*/
         InputStream in = new ByteArrayInputStream(decodedText);
         BufferedImage bImageFromConvert = ImageIO.read(in);
         ImageIO.write(bImageFromConvert, "png", new File("test.png"));
