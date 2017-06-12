@@ -14,13 +14,14 @@ import java.io.*;
 public class Main {
 
     public static void main(String args[]) throws InterruptedException, SMSLibException, IOException, TwitterException {
-        //testSmsServer();
+        testSmsServer();
         //testTwitter();
         //testDB();
         //writeDB();
-        //ImgReader.generateSMSFromImage("http://anasghira.com/test.png");
+        //ImgReader.generateSMSFromImage("http://www.ca-stomer.fr/var/ptic/storage/images/media/caroussel-page-d-accueil/image-test-1/96100-1-fre-FR/Image-test-1_large.jpg");
+        //ImgReader.test("http://www.ca-stomer.fr/var/ptic/storage/images/media/caroussel-page-d-accueil/image-test-1/96100-1-fre-FR/Image-test-1_large.jpg");
 
-        System.out.println(WeatherProxy.getWeather("Nice"));
+        //System.out.println(WeatherProxy.getWeather("Nice"));
     }
 
     public static void testSmsServer() throws InterruptedException, SMSLibException, IOException {
