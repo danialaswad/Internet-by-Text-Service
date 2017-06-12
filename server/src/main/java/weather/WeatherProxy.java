@@ -22,8 +22,8 @@ public class WeatherProxy {
         String vent = result.select("speed").first().attr("value");
         int ventKM = (int)(Float.parseFloat(vent)*3.6);
         String humidite = result.select("humidity").first().attr("value");
-        String sunrise = result.select("sun").first().attr("rise").split("T")[1];
-        String sunset = result.select("sun").first().attr("set").split("T")[1];
+        String sunrise = result.select("sun").first().attr("rise").split("T",2)[1];
+        String sunset = result.select("sun").first().attr("set").split("T",2)[1];
         String name = result.select("city").first().attr("name");
         String output = name+","+temp+"°C,"+weatherID+","+weather+","+ventKM+" Km/h,"+humidite+"%,"+sunrise+" (UTC),"+sunset+" (UTC)";
         return output;
