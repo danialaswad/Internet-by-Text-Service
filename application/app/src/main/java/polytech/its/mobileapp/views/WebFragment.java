@@ -220,10 +220,7 @@ public class WebFragment extends Fragment {
         return existingPageContent;
     }
 
-    public void showHelp() {
-        String help = "";
-        help = new FileManager().getFileValue(this,"help_page");
-        getResources().getResourceEntryName()
+    public void showHelp(String help) {
         clearAndUpdateView(help);
 
     }
