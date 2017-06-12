@@ -35,6 +35,7 @@ import java.util.Map;
 import polytech.its.mobileapp.R;
 import polytech.its.mobileapp.utils.CacheUtility;
 import polytech.its.mobileapp.utils.CompressionUtility;
+import polytech.its.mobileapp.utils.FileManager;
 import polytech.its.mobileapp.utils.SmsUtility;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -141,7 +142,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
             case R.id.action_history:
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 HistoryFragment historyFragment = new HistoryFragment();
-                fragmentTransaction.add(R.id.fragment, historyFragment, "HISTORY");
+                fragmentTransaction.replace(R.id.fragment, historyFragment, "HISTORY");
                 fragmentTransaction.commit();
                 return true;
 
@@ -152,11 +153,16 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                 PHONE_NUMBER = "+33666360803";
                 return true;
             case R.id.action_help:
+                String helpPage = new FileManager().getHelpFileValue(context);
+
                 if (!(fragmentManager.findFragmentById(R.id.fragment) instanceof WebFragment)) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("content", helpPage);
+                    webFragment.setArguments(bundle);
+                    fragmentManager.beginTransaction().remove(webFragment);
                     fragmentManager.beginTransaction().replace(R.id.fragment, webFragment).commit();
                 }
-                webFragment.showHelp();
-                showToast(getString(R.string.service_unavailable));
+                webFragment.showHelp(helpPage);
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -191,7 +197,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         Bundle bundle = new Bundle();
         bundle.putString("content", HOME);
         webFragment.setArguments(bundle);
-        fragmentManager.beginTransaction().add(R.id.fragment, webFragment).addToBackStack(null).commit();
+        fragmentManager.beginTransaction().add(R.id.fragment, webFragment).commit();
 
     }
 
@@ -206,6 +212,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
 
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             TwitterFragment twitterFragment = new TwitterFragment();
+            fragmentTransaction.remove(webFragment);
             fragmentTransaction.add(R.id.fragment, twitterFragment, "TWITTER");
             fragmentTransaction.commit();
         } else {
@@ -273,7 +280,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         TwitterListFragment tlf = new TwitterListFragment();
         tlf.setArguments(bundle);
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.add(R.id.fragment, tlf, "twitter_list_fragment");
+        ft.replace(R.id.fragment, tlf, "twitter_list_fragment");
         ft.commit();
     }
 
