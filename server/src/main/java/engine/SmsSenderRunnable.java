@@ -1,11 +1,12 @@
 package engine;
 
-import org.smslib.GatewayException;
-import org.smslib.InboundMessage;
-import org.smslib.Service;
+import org.apache.log4j.Logger;
+import org.smslib.*;
 import org.smslib.modem.SerialModemGateway;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -13,13 +14,38 @@ import java.util.List;
  */
 public class SmsSenderRunnable implements Runnable {
     private Boolean shutdown;
-    public SmsSenderRunnable(Boolean shutdown, List<String> outputMessages){
+    private HashMap<String, String> outputMessages;
+
+    private static final Logger LOG = Logger.getLogger(SmsSenderRunnable.class);
+
+    public SmsSenderRunnable(Boolean shutdown, HashMap<String, String> outputMessages){
         this.shutdown=shutdown;
+        this.outputMessages = outputMessages;
     }
 
     @Override
     public void run() {
         for(;!shutdown;){
+            for (HashMap.Entry<String,String> entry : outputMessages.entrySet()) {
+                try {
+                    sendMessage(entry.getKey(),entry.getValue());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (TimeoutException e) {
+                    e.printStackTrace();
+                } catch (GatewayException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+    }
+
+    private void sendMessage(String to, String body) throws InterruptedException, TimeoutException, GatewayException, IOException {
+        OutboundMessage msg = new OutboundMessage(to, body);
+        Service.getInstance().sendMessage(msg);
+        LOG.info("Output Message :");
+        LOG.info("\tMessage : " +  msg.getText());
     }
 }

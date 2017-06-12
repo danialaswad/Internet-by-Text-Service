@@ -6,6 +6,7 @@ import org.smslib.Service;
 import org.smslib.modem.SerialModemGateway;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -14,18 +15,21 @@ import java.util.List;
 public class SmsReceiverRunnable implements Runnable{
     private Boolean shutdown;
     private List<InboundMessage> inputMessages;
-    private List<String> outputMessages;
-    public SmsReceiverRunnable(Boolean shutdown, List<InboundMessage> inputMessages, List<String> outputMessages) {
+    private  HashMap<String, String> outputMessages;
+    private SmsCommand smsCommand;
+    public SmsReceiverRunnable(Boolean shutdown, List<InboundMessage> inputMessages, HashMap<String, String> outputMessages) {
         this.shutdown = shutdown;
         this.inputMessages = inputMessages;
         this.outputMessages = outputMessages;
+        smsCommand = new SmsCommand();
     }
 
     @Override
     public void run() {
         for(;!shutdown;){
             for (InboundMessage msg : inputMessages){
-                SmsProcesserRunnable smsProcesserRunnable = new SmsProcesserRunnable(msg,outputMessages);
+                SmsProcesserRunnable smsProcesserRunnable = new SmsProcesserRunnable(msg,outputMessages,smsCommand);
+                smsProcesserRunnable.run();
             }
         }
     }

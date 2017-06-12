@@ -1,12 +1,13 @@
 package engine;
 
-import compression.ZLibCompression;
+
 import database.ITSDatabase;
 import org.apache.log4j.Logger;
 import org.smslib.*;
 import org.smslib.modem.SerialModemGateway;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,7 +20,6 @@ import java.util.concurrent.Executors;
 public class SmsServer  implements Runnable {
 
     private SerialModemGateway gateway;
-    private SmsCommand smsCommand;
     private Boolean shutdown = false;
 
     private static final Logger LOG = Logger.getLogger(SmsServer.class);
@@ -41,12 +41,10 @@ public class SmsServer  implements Runnable {
     public void run() {
         try {
             readDatabase();
-            smsCommand = new SmsCommand();
             Service.getInstance().startService();
             logModemInfo();
             List<InboundMessage> inputMessages = new ArrayList<>();
-            List<String> outputMessages = new ArrayList<>();
-
+            HashMap<String,String> outputMessages = new HashMap<String, String>();
             //Pool
             ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()); //ou Executors.newFixedThreadPool(2)
             //Runnables
@@ -54,20 +52,15 @@ public class SmsServer  implements Runnable {
             SmsSenderRunnable smsSenderRunnable = new SmsSenderRunnable(shutdown,outputMessages);
             executor.execute(smsReceiverRunnable);
             executor.execute(smsSenderRunnable);
+
             while(!shutdown){
                 Service.getInstance().readMessages(inputMessages, InboundMessage.MessageClasses.ALL);
-                /*for (InboundMessage msg : msgList){
-                    LOG.info("Input Message :");
-                    LOG.info("\tMessage : " +  msg.getText());
-                    LOG.info("\tSender : " +  msg.getOriginator());
-                    String cryptedMsg = ZLibCompression.compressToBase64(smsCommand.process(msg.getText()),"UTF-8");
-                    sendMessage("+"+msg.getOriginator(),cryptedMsg);
-                    gateway.deleteMessage(msg);
-                }*/
             }
-            //nettoye la liste de demande
+
+            //nettoye la liste des demandes et des réponses
             outputMessages.clear();
             inputMessages.clear();
+
             //sauvegarde la database pour la prochaine utilisation
             saveDatabase();
             Service.getInstance().stopService();
@@ -87,13 +80,6 @@ public class SmsServer  implements Runnable {
     }
 
 
-
-    private void sendMessage(String to, String body) throws InterruptedException, TimeoutException, GatewayException, IOException {
-        OutboundMessage msg = new OutboundMessage(to, body);
-        Service.getInstance().sendMessage(msg);
-        LOG.info("Output Message :");
-        LOG.info("\tMessage : " +  msg.getText());
-    }
 
     private void saveDatabase(){
 
