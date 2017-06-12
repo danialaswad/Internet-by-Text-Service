@@ -18,16 +18,17 @@
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/textView_temperature"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@id/textView_temperature"
         android:minHeight="30dp"
         android:minWidth="30dp"
         android:visibility="invisible"
-        app:srcCompat="@drawable/sun"
-        android:layout_alignBottom="@+id/textView_temperature"
-        android:layout_alignRight="@+id/textView8"
-        android:layout_alignEnd="@+id/textView8"
-        android:layout_marginRight="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="18dp" />
+        app:srcCompat="@drawable/sun" />
 
     <TextView
         android:id="@+id/textview_description"
@@ -80,11 +81,11 @@
         android:id="@+id/imageView_wind"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/wind"
-        android:layout_alignTop="@+id/textview_wind"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/textview_wind"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/wind" />
 
     <ImageView
         android:id="@+id/imageView_humidity"
