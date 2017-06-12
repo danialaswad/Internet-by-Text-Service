@@ -5,6 +5,7 @@ package polytech.its.mobileapp.Weather;
  */
 
 public class WeatherData {
+    String city;
     String temperature;
     String iconName;
     String description;
@@ -13,7 +14,8 @@ public class WeatherData {
     String sunrise;
     String sunset;
 
-    public WeatherData(String temperature, String iconName, String description, String wind, String humidity, String sunset, String sunrise) {
+    public WeatherData(String city, String temperature, String iconName, String description, String wind, String humidity, String sunset, String sunrise) {
+        this.city = city;
         this.temperature = temperature;
         this.iconName = iconName;
         this.description = description;
@@ -21,6 +23,10 @@ public class WeatherData {
         this.humidity = humidity;
         this.sunset = sunset;
         this.sunrise = sunrise;
+    }
+
+    public String getCity() {
+        return city;
     }
 
     public String getTemperature() {
@@ -54,6 +60,6 @@ public class WeatherData {
 
     public static WeatherData getInstance(String weatherInfo) {
         String[] infos = weatherInfo.split(",");
-        return new WeatherData(infos[0], infos[1], infos[2], infos[3], infos[4], infos[5], infos[6]);
+        return new WeatherData(infos[0], infos[1], infos[2], infos[3], infos[4], infos[5], infos[6], infos[7]);
     }
 }

@@ -4,99 +4,69 @@
     android:layout_height="match_parent"
     android:background="?android:attr/colorAccent">
 
-    <EditText
-        android:id="@+id/editText_city"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="19dp"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="45dp"
-        android:ems="10"
-        android:hint="Ville. ex : Nice"
-        android:inputType="textPersonName" />
-
-    <Button
-        android:id="@+id/button_city"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/editText_city"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="34dp"
-        android:layout_marginRight="34dp"
-        android:text="Envoyer" />
-
     <TextView
         android:id="@+id/textView_temperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editText_city"
-        android:layout_marginLeft="22dp"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="52dp"
-        android:layout_toEndOf="@+id/imageView"
-        android:layout_toRightOf="@+id/imageView"
-        android:text="150°C"
-        android:textSize="90sp" />
+        android:layout_below="@+id/textView_city"
+        android:layout_marginTop="77dp"
+        android:layout_toEndOf="@+id/textview_wind"
+        android:layout_toRightOf="@+id/textview_wind"
+        android:textSize="75sp" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText_city"
-        android:layout_alignStart="@+id/editText_city"
-        android:layout_below="@+id/editText_city"
-        android:layout_marginTop="58dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/textView_temperature"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@id/textView_temperature"
         android:minHeight="30dp"
         android:minWidth="30dp"
-        app:srcCompat="@drawable/sun"
-        android:layout_alignBottom="@+id/textView_temperature" />
+        android:visibility="invisible"
+        app:srcCompat="@drawable/sun" />
 
     <TextView
         android:id="@+id/textview_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:text="Il pleut lol"
-        android:textSize="24sp"
         android:layout_below="@+id/textView_temperature"
-        android:layout_alignRight="@+id/editText_city"
-        android:layout_alignEnd="@+id/editText_city" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="41dp"
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/textview_wind"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="55dp"
-        android:text="350Km/h"
+        android:layout_alignLeft="@+id/textview_humidity"
+        android:layout_alignStart="@+id/textview_humidity"
         android:layout_below="@+id/textview_description"
-        android:layout_toRightOf="@+id/imageView2"
-        android:layout_toEndOf="@+id/imageView2"
-        android:layout_marginLeft="6dp"
-        android:layout_marginStart="6dp" />
+        android:layout_marginTop="54dp" />
 
     <TextView
         android:id="@+id/textview_humidity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textview_wind"
-        android:layout_alignStart="@+id/textview_wind"
-        android:layout_below="@+id/textview_wind"
-        android:layout_marginTop="15dp"
-        android:text="75%" />
+        android:layout_alignLeft="@+id/textview_sunset"
+        android:layout_alignStart="@+id/textview_sunset"
+        android:layout_below="@+id/imageView_wind"
+        android:layout_marginTop="14dp" />
 
     <TextView
         android:id="@+id/textview_sunset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="21dp"
-        android:text="04:30"
-        android:layout_below="@+id/textview_humidity"
-        android:layout_alignLeft="@+id/textview_humidity"
-        android:layout_alignStart="@+id/textview_humidity" />
+        android:layout_below="@+id/imageView_humidity"
+        android:layout_marginLeft="17dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="9dp"
+        android:layout_toEndOf="@+id/imageView_sunrise"
+        android:layout_toRightOf="@+id/imageView_sunrise" />
 
     <TextView
         android:id="@+id/textview_sunrise"
@@ -105,45 +75,55 @@
         android:layout_alignEnd="@+id/textview_sunset"
         android:layout_alignRight="@+id/textview_sunset"
         android:layout_below="@+id/textview_sunset"
-        android:layout_marginTop="14dp"
-        android:text="21:10" />
+        android:layout_marginTop="14dp" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imageView_wind"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/wind"
-        android:layout_above="@+id/textview_humidity"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/textview_wind"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/wind" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/imageView_humidity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/textview_humidity"
+        android:visibility="invisible"
         app:srcCompat="@drawable/humidity" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/imageView_sunrise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/textview_sunrise"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/imageView3"
-        android:layout_marginTop="6dp"
+        android:visibility="invisible"
         app:srcCompat="@drawable/sunrise" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/imageView_sunset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/textview_sunset"
         android:layout_marginTop="7dp"
+        android:visibility="invisible"
         app:srcCompat="@drawable/sunset" />
+
+    <TextView
+        android:id="@+id/textView_city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="90sp" />
 
 </RelativeLayout>

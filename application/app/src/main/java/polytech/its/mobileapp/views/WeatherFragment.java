@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -51,17 +52,6 @@ public class WeatherFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View v = inflater.inflate(R.layout.fragment_weather, container, false);
-        final EditText city = (EditText) v.findViewById(R.id.editText_city);
-        Button sendCity = (Button) v.findViewById(R.id.button_city);
-
-        sendCity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HomeActivity home = ((HomeActivity) getActivity());
-
-                home.sendMessage(getString(R.string.getweather) + city.getText());
-            }
-        });
         return v;
     }
 
@@ -84,6 +74,9 @@ public class WeatherFragment extends Fragment {
 
     public void setDisplay(String weatherInfo) {
         WeatherData wd = WeatherData.getInstance(weatherInfo);
+
+        TextView city = (TextView) getView().findViewById(R.id.textView_city);
+        city.setText(wd.getCity());
         TextView temperature = (TextView) getView().findViewById(R.id.textView_temperature);
         temperature.setText(wd.getTemperature());
         TextView description = (TextView) getView().findViewById(R.id.textview_description);
@@ -97,8 +90,54 @@ public class WeatherFragment extends Fragment {
         TextView sunrise = (TextView) getView().findViewById(R.id.textview_sunrise);
         sunrise.setText(wd.getSunrise());
 
+        String iconId = wd.getIconName();
+
         ImageView icon = (ImageView) getView().findViewById(R.id.imageView);
 
+        changeIcon(iconId, icon);
+    }
+
+    private void changeIcon(String iconId, ImageView icon) {
+        int iconValue = Integer.parseInt(iconId);
+        if (iconValue != 800) {
+            iconValue /= 100;
+
+            switch (iconValue) {
+                case 2:
+                    icon.setImageResource(R.drawable.thunder);
+                    break;
+                case 3:
+                    icon.setImageResource(R.drawable.drizzle);
+                    break;
+                case 7:
+                    icon.setImageResource(R.drawable.foggy);
+                    break;
+                case 8:
+                    icon.setImageResource(R.drawable.clouds);
+                    break;
+                case 6:
+                    icon.setImageResource(R.drawable.winter);
+                    break;
+                case 5:
+                    icon.setImageResource(R.drawable.rain);
+                    break;
+                default:
+                    icon.setImageResource(R.drawable.default_weather);
+                    break;
+            }
+        } else {
+            icon.setImageResource(R.drawable.sun);
+        }
+        ImageView wind = (ImageView) getView().findViewById(R.id.imageView_wind);
+        ImageView humidity = (ImageView) getView().findViewById(R.id.imageView_humidity);
+        ImageView sunset = (ImageView) getView().findViewById(R.id.imageView_sunset);
+        ImageView sunrise = (ImageView) getView().findViewById(R.id.imageView_sunrise);
+
+        icon.setVisibility(View.VISIBLE);
+        wind.setVisibility(View.VISIBLE);
+        humidity.setVisibility(View.VISIBLE);
+        sunset.setVisibility(View.VISIBLE);
+        sunrise.setVisibility(View.VISIBLE);
     }
 
 
