@@ -43,7 +43,9 @@ public class SmsServer  implements Runnable {
             logModemInfo();
             ArrayList<InboundMessage> msgList = new ArrayList<>();
             while(!shutdown){
-                Service.getInstance().readMessages(msgList, InboundMessage.MessageClasses.ALL);
+                synchronized (this) {
+                    Service.getInstance().readMessages(msgList, InboundMessage.MessageClasses.ALL);
+                }
                 for (InboundMessage msg : msgList){
                     LOG.info("Input Message :");
                     LOG.info("\tMessage : " +  msg.getText());
