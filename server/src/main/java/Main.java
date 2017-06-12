@@ -3,6 +3,7 @@ import org.apache.log4j.Logger;
 import org.smslib.SMSLibException;
 import twitter4j.TwitterException;
 import weather.WeatherProxy;
+import web.ImgReader;
 
 import java.io.*;
 
@@ -17,8 +18,10 @@ public class Main {
         //testTwitter();
         //testDB();
         //writeDB();
-        /*String test = WeatherProxy.getWeather("Nice");
-        System.out.println(test);*/
+        //ImgReader.generateSMSFromImage("http://www.ca-stomer.fr/var/ptic/storage/images/media/caroussel-page-d-accueil/image-test-1/96100-1-fre-FR/Image-test-1_large.jpg");
+        //ImgReader.test("http://www.ca-stomer.fr/var/ptic/storage/images/media/caroussel-page-d-accueil/image-test-1/96100-1-fre-FR/Image-test-1_large.jpg");
+
+        //System.out.println(WeatherProxy.getWeather("Nice"));
     }
 
     public static void testSmsServer() throws InterruptedException, SMSLibException, IOException {

@@ -43,7 +43,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.auth.RequestToken;
 import twitter4j.conf.ConfigurationBuilder;
 
-public class HomeActivity extends AppCompatActivity implements WebFragment.OnFragmentInteractionListener, TwitterFragment.OnFragmentInteractionListener, TwitterListFragment.OnFragmentInteractionListener, HistoryFragment.OnFragmentInteractionListener {
+public class HomeActivity extends AppCompatActivity implements WebFragment.OnFragmentInteractionListener, TwitterFragment.OnFragmentInteractionListener, TwitterListFragment.OnFragmentInteractionListener, HistoryFragment.OnFragmentInteractionListener, WeatherFragment.OnFragmentInteractionListener {
     public static String PHONE_NUMBER;
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
 
@@ -100,38 +100,25 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         String newPhone = "";
         switch (item.getItemId()) {
             case R.id.action_send:
-                retrieveURL();
+                Fragment f = fragmentManager.findFragmentById(R.id.fragment);
+                if (f instanceof WeatherFragment)
+                    retrieveCity();
+                else
+                    retrieveURL();
                 return true;
             case R.id.action_stop:
                 sendMessage(getString(R.string.end) + webSiteAsked);
                 if (webFragment.nextButton.getVisibility() == View.VISIBLE)
                     webFragment.nextButton.setVisibility(View.INVISIBLE);
                 return true;
-            case R.id.action_check:
-                sendMessage(getString(R.string.isOk));
-                new CountDownTimer(10000, 1000) {
-
-                    public void onTick(long millisUntilFinished) {
-                    }
-
-                    public void onFinish() {
-                        String message = "<h1>Service indisponible</h1><br><p> Le serveur n'a pas répondu à la requête";
-                        if (!available) {
-                            if (!(fragmentManager.findFragmentById(R.id.fragment) instanceof WebFragment)) {
-                                Bundle bundle = new Bundle();
-                                bundle.putString("content", message);
-                                webFragment.setArguments(bundle);
-                                fragmentManager.beginTransaction().replace(R.id.fragment, webFragment).commit();
-                            }
-                            webFragment.clearAndUpdateView(message);
-                            showToast(getString(R.string.service_unavailable));
-                        }
-                    }
-                }.start();
-                return true;
 
             case R.id.action_twitter:
                 twitterManagement();
+                return true;
+
+            case R.id.action_weather:
+                WeatherFragment frag = new WeatherFragment();
+                fragmentManager.beginTransaction().replace(R.id.fragment, frag, "WEATHER").commit();
                 return true;
             case R.id.action_save:
                 try {
@@ -162,6 +149,28 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                     PHONE_NUMBER = newPhone;
                     showToast(getString(R.string.service_changed));
                 }
+                return true;
+            case R.id.action_check:
+                sendMessage(getString(R.string.isOk));
+                new CountDownTimer(10000, 1000) {
+
+                    public void onTick(long millisUntilFinished) {
+                    }
+
+                    public void onFinish() {
+                        String message = "<h1>Service indisponible</h1><br><p> Le serveur n'a pas répondu à la requête";
+                        if (!available) {
+                            if (!(fragmentManager.findFragmentById(R.id.fragment) instanceof WebFragment)) {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("content", message);
+                                webFragment.setArguments(bundle);
+                                fragmentManager.beginTransaction().replace(R.id.fragment, webFragment).commit();
+                            }
+                            webFragment.clearAndUpdateView(message);
+                            showToast(getString(R.string.service_unavailable));
+                        }
+                    }
+                }.start();
                 return true;
             case R.id.action_help:
                 String helpPage = new FileManager().getHelpFileValue(context);
@@ -282,6 +291,17 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         return webSiteAsked;
     }
 
+    public void retrieveCity() {
+        String cityAsked = URLArea.getText().toString();
+
+        View view = this.findViewById(android.R.id.content);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+        sendMessage(getString(R.string.getweather)+cityAsked);
+
+    }
+
     private static void showTweets(String decompressed) {
         int indexOfSplit = context.getString(R.string.TWITTERHOME).length();
         decompressed = decompressed.substring(indexOfSplit);
@@ -315,6 +335,14 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
             fragmentManager.beginTransaction().add(R.id.fragment, fragobj).commit();
         } else
             webFragment.updateWebView(decompressed);
+    }
+
+    private static void showWeather(String decompressed, String string) {
+        Fragment f = fragmentManager.findFragmentById(R.id.fragment);
+        String weatherInfo = decompressed.substring(string.length());
+        if (f instanceof WeatherFragment) {
+            ((WeatherFragment) f).setDisplay(weatherInfo);
+        }
     }
 
     /**
@@ -397,9 +425,10 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
             } else if (decompressed.contains(context.getString(R.string.tweetSuccess))) {
                 showToast(context.getString(R.string.SuccessTweet));
                 return "Tweet sent";
-            } else {
-                return "Commande incomprise";
+            } else if (decompressed.contains(context.getString(R.string.weatherCmd))) {
+                showWeather(decompressed, context.getString(R.string.weatherCmd));
             }
+            return "Commande incomprise";
 
         }
 

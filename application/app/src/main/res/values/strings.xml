@@ -35,4 +35,6 @@
     <string name="web_saved">Site sauvegardé</string>
     <string name="service_changed">Service remplacé</string>
     <string name="weather">Méteo</string>
+    <string name="weatherCmd">WEATHER:</string>
+    <string name="getweather">GETWEATHER:</string>
 </resources>
