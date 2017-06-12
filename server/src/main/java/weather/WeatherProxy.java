@@ -1,13 +1,8 @@
 package weather;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-
 import java.io.*;
-import java.net.URL;
-import java.nio.charset.Charset;
 
 /**
  * weather.WeatherProxy
