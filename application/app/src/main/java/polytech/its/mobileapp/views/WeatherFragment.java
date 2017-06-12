@@ -7,14 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import polytech.its.mobileapp.R;
-import polytech.its.mobileapp.Weather.WeatherData;
+import polytech.its.mobileapp.weather.WeatherData;
 
 /**
  * A simple {@link Fragment} subclass.
