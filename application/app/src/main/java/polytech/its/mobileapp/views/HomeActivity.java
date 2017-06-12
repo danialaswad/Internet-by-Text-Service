@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -26,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.ceylonlabs.imageviewpopup.ImagePopup;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -36,6 +40,7 @@ import polytech.its.mobileapp.R;
 import polytech.its.mobileapp.utils.CacheUtility;
 import polytech.its.mobileapp.utils.CompressionUtility;
 import polytech.its.mobileapp.utils.FileManager;
+import polytech.its.mobileapp.utils.ImageManager;
 import polytech.its.mobileapp.utils.SmsUtility;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -56,8 +61,9 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
 
     String webSiteAsked = "www.localhost.fr";
     static boolean available = false;
-    final String HOME = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.<br><img alt=\"Image de film\" src=\"http://andokarim.fr/images/film.jpg\"></img>";
+    final String HOME = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.<br><img alt=\"Image de film\" src=\"http://anasghira.com/test.png\"></img>";
 
+    static String imageData = "";
 
     public Twitter twitter;
 
@@ -298,7 +304,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
-        sendMessage(getString(R.string.getweather)+cityAsked);
+        sendMessage(getString(R.string.getweather) + cityAsked);
 
     }
 
@@ -343,6 +349,14 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         if (f instanceof WeatherFragment) {
             ((WeatherFragment) f).setDisplay(weatherInfo);
         }
+    }
+
+    private static void displayPopup() {
+        ImagePopup ip = new ImagePopup(context);
+        Bitmap bitmap = new ImageManager().imageBuilder(imageData);
+        Drawable d = new BitmapDrawable(context.getResources(), bitmap);
+        ip.initiatePopup(d);
+
     }
 
     /**
@@ -427,6 +441,10 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                 return "Tweet sent";
             } else if (decompressed.contains(context.getString(R.string.weatherCmd))) {
                 showWeather(decompressed, context.getString(R.string.weatherCmd));
+            } else if (decompressed.contains("IMG:")) {
+                imageData += decompressed;
+            } else if (decompressed.contains("IMGEND:YES")) {
+                displayPopup();
             }
             return "Commande incomprise";
 

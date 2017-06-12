@@ -1,4 +1,4 @@
-package polytech.its.mobileapp.Weather;
+package polytech.its.mobileapp.weather;
 
 /**
  * @author: Abdelkarim Andolerzak
