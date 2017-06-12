@@ -51,8 +51,8 @@ public class ITSDatabaseSQL {
         return myList;
     }
 
-    public static String getTwitterToken(String numTel) throws SQLException {
-        return execute("SELECT TOKEN FROM TweetToken WHERE NUMTEL = \'" + numTel + "\'", "TOKEN");
+    public static String getTwitterToken(String twitterID) throws SQLException {
+        return execute("SELECT TOKEN FROM TweetToken WHERE TWITTERID = \'" + twitterID + "\'", "TOKEN");
     }
 
     private static String execute(String query, String var) throws SQLException {
@@ -74,11 +74,11 @@ public class ITSDatabaseSQL {
     }
 
 
-    public static void addTwitterToken(String telNum, String twitterToken) throws SQLException {
-        executer("SELECT count(*) from TweetToken WHERE NUMTEL=?",
-                telNum,
-                "UPDATE TweetToken SET TOKEN = \'" +twitterToken +"\' WHERE NUMTEL = \'" + telNum+"\'",
-                "INSERT INTO TweetToken(NUMTEL,TOKEN) VALUES(\'" + telNum+"\',\'" +twitterToken +"\')");
+    public static void addTwitterToken(String twitterID, String twitterToken) throws SQLException {
+        executer("SELECT count(*) from TweetToken WHERE TWITTERID=?",
+                twitterID,
+                "UPDATE TweetToken SET TOKEN = \'" +twitterToken +"\' WHERE TWITTERID = \'" + twitterID+"\'",
+                "INSERT INTO TweetToken(TWITTERID,TOKEN) VALUES(\'" + twitterID+"\',\'" +twitterToken +"\')");
     }
 
     private static void executer(String check, String verif,String update, String insert) throws SQLException {
