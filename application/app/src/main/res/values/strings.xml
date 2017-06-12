@@ -33,4 +33,6 @@
     <string name="pays">france</string>
     <string name="service_unavailable">SERVICE INDISPONIBLE</string>
     <string name="web_saved">Site sauvegardé</string>
+    <string name="service_changed">Service remplacé</string>
+    <string name="weather">Méteo</string>
 </resources>

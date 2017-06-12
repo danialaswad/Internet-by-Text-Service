@@ -1,6 +1,6 @@
-<menu xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <item
         android:id="@+id/action_send"
@@ -12,7 +12,7 @@
         android:id="@+id/action_stop"
         android:icon="@drawable/cancel"
         android:title="Stop"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_more"
@@ -26,6 +26,11 @@
                 android:icon="@drawable/twitter"
                 android:title="@string/twitter"
                 app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/meteo"
+                android:icon="@drawable/weather"
+                android:title="@string/weather" />
 
             <item
                 android:id="@+id/action_history"

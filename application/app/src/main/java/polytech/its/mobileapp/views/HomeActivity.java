@@ -44,7 +44,7 @@ import twitter4j.auth.RequestToken;
 import twitter4j.conf.ConfigurationBuilder;
 
 public class HomeActivity extends AppCompatActivity implements WebFragment.OnFragmentInteractionListener, TwitterFragment.OnFragmentInteractionListener, TwitterListFragment.OnFragmentInteractionListener, HistoryFragment.OnFragmentInteractionListener {
-    public static String PHONE_NUMBER = "+33628760946";
+    public static String PHONE_NUMBER;
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
 
     private EditText URLArea;
@@ -78,6 +78,8 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         //Enregistre le SMS listener
         registerListener();
 
+        PHONE_NUMBER = "+33628760946";
+
         //Récupère webview,edittext... pour les modifier
         viewTreatment();
 
@@ -95,6 +97,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        String newPhone = "";
         switch (item.getItemId()) {
             case R.id.action_send:
                 retrieveURL();
@@ -147,10 +150,18 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                 return true;
 
             case R.id.action_country1:
-                PHONE_NUMBER = "+33628760946";
+                newPhone = "+33628760946";
+                if (newPhone != PHONE_NUMBER) {
+                    PHONE_NUMBER = newPhone;
+                    showToast(getString(R.string.service_changed));
+                }
                 return true;
             case R.id.action_country2:
-                PHONE_NUMBER = "+33666360803";
+                newPhone = "+33666360803";
+                if (newPhone != PHONE_NUMBER) {
+                    PHONE_NUMBER = newPhone;
+                    showToast(getString(R.string.service_changed));
+                }
                 return true;
             case R.id.action_help:
                 String helpPage = new FileManager().getHelpFileValue(context);
