@@ -4,7 +4,6 @@ package database;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class ITSDatabaseSQL {
 
@@ -22,37 +21,37 @@ public class ITSDatabaseSQL {
 
     public static void main(String[] args){
 
-        List<String> p = new ArrayList<>();
-        p.add("eafae");p.add("asd");p.add("asf");
         try {
-            addTwitterToken("danial","newer");
-            addPages("asda","asdasd",p);
+            addTwitterToken("daasdsadnial","ASsssdasda","aaaaaaa");
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         try {
-            System.out.println(getTwitterToken("danial"));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            System.out.println(getPage("asda","asdasd").toString());
+            System.out.println(getTwitterToken("danial").toString());
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
 
-    public static List<String> getPage(String telNum, String url) throws SQLException {
+    public static ArrayList<String> getPage(String telNum, String url) throws SQLException {
         String res =  execute("SELECT PAGES FROM Website WHERE NUMURL = \'" + telNum+url+"\'", "PAGES");
-        List<String> myList = new ArrayList<>(Arrays.asList(res.substring(1, res.length() - 1).split(", ")));
+        ArrayList<String> myList = new ArrayList<>(Arrays.asList(res.substring(1, res.length() - 1).split(", ")));
         return myList;
     }
 
-    public static String getTwitterToken(String twitterID) throws SQLException {
-        return execute("SELECT TOKEN FROM TweetToken WHERE TWITTERID = \'" + twitterID + "\'", "TOKEN");
+    public static ArrayList<String> getTwitterToken(String twitterID) throws SQLException {
+        String token =  execute("SELECT TOKEN FROM TweetToken WHERE TWITTERID = \'" + twitterID + "\'", "TOKEN");
+        String secret = execute("SELECT SECRET FROM TweetToken WHERE TWITTERID = \'" + twitterID + "\'", "SECRET");
+        ArrayList<String> list = new ArrayList<>();
+        list.add(token);
+        list.add(secret);
+        return list;
+    }
+
+    public static String getMaxTweetID(String twitterID) throws SQLException {
+        return execute("SELECT MAXTWEET FROM TweetToken WHERE TWITTERID = \'" + twitterID + "\'", "MAXTWEET");
     }
 
     private static String execute(String query, String var) throws SQLException {
@@ -66,7 +65,7 @@ public class ITSDatabaseSQL {
         return result;
     }
 
-    public static void addPages(String telNum, String url, List<String> pages) throws SQLException {
+    public static void addPages(String telNum, String url, ArrayList<String> pages) throws SQLException {
         executer("SELECT count(*) from Website WHERE NUMURL=?",
                 telNum+url,
                 "UPDATE Website SET PAGES = \'" +pages.toString() +"\' WHERE NUMURL = \'" + telNum+url+"\'",
@@ -74,11 +73,18 @@ public class ITSDatabaseSQL {
     }
 
 
-    public static void addTwitterToken(String twitterID, String twitterToken) throws SQLException {
+    public static void addTwitterToken(String twitterID, String twitterToken, String twitterSecret) throws SQLException {
         executer("SELECT count(*) from TweetToken WHERE TWITTERID=?",
                 twitterID,
-                "UPDATE TweetToken SET TOKEN = \'" +twitterToken +"\' WHERE TWITTERID = \'" + twitterID+"\'",
-                "INSERT INTO TweetToken(TWITTERID,TOKEN) VALUES(\'" + twitterID+"\',\'" +twitterToken +"\')");
+                "UPDATE TweetToken SET TOKEN = \'" +twitterToken +"\' , SECRET = \'"+twitterSecret+"\' WHERE TWITTERID = \'" + twitterID+"\'",
+                "INSERT INTO TweetToken(TWITTERID,TOKEN,SECRET) VALUES(\'" + twitterID+"\',\'" +twitterToken +"\',\'" + twitterSecret + "\')");
+    }
+
+    public static void addMaxTweet(String twitterID, String maxTweet) throws SQLException {
+        executer("SELECT count(*) from TweetToken WHERE TWITTERID=?",
+                twitterID,
+                "UPDATE TweetToken SET MAXTWEET = \'" +maxTweet +"\' WHERE TWITTERID = \'" + twitterID+"\'",
+                "INSERT INTO TweetToken(TWITTERID,MAXTWEET) VALUES(\'" + twitterID+"\',\'" +maxTweet +"\')");
     }
 
     private static void executer(String check, String verif,String update, String insert) throws SQLException {
@@ -99,6 +105,12 @@ public class ITSDatabaseSQL {
         }
     }
 
+    public static void removePages(String numTel, String url) throws SQLException {
+        connection = getDBConnection();
+        statement = connection.createStatement();
+        String sql = "DELETE FROM WebSite WHERE NUMURL = \'" + numTel + url + "\'";
+        statement.executeUpdate(sql);
+    }
 
     private static Connection getDBConnection() {
         Connection dbConnection = null;
@@ -113,4 +125,5 @@ public class ITSDatabaseSQL {
         return dbConnection;
 
     }
+
 }

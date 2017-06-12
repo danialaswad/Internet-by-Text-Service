@@ -1,9 +1,13 @@
 package twitter;
 
 import database.ITSDatabase;
+import database.ITSDatabaseSQL;
 import org.junit.Assert;
 import org.junit.Test;
 import twitter4j.auth.AccessToken;
+
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * TwitterManagerTest
@@ -14,12 +18,12 @@ import twitter4j.auth.AccessToken;
 public class TwitterManagerTest {
 
     @Test
-    public void configureAccountTest(){
+    public void configureAccountTest() throws SQLException {
         TwitterManager tm = new TwitterManager();
         tm.configureAccount("testToken","testSecretToken","0123");
-        ITSDatabase database = ITSDatabase.instance();
         AccessToken expected = new AccessToken("testToken","testSecretToken",Long.parseLong("0123"));
-        Assert.assertEquals(expected,database.twitterTokens().get("0123"));
+        List<String> list = ITSDatabaseSQL.getTwitterToken("0123");
+        Assert.assertTrue(expected.equals(new AccessToken(list.get(0),list.get(1),Long.parseLong("0123"))));
     }
 
 }

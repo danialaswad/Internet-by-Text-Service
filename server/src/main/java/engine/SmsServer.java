@@ -48,7 +48,7 @@ public class SmsServer  implements Runnable {
                     LOG.info("Input Message :");
                     LOG.info("\tMessage : " +  msg.getText());
                     LOG.info("\tSender : " +  msg.getOriginator());
-                    String cryptedMsg = ZLibCompression.compressToBase64(smsCommand.process(msg.getText()),"UTF-8");
+                    String cryptedMsg = ZLibCompression.compressToBase64(smsCommand.process(msg.getText(),msg.getOriginator()),"UTF-8");
                     sendMessage("+"+msg.getOriginator(),cryptedMsg);
                     gateway.deleteMessage(msg);
                 }
