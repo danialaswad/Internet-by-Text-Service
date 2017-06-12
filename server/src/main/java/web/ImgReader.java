@@ -1,12 +1,16 @@
 package web;
 
+import compression.ZLibCompression;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 
 /**
@@ -22,13 +26,27 @@ public class ImgReader {
         return ImageIO.read(url);
     }
 
-    public static void generateSMSFromImage(String imgURL) throws IOException {
+    public static byte[] getImageArray(String imgURL) throws IOException {
+        byte[] imageInByte;
         BufferedImage img = getImageFromURL(imgURL);
-        // get DataBufferBytes from Raster
-        WritableRaster raster = img.getRaster();
-        DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
-        byte[] pixels = data.getData();
-        System.out.println("Test");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(img, "png", baos);
+        baos.flush();
+        imageInByte = baos.toByteArray();
+        baos.close();
+        System.out.println("Test2");
+        return imageInByte;
+    }
+
+    public static void decodingImg(String txt) throws IOException {
+        byte[] decodedText = ZLibCompression.decodeImage(txt);
+
+        /*String img = decodedText.split(":")[1];
+        byte[] bytes = img.getBytes("UTF-8");*/
+        InputStream in = new ByteArrayInputStream(decodedText);
+        BufferedImage bImageFromConvert = ImageIO.read(in);
+        ImageIO.write(bImageFromConvert, "png", new File("test.png"));
+        System.out.println(decodedText);
     }
 
 
