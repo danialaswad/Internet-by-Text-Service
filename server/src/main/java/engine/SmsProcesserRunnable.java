@@ -1,7 +1,7 @@
 package engine;
 
 import compression.ZLibCompression;
-import engine.utils.SEMOUTPUTMESSAGE;
+import engine.utils.SemOutputMessage;
 import org.apache.log4j.Logger;
 import org.smslib.GatewayException;
 import org.smslib.InboundMessage;
@@ -9,9 +9,7 @@ import org.smslib.Service;
 import org.smslib.TimeoutException;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Antoine on 12/06/2017.
@@ -37,9 +35,9 @@ public class SmsProcesserRunnable implements Runnable {
             LOG.info("\tSender : " +  originator);
             //mutex?
             String compressMsg = ZLibCompression.compressToBase64(smsCommand.process(msg.getText(),originator),"UTF-8");
-            SEMOUTPUTMESSAGE.getSemaphore().acquire();
+            SemOutputMessage.getSemaphore().acquire();
             outputMessages.put(originator,compressMsg);
-            SEMOUTPUTMESSAGE.getSemaphore().release();
+            SemOutputMessage.getSemaphore().release();
             Service.getInstance().deleteMessage(msg);
         } catch (TimeoutException e) {
             e.printStackTrace();
