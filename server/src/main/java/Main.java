@@ -1,4 +1,5 @@
 import compression.ZLibCompression;
+import engine.ServerMulti;
 import engine.SmsCommand;
 import engine.SmsServer;
 import org.apache.log4j.Logger;
@@ -24,7 +25,7 @@ public class Main {
 
     public static void testSmsServer() throws InterruptedException, SMSLibException, IOException {
 
-        SmsServer server = new SmsServer("0000","+33609001390","COM9");
+        ServerMulti server = new ServerMulti("0000","+33609001390","COM9");
         try
         {
             server.run();
