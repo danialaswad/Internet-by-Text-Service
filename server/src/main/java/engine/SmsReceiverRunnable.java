@@ -1,6 +1,6 @@
 package engine;
 
-import engine.utils.SemInputMessage;
+import engine.utils.SemOutputMessage;
 import org.smslib.GatewayException;
 import org.smslib.InboundMessage;
 import org.smslib.Service;
@@ -31,7 +31,7 @@ public class SmsReceiverRunnable implements Runnable{
         for(;!shutdown;){
             Iterator iterator = inputMessages.iterator();
             try {
-                SemInputMessage.getSemaphore().acquire();
+                SemOutputMessage.getSemaphore().acquire();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -41,7 +41,7 @@ public class SmsReceiverRunnable implements Runnable{
                 smsProcesserRunnable.run();
                 inputMessages.remove(msg);
             }
-            SemInputMessage.getSemaphore().release();
+            SemOutputMessage.getSemaphore().release();
         }
     }
 }
