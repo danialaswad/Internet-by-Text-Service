@@ -72,11 +72,11 @@ public class SmsCommand {
     }
 
     public String get(String data){
-        return "WEB:"+pageManager.getWebpage(data,msgOriginator);
+        return "WEB:"+pageManager.getWebPage(data,msgOriginator);
     }
 
     public String next(String data){
-         return "WEBNEXT:" + pageManager.nexWebPage(data,msgOriginator);
+         return "WEBNEXT:" + pageManager.nextWebPage(data,msgOriginator);
     }
 
     public String endwebsite(String data){
@@ -137,7 +137,7 @@ public class SmsCommand {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return "IMG:FAILURE";
     }
 
     public String getweather(String data){

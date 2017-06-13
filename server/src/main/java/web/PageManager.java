@@ -17,7 +17,7 @@ public class PageManager {
 
     private final static Logger LOG = org.apache.log4j.Logger.getLogger(PageManager.class);
 
-    public String getWebpage(String url,String originator){
+    public String getWebPage(String url, String originator){
         URLReader reader = new URLReader(url);
         Document document = reader.fetchFile();
         String page = new WebPageCleaner().cleanWebPage(document,reader.getUrlString());
@@ -34,7 +34,7 @@ public class PageManager {
         //return database.webpages().get(reader.getUrlString()).remove(0);
     }
 
-    public String nexWebPage(String url,String originator){
+    public String nextWebPage(String url, String originator){
         URLReader reader = new URLReader(url);
         String result="";
         try {

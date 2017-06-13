@@ -43,7 +43,25 @@ public class SmsCommandTest {
 
     @Test
     public void twitterHomeFailure(){
-        /*SmsCommand command = new SmsCommand();
-        Assert.assertEquals("TWITTERHOME:FAILURE",command.process("TWITTERHOME:1234"));*/
+        SmsCommand command = new SmsCommand();
+        Assert.assertEquals("WEB:<h2>Mauvaise commande</h2>",command.process("TWITTERHOME:1234",""));
+    }
+
+    @Test
+    public void tweetFailure(){
+        SmsCommand command = new SmsCommand();
+        Assert.assertEquals("TWEET:FAILURE",command.process("TWEET:1234",""));
+
+        Assert.assertEquals("WEB:<h2>Mauvaise commande</h2>",command.process("TWEET:1234,ok",""));
+    }
+
+    @Test
+    public void getimgTest(){
+        SmsCommand command = new SmsCommand();
+        String expected = "IMG:iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAIAAAACDbGyAAAALUlEQVR42mPQZWXnZ2J6K6MCQQwcjIzW7JwIPpyFwn8jowJUBdSLkAfyGRgYAGR/FW31B4/YAAAAAElFTkSuQmCC";
+        Assert.assertEquals(expected,command.process("GETIMG:http://anasghira.com/its/test.png",""));
+
+        expected = "IMG:FAILURE";
+        Assert.assertEquals(expected,command.process("GETIMG:http://anasghira.com/test.jpg",""));
     }
 }
