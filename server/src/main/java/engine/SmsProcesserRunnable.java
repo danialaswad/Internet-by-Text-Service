@@ -1,6 +1,7 @@
 package engine;
 
 import compression.ZLibCompression;
+import engine.utils.SEMOUTPUTMESSAGE;
 import org.apache.log4j.Logger;
 import org.smslib.GatewayException;
 import org.smslib.InboundMessage;
@@ -15,6 +16,7 @@ import java.util.List;
 /**
  * Created by Antoine on 12/06/2017.
  */
+
 public class SmsProcesserRunnable implements Runnable {
     private static final Logger LOG = Logger.getLogger(SmsProcesserRunnable.class);
     private InboundMessage msg;
@@ -35,7 +37,9 @@ public class SmsProcesserRunnable implements Runnable {
             LOG.info("\tSender : " +  originator);
             //mutex?
             String compressMsg = ZLibCompression.compressToBase64(smsCommand.process(msg.getText(),originator),"UTF-8");
+            SEMOUTPUTMESSAGE.getSemaphore().acquire();
             outputMessages.put(originator,compressMsg);
+            SEMOUTPUTMESSAGE.getSemaphore().release();
             Service.getInstance().deleteMessage(msg);
         } catch (TimeoutException e) {
             e.printStackTrace();
