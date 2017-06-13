@@ -21,11 +21,11 @@ public class PageManager {
         URLReader reader = new URLReader(url);
         Document document = reader.fetchFile();
         String page = new WebPageCleaner().cleanWebPage(document,reader.getUrlString());
-        ArrayList<String> pages = new PageCutter(page).getPageChunkList();
+        ArrayList<String> pages = new PageCutter(page).getFirstChunk();
 
-        String result = pages.remove(0);
+        String result = pages.get(0);
         try {
-            ITSDatabaseSQL.addPages(originator, reader.getUrlString(),pages);
+          ITSDatabaseSQL.addPages(originator, reader.getUrlString(),pages.get(1));
         } catch (SQLException e) {
             LOG.error(e.getMessage());
         }
@@ -38,10 +38,11 @@ public class PageManager {
         URLReader reader = new URLReader(url);
         String result="";
         try {
-            ArrayList<String> pages = ITSDatabaseSQL.getPage(originator,reader.getUrlString());
-            if (pages.size() > 0) {
-                result = pages.remove(0);
-                ITSDatabaseSQL.addPages(originator,reader.getUrlString(),pages);
+            String page = ITSDatabaseSQL.getPage(originator,reader.getUrlString());
+            ArrayList<String> pages = new PageCutter(page).getFirstChunk();
+            result += pages.get(0);
+            if (pages.size()>1){
+                ITSDatabaseSQL.addPages(originator, reader.getUrlString(),pages.get(1));
             }
         } catch (SQLException e) {
             LOG.error(e.getMessage());

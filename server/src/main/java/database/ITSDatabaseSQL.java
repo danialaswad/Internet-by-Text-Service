@@ -21,24 +21,23 @@ public class ITSDatabaseSQL {
 
     public static void main(String[] args){
 
+
         try {
-            addTwitterToken("daasdsadnial","ASsssdasda","aaaaaaa");
+            addPages("asdasfasf","aSfasfaf","ASFAsfadfadf");
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         try {
-            System.out.println(getTwitterToken("danial").toString());
+            getPage("asdasfasf","aSfasfaf");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
 
-    public static ArrayList<String> getPage(String telNum, String url) throws SQLException {
-        String res =  execute("SELECT PAGES FROM Website WHERE NUMURL = \'" + telNum+url+"\'", "PAGES");
-        ArrayList<String> myList = new ArrayList<>(Arrays.asList(res.substring(1, res.length() - 1).split(", ")));
-        return myList;
+    public static String getPage(String telNum, String url) throws SQLException {
+        return  execute("SELECT PAGES FROM Website WHERE NUMURL = \'" + telNum+url+"\'", "PAGES");
     }
 
     public static ArrayList<String> getTwitterToken(String twitterID) throws SQLException {
@@ -65,11 +64,11 @@ public class ITSDatabaseSQL {
         return result;
     }
 
-    public static void addPages(String telNum, String url, ArrayList<String> pages) throws SQLException {
+    public static void addPages(String telNum, String url, String pages) throws SQLException {
         executer("SELECT count(*) from Website WHERE NUMURL=?",
                 telNum+url,
-                "UPDATE Website SET PAGES = \'" +pages.toString() +"\' WHERE NUMURL = \'" + telNum+url+"\'",
-                "INSERT INTO Website(NUMURL,PAGES) VALUES(\'" + telNum+url+"\',\'" +pages.toString() +"\')");
+                "UPDATE Website SET PAGES = \'" +pages +"\' WHERE NUMURL = \'" + telNum+url+"\'",
+                "INSERT INTO Website(NUMURL,PAGES) VALUES(\'" + telNum+url+"\',\'" +pages +"\')");
     }
 
 
