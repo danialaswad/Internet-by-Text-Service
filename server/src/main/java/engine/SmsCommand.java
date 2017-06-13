@@ -1,9 +1,11 @@
 package engine;
 
+import compression.ZLibCompression;
 import org.apache.log4j.Logger;
 import twitter.TwitterManager;
 import twitter4j.TwitterException;
 import weather.WeatherProxy;
+import web.ImgReader;
 import web.PageManager;
 
 import java.io.IOException;
@@ -24,11 +26,13 @@ public class SmsCommand {
     private PageManager pageManager;
     private Map<String, Method> commands;
     private TwitterManager twitterManager;
+    private String msgOriginator;
 
     public SmsCommand(){
         pageManager = new PageManager();
         twitterManager = new TwitterManager();
         commands = initCommand();
+        msgOriginator="";
     }
 
     private Map<String, Method> initCommand(){
@@ -40,7 +44,9 @@ public class SmsCommand {
         return map;
     }
 
-    public String process(String request){
+    public String process(String request, String msgOriginator){
+        this.msgOriginator = msgOriginator;
+
         String [] arrayRequest = request.split(":",2);
         String cmd = arrayRequest[0];
         String data = "";
@@ -66,15 +72,15 @@ public class SmsCommand {
     }
 
     public String get(String data){
-        return "WEB:"+pageManager.getWebpage(data);
+        return "WEB:"+pageManager.getWebPage(data,msgOriginator);
     }
 
     public String next(String data){
-         return "WEBNEXT:" + pageManager.nexWebPage(data);
+         return "WEBNEXT:" + pageManager.nextWebPage(data,msgOriginator);
     }
 
     public String endwebsite(String data){
-        pageManager.removeWebPage(data);
+        pageManager.removeWebPage(data,msgOriginator);
         return "ENDWEBSITE:SUCCESS";
     }
 
@@ -124,8 +130,14 @@ public class SmsCommand {
     }
 
     public String getimg(String data){
-        //TODO
-        return "";
+        try {
+            byte[] img = ImgReader.getImageArray(data);
+            String encodedImage = ZLibCompression.encodeImage(img);
+            return "IMG:"+encodedImage;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "IMG:FAILURE";
     }
 
     public String getweather(String data){

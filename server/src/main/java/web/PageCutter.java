@@ -40,6 +40,20 @@ public class PageCutter {
         return result;
     }
 
+    public ArrayList<String> getFirstChunk(){
+        if (page.body().toString().length() < SIZE_CHUNK){
+            chunkList.add(page.body().toString());
+            return chunkList;
+        }
+
+        String tmp = subHtmlTags(0, SIZE_CHUNK);
+        chunkList.add(tmp);
+
+        chunkList.add(page.body().toString().substring(tmp.length(),page.body().toString().length()));
+
+        return chunkList;
+    }
+
 
     /**
      *

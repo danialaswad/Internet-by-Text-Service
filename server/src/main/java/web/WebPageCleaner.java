@@ -18,7 +18,7 @@ public class WebPageCleaner {
 
     private static final String UNECESSARYTAGS = "script, span, .hidden, noscript, style";
 
-    private static final String ACCEPTABLETAGS = "p, a, h1, h2, h3, h4, table, th, td, i, tr, tbody, b, img, body, div, ul, li";
+    private static final String ACCEPTABLETAGS = "p, a, h1, h2, h3, h4, table, th, td, i, tr, tbody, b, img, body, div, ul, li, section";
 
     private static final List<String> UNECCESARYATTRIBUTES = Arrays.asList("id", "src", "href", "alt", "title", "height", "width");
 
