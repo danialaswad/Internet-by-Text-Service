@@ -37,7 +37,7 @@ public class ImgReader {
         byte[] imageInByte;
         BufferedImage img = getImageFromURL(imgURL);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(img, "png", baos);
+        ImageIO.write(img, "bmp", baos);
         baos.flush();
         imageInByte = baos.toByteArray();
         baos.close();
