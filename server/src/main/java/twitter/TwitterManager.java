@@ -65,7 +65,6 @@ public class TwitterManager {
     }
 
     String getHomeTimeline(String id, String maxId) throws TwitterException {
-
         JSONArray jsonArray = new JSONArray();
         try {
             ArrayList<String> list = ITSDatabaseSQL.getTwitterToken(id);
@@ -80,15 +79,7 @@ public class TwitterManager {
             }
 
             List<Status> statuses = twitter.getHomeTimeline(paging);
-
-            for (Status status : statuses) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("un",status.getUser().getName());
-                jsonObject.put("usn", status.getUser().getScreenName());
-                jsonObject.put("text", status.getText());
-                jsonArray.put(jsonObject);
-            }
-
+            jsonArray = processStatues(statuses);
             Long m = statuses.get(statuses.size()-1).getId() -1;
 
             ITSDatabaseSQL.addMaxTweet(id,m.toString());
@@ -100,6 +91,18 @@ public class TwitterManager {
         }
 
         return jsonArray.toString();
+    }
+
+    public JSONArray processStatues(List<Status> statuses){
+        JSONArray jsonArray = new JSONArray();
+        for (Status status : statuses) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("un",status.getUser().getName());
+            jsonObject.put("usn", status.getUser().getScreenName());
+            jsonObject.put("text", status.getText());
+            jsonArray.put(jsonObject);
+        }
+        return jsonArray;
     }
 
 

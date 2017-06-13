@@ -46,16 +46,4 @@ public class ZLibCompression {
     public static String encodeImage(byte[] array){
         return Base64.encodeBase64String(array);
     }
-
-    public static byte[] decodeImage(String img){
-        return Base64.decodeBase64(img);
-        /*import org.apache.commons.codec.binary.Base64;
-        ...
-        String retVal = Base64.encodeBase64String(digest);
-        by:
-
-        import android.util.Base64;
-        ...
-        String retVal = Base64.encodeToString(digest, Base64.DEFAULT);*/
-    }
 }

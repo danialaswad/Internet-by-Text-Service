@@ -26,4 +26,5 @@ public class TwitterManagerTest {
         Assert.assertTrue(expected.equals(new AccessToken(list.get(0),list.get(1),Long.parseLong("0123"))));
     }
 
+
 }

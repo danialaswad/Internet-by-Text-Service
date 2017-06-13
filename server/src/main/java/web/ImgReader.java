@@ -45,17 +45,6 @@ public class ImgReader {
         return imageInByte;
     }
 
-    public static void decodingImg(String txt) throws IOException {
-        //TODO
-        byte[] decodedText = ZLibCompression.decodeImage(txt);
-        InputStream in = new ByteArrayInputStream(decodedText);
-        BufferedImage bImageFromConvert = ImageIO.read(in);
-        ImageIO.write(bImageFromConvert, "png", new File("test.png"));
-        System.out.println(decodedText);
-
-
-    }
-
 
 
 }
