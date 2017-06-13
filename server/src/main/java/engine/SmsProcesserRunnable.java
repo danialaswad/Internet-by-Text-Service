@@ -30,11 +30,12 @@ public class SmsProcesserRunnable implements Runnable {
     public void run() {
         try {
             LOG.info("Input Message :");
+            String originator = "+"+msg.getOriginator();
             LOG.info("\tMessage : " +  msg.getText());
-            LOG.info("\tSender : " +  msg.getOriginator());
+            LOG.info("\tSender : " +  originator);
             //mutex?
-            String compressMsg = ZLibCompression.compressToBase64(smsCommand.process(msg.getText()),"UTF-8");
-            outputMessages.put("+"+msg.getOriginator(),compressMsg);
+            String compressMsg = ZLibCompression.compressToBase64(smsCommand.process(msg.getText(),originator),"UTF-8");
+            outputMessages.put(originator,compressMsg);
             Service.getInstance().deleteMessage(msg);
         } catch (TimeoutException e) {
             e.printStackTrace();
