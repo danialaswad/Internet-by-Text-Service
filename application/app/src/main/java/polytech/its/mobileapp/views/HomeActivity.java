@@ -1,7 +1,9 @@
 package polytech.its.mobileapp.views;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -22,14 +24,15 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.ceylonlabs.imageviewpopup.ImagePopup;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -58,10 +61,12 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
     private static Context context;
     public static WebFragment webFragment;
     private static FragmentManager fragmentManager;
+    private static View layout;
+    private static Context dialogContext;
 
     String webSiteAsked = "www.localhost.fr";
     static boolean available = false;
-    final String HOME = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.<br><img alt=\"Image de film\" src=\"http://anasghira.com/test.png\"></img>";
+    final String HOME = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.<br><img alt=\"Image de film\" src=\"http://anasghira.com/its/test.png\"></img>";
 
     static String imageData = "";
 
@@ -85,6 +90,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         registerListener();
 
         PHONE_NUMBER = "+33628760946";
+        dialogContext = HomeActivity.this;
 
         //Récupère webview,edittext... pour les modifier
         viewTreatment();
@@ -215,6 +221,9 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         URLArea = (EditText) mCustomView.findViewById(R.id.urlEditor);
         mPbar = (ProgressBar) mCustomView.findViewById(R.id.web_view_progress);
         mPbar.setVisibility(View.GONE);
+        layout = mCustomView.inflate(context, R.layout.custom_fullimage_dialog,
+                (ViewGroup) findViewById(R.id.layout_root));
+
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -340,7 +349,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
             fragmentManager.beginTransaction().remove(fragobj).commit();
             fragmentManager.beginTransaction().add(R.id.fragment, fragobj).commit();
         } else
-            webFragment.updateWebView(decompressed);
+            webFragment.updateWebView(content);
     }
 
     private static void showWeather(String decompressed, String string) {
@@ -352,10 +361,23 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
     }
 
     private static void displayPopup() {
-        ImagePopup ip = new ImagePopup(context);
+//        ImagePopup ip = new ImagePopup(context);
         Bitmap bitmap = new ImageManager().imageBuilder(imageData);
-        Drawable d = new BitmapDrawable(context.getResources(), bitmap);
-        ip.initiatePopup(d);
+        Drawable d = new BitmapDrawable(dialogContext.getResources(), bitmap);
+//        ip.initiatePopup(d);
+
+        AlertDialog.Builder ImageDialog = new AlertDialog.Builder(dialogContext);
+        LayoutInflater factory = LayoutInflater.from(dialogContext);
+        final View view = factory.inflate(R.layout.custom_fullimage_dialog, null);
+        ImageDialog.setView(view);
+
+        ImageView showImage = (ImageView) view.findViewById(R.id.fullimage);
+        showImage.setImageBitmap(bitmap);
+        ImageDialog.setNegativeButton("ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface arg0, int arg1) {
+            }
+        });
+        ImageDialog.show();
 
     }
 
@@ -411,7 +433,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
             }
         }
 
-        String filterResponse(String decompressed) {
+        public String filterResponse(String decompressed) {
             if (decompressed.equals(context.getString(R.string.available)) && !available) {
                 showToast(context.getString(R.string.disponible));
                 available = true;
@@ -441,10 +463,11 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                 return "Tweet sent";
             } else if (decompressed.contains(context.getString(R.string.weatherCmd))) {
                 showWeather(decompressed, context.getString(R.string.weatherCmd));
-            } else if (decompressed.contains("IMG:")) {
-                imageData += decompressed;
-            } else if (decompressed.contains("IMGEND:YES")) {
+            } else if (decompressed.contains(context.getString(R.string.image))) {
+                imageData += decompressed.substring(context.getString(R.string.image).length());
+            } else if (decompressed.contains(context.getString(R.string.imgEnd))) {
                 displayPopup();
+
             }
             return "Commande incomprise";
 
