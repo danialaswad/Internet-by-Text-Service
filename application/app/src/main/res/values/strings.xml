@@ -30,7 +30,7 @@
     <string name="getImage">GETIMG:</string>
     <string name="imageError">L\'image est indisponible</string>
     <string name="imageDownload">L\'image est en téléchargement</string>
-    <string name="pays">france</string>
+    <string name="pays">Pays</string>
     <string name="service_unavailable">SERVICE INDISPONIBLE</string>
     <string name="web_saved">Site sauvegardé</string>
     <string name="service_changed">Service remplacé</string>
@@ -40,4 +40,9 @@
     <string name="image">IMG:</string>
     <string name="imgEnd">IMGEND:YES</string>
     <string name="ok_button">OK</string>
+    <string name="serveur_1">Serveur 1</string>
+    <string name="serveur_2">Serveur 2</string>
+    <string name="send">envoyer</string>
+    <string name="stop">arreter</string>
+    <string name="more">Plus</string>
 </resources>

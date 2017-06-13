@@ -1,6 +1,7 @@
 package polytech.its.mobileapp.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,7 +36,19 @@ public class CacheUtility {
 
         return f;
 
+    }
 
+    public String saveImage(Context context, String filename, String content) throws IOException {
+        Bitmap b = new ImageManager().imageBuilder(content);
+        File mydir = context.getDir("cachedImages", Context.MODE_PRIVATE); //Creating an internal dir;
+        File f = new File(mydir, filename);
+        f.getParentFile().mkdirs();
+        f.createNewFile();
+        FileOutputStream fos = new FileOutputStream(f);
+        b.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        fos.flush();
+        fos.close();
+        return f.getAbsolutePath();
     }
 
     public Map<String, History> retrieveWebsites(Context context) throws IOException {
