@@ -7,11 +7,12 @@ import org.smslib.*;
 import org.smslib.modem.SerialModemGateway;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SmsServer class
  * @Author : ITS Team
- */
+ **/
 
 public class SmsServer  implements Runnable {
 
@@ -37,7 +38,6 @@ public class SmsServer  implements Runnable {
 
     public void run() {
         try {
-            readDatabase();
             smsCommand = new SmsCommand();
             Service.getInstance().startService();
             logModemInfo();
@@ -49,13 +49,15 @@ public class SmsServer  implements Runnable {
                     LOG.info("\tMessage : " +  msg.getText());
                     LOG.info("\tSender : " +  msg.getOriginator());
                     String originator = "+"+msg.getOriginator();
-                    String cryptedMsg = ZLibCompression.compressToBase64(smsCommand.process(msg.getText(),originator),"UTF-8");
-                    sendMessage(originator,cryptedMsg);
+                    List<String> toSend = smsCommand.process(msg.getText(),originator);
+                    for(String message : toSend) {
+                        String cryptedMsg = ZLibCompression.compressToBase64(message, "UTF-8");
+                        sendMessage(originator, cryptedMsg);
+                    }
                     gateway.deleteMessage(msg);
                 }
                 msgList.clear();
             }
-            saveDatabase();
             Service.getInstance().stopService();
             Service.getInstance().removeGateway(gateway);
 
@@ -79,71 +81,6 @@ public class SmsServer  implements Runnable {
         Service.getInstance().sendMessage(msg);
         LOG.info("Output Message :");
         LOG.info("\tMessage : " +  msg.getText());
-    }
-
-    private void saveDatabase(){
-
-        FileOutputStream fout = null;
-        ObjectOutputStream oos = null;
-        try {
-            fout = new FileOutputStream(DBFILE);
-            oos = new ObjectOutputStream(fout);
-            // sérialization de l'objet
-            oos.writeObject(database) ;
-            LOG.info("Database stored in file " + DBFILE);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            if (fout != null) {
-                try {
-                    fout.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (oos != null) {
-                try {
-                    oos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private void readDatabase(){
-
-        FileInputStream fin = null;
-        ObjectInputStream ois = null;
-        try {
-            fin = new FileInputStream(DBFILE);
-            ois = new ObjectInputStream(fin);
-            database = (ITSDatabase) ois.readObject();
-            ITSDatabase.setInstance(database);
-            LOG.info("Database retrieve from file " + DBFILE);
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-
-            if (fin != null) {
-                try {
-                    fin.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (ois != null) {
-                try {
-                    ois.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
     }
 
     public void stop() throws InterruptedException, SMSLibException, IOException {

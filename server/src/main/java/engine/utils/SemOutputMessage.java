@@ -5,20 +5,20 @@ import java.util.concurrent.Semaphore;
 /**
  * Created by Antoine on 13/06/2017.
  */
-public class SEMOUTPUTMESSAGE {
+public class SemOutputMessage {
         private static Semaphore semaphore;
 
         /** Constructeur privé */
-        private SEMOUTPUTMESSAGE()
+        private SemOutputMessage()
         {
                 semaphore = new Semaphore(1);
         }
 
         /** Instance unique pré-initialisée */
-        private static SEMOUTPUTMESSAGE INSTANCE = new SEMOUTPUTMESSAGE();
+        private static SemOutputMessage INSTANCE = new SemOutputMessage();
 
         /** Point d'accès pour l'instance unique du singleton */
-        public static SEMOUTPUTMESSAGE getInstance()
+        public static SemOutputMessage getInstance()
         {
             return INSTANCE;
         }

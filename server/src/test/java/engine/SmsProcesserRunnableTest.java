@@ -34,11 +34,17 @@ public class SmsProcesserRunnableTest {
         Assert.assertTrue(outputMessages.size()==1);
 
         outputMessages.clear();
+        SmsProcesserRunnable th2 = new SmsProcesserRunnable(msg,outputMessages,smsCommand);
+        th2.run();
+        Assert.assertTrue(outputMessages.size()==1);
+    }
+
+    @Test
+    public void checkmodifyingMultiThread(){
         //multi-thread
         ArrayList<Runnable> runnableArrayList = new ArrayList<>();
         for (int i = 0; i<100;i++){
-            SmsCommand smsC = new SmsCommand();
-            SmsProcesserRunnable th= new SmsProcesserRunnable(msg,outputMessages,smsC);
+            SmsProcesserRunnable th= new SmsProcesserRunnable(msg,outputMessages,smsCommand);
             runnableArrayList.add(th);
         }
         ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
@@ -46,6 +52,6 @@ public class SmsProcesserRunnableTest {
             executor.execute(r);
         }
         executor.shutdown();
-        //Assert.assertTrue(outputMessages.size()==100);
+        Assert.assertTrue(outputMessages.size()==100);
     }
 }

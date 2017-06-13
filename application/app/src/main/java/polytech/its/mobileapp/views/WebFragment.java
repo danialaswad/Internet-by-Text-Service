@@ -32,6 +32,7 @@ import static android.webkit.WebView.HitTestResult.IMAGE_TYPE;
 @SuppressWarnings("deprecation")
 public class WebFragment extends Fragment {
     private String existingPageContent = "";
+    public static String imageURL = "";
 
     public WebView webArea;
     public ImageButton nextButton;
@@ -140,8 +141,13 @@ public class WebFragment extends Fragment {
                 if (result.getType() == IMAGE_TYPE) {
                     Log.d("LONGPRESSSS", result.getExtra());
                     if (result.getExtra() != null) {
-                        home.sendMessage(getString(R.string.getImage) + result.getExtra());
-                        home.showToast(getString(R.string.imageDownload));
+                        imageURL = result.getExtra();
+                        if (imageURL.contains("data/user/0")) {
+                            home.displayPopup();
+                        } else {
+                            home.sendMessage(getString(R.string.getImage) + imageURL);
+                            home.showToast(getString(R.string.imageDownload));
+                        }
                     } else
                         home.showToast(getString(R.string.imageError));
                 }
@@ -191,7 +197,7 @@ public class WebFragment extends Fragment {
 
     void clearAndUpdateView(String message) {
         webArea.loadUrl("about:blank");
-        existingPageContent = "";
+        existingPageContent = message;
         webArea.loadDataWithBaseURL(null, message, "text/html", "utf-8", null);
     }
 
