@@ -9,7 +9,7 @@ public class ITSDatabaseSQL {
 
     // drivers
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    private static final String DB_URL = "jdbc:mysql://localhost/its?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC\n";
+    private static final String DB_URL = "jdbc:mysql://localhost/its?useUnicode=true&characterEncoding=utf-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC\n";
 
     // credentials
     private static final String USER = "its";
