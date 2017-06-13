@@ -274,5 +274,21 @@ public class PageCutterTest {
 
         Assert.assertTrue(pages.get(0).length() < 1000);
 
+
+        html = "<body class=\"mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Vampire rootpage-Vampire skin-vector action-view\">\t\t<div id=\"mw-page-base\" class=\"noprint\"></div>\n" +
+                "\" +\n" +
+                "                \"\\t\\t<div id=\\\"mw-head-base\\\" class=\\\"noprint\\\"></div>\\n\" +\n" +
+                "                \"\\t\\t<div id=\\\"content\\\" class=\\\"mw-body\\\" role=\\\"main\\\">\\n\" +\n" +
+                "                \"\\t\\t\\t<a id=\\\"top\\\"></a>\\n\" +\n" +
+                "                \"\\n\" +\n" +
+                "                \"\\t\\t\\t\\t\\t\\t\\t<div id=\\\"siteNotice\\\" class=\\\"mw-body-content\\\"><!-- CentralNotice --></div>\\n\" +\n" +
+                "                \"\\t\\t\\t\\t\\t\\t<div class=\\\"mw-indicators mw-body-content\\\">\\n\" +\n" +
+                "                \"</div>\\n\" +\n";
+
+        pages = new PageCutter(html).getFirstChunk();
+
+        Assert.assertTrue(pages.size() == 1);
+
+        Assert.assertTrue(pages.get(0).length() < 1000);
     }
 }

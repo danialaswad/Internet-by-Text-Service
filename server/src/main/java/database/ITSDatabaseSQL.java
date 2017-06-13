@@ -19,30 +19,14 @@ public class ITSDatabaseSQL {
     private static Connection connection = null;
     private static Statement statement = null;
 
-    public static void main(String[] args){
-
-
-        try {
-            addPages("asdasfasf","aSfasfaf","ASFAsfadfadf");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            getPage("asdasfasf","aSfasfaf");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public static String getPage(String telNum, String url) throws SQLException {
-        return  execute("SELECT PAGES FROM Website WHERE NUMURL = \'" + telNum+url+"\'", "PAGES");
+        return  executer("SELECT PAGES FROM Website WHERE NUMURL = \'" + telNum+url+"\'", "PAGES");
     }
 
     public static ArrayList<String> getTwitterToken(String twitterID) throws SQLException {
-        String token =  execute("SELECT TOKEN FROM TweetToken WHERE TWITTERID = \'" + twitterID + "\'", "TOKEN");
-        String secret = execute("SELECT SECRET FROM TweetToken WHERE TWITTERID = \'" + twitterID + "\'", "SECRET");
+        String token =  executer("SELECT TOKEN FROM TweetToken WHERE TWITTERID = \'" + twitterID + "\'", "TOKEN");
+        String secret = executer("SELECT SECRET FROM TweetToken WHERE TWITTERID = \'" + twitterID + "\'", "SECRET");
         ArrayList<String> list = new ArrayList<>();
         list.add(token);
         list.add(secret);
@@ -50,10 +34,10 @@ public class ITSDatabaseSQL {
     }
 
     public static String getMaxTweetID(String twitterID) throws SQLException {
-        return execute("SELECT MAXTWEET FROM TweetToken WHERE TWITTERID = \'" + twitterID + "\'", "MAXTWEET");
+        return executer("SELECT MAXTWEET FROM TweetToken WHERE TWITTERID = \'" + twitterID + "\'", "MAXTWEET");
     }
 
-    private static String execute(String query, String var) throws SQLException {
+    private static String executer(String query, String var) throws SQLException {
         String result = "";
         connection = getDBConnection();
         statement = connection.createStatement();

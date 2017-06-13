@@ -70,7 +70,6 @@ public class TwitterManager {
         try {
             ArrayList<String> list = ITSDatabaseSQL.getTwitterToken(id);
             AccessToken accessToken = new AccessToken(list.get(0),list.get(1),Long.parseLong(id));
-            //AccessToken accessToken = database.twitterTokens().get(id);
             twitter.setOAuthAccessToken(accessToken);
 
 
@@ -91,7 +90,6 @@ public class TwitterManager {
             }
 
             Long m = statuses.get(statuses.size()-1).getId() -1;
-            //database.maxTweetId().put(id,m.toString());
 
             ITSDatabaseSQL.addMaxTweet(id,m.toString());
             twitter.setOAuthAccessToken(null);
