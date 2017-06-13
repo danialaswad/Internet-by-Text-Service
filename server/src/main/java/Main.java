@@ -18,8 +18,8 @@ import java.nio.IntBuffer;
 public class Main {
 
     public static void main(String args[]) throws InterruptedException, SMSLibException, IOException, TwitterException {
-        //testSmsServer();
-        testIMG("GETIMG:http://www.welovebuzz.com/wp-content/uploads/2016/05/cropped-paysage-maroc.jpg");
+        testSmsServer();
+        //testIMG("GETIMG:http://www.welovebuzz.com/wp-content/uploads/2016/05/cropped-paysage-maroc.jpg");
     }
 
     public static void testSmsServer() throws InterruptedException, SMSLibException, IOException {
@@ -39,7 +39,7 @@ public class Main {
 
 
     public static void testIMG(String text) throws IOException {
-        SmsCommand smsCommand = new SmsCommand();
+        /*SmsCommand smsCommand = new SmsCommand();
         String cryptedMsg = smsCommand.process(text,"+33668639846");
         System.out.println();
         String fin = ZLibCompression.compressToBase64(cryptedMsg,"UTF-8");
@@ -48,6 +48,6 @@ public class Main {
         if(!res.equals(cryptedMsg.split(":")[1]))
             System.out.println("not");
         ImgReader.decodingImg(res);
-        System.out.println("test");
+        System.out.println("test");*/
     }
 }

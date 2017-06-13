@@ -44,7 +44,7 @@ public class SmsCommand {
         return map;
     }
 
-    public String process(String request, String msgOriginator){
+    public List<String> process(String request, String msgOriginator){
         this.msgOriginator = msgOriginator;
 
         String [] arrayRequest = request.split(":",2);
@@ -68,89 +68,117 @@ public class SmsCommand {
             LOG.error(e.getMessage());
             return error();
         }
-        return (String) o;
+        return (List<String>) o;
     }
 
-    public String get(String data){
-        return "WEB:"+pageManager.getWebPage(data,msgOriginator);
+    public List<String> get(String data){
+        ArrayList<String> result = new ArrayList<>();
+        result.add("WEB:"+pageManager.getWebPage(data,msgOriginator));
+        return result;
     }
-
-    public String next(String data){
-         return "WEBNEXT:" + pageManager.nextWebPage(data,msgOriginator);
+    public List<String> next(String data){
+        ArrayList<String> result = new ArrayList<>();
+        result.add("WEBNEXT:" + pageManager.nextWebPage(data,msgOriginator));
+        return result;
     }
-
-    public String endwebsite(String data){
+    public List<String> endwebsite(String data){
         pageManager.removeWebPage(data,msgOriginator);
-        return "ENDWEBSITE:SUCCESS";
+        ArrayList<String> result = new ArrayList<>();
+        result.add("ENDWEBSITE:SUCCESS");
+        return result;
     }
 
-    public String ok(String data){
-        return "ITS:AVAILABLE";
+    public List<String> ok(String data){
+        ArrayList<String> result = new ArrayList<>();
+        result.add("ITS:AVAILABLE");
+        return result;
     }
 
-    public String twitterconf(String data){
+    public List<String> twitterconf(String data){
+        ArrayList<String> result = new ArrayList<>();
         List<String> tmp = new ArrayList<>(Arrays.asList(data.split(",")));
 
         if (tmp.size()!=3) {
-            return "TWITTERCONF:FAILURE";
+            result.add("TWITTERCONF:FAILURE");
+            return result;
         }
 
         twitterManager.configureAccount(tmp.get(0),tmp.get(1),tmp.get(2));
-        return "TWITTERCONF:SUCCESS";
+        result.add("TWITTERCONF:SUCCESS");
+        return result;
     }
-
-    public String twitterhome(String data){
+    public List<String> twitterhome(String data){
+        ArrayList<String> result = new ArrayList<>();
         String id = data;
         try {
-            return "TWITTERHOME:"+twitterManager.getHomeTimeline(id);
+            result.add("TWITTERHOME:"+twitterManager.getHomeTimeline(id));
+            return result;
         } catch (TwitterException e) {
             LOG.warn(e.getMessage());
-            return "TWITTERHOME:FAILURE";
+            result.add("TWITTERHOME:FAILURE");
+            return result;
         }
     }
-    public String twitternext(String data){
+    public List<String> twitternext(String data){
+        ArrayList<String> result = new ArrayList<>();
         String id = data;
         try {
-            return "TWITTERNEXT:"+twitterManager.getNextHomeTimeline(id);
+            result.add("TWITTERNEXT:"+twitterManager.getNextHomeTimeline(id));
+            return result;
         } catch (TwitterException e) {
             LOG.warn(e.getMessage());
-            return "TWITTERNEXT:FAILURE";
+            result.add("TWITTERNEXT:FAILURE");
+            return result;
         }
     }
-
-    public String tweet(String data){
+    public List<String> tweet(String data){
+        ArrayList<String> result = new ArrayList<>();
         String [] dataArray = data.split(",",2);
         if (dataArray.length != 2) {
-            return "TWEET:FAILURE";
+            result.add("TWEET:FAILURE");
+            return result;
         }
-        if(twitterManager.postTweet(dataArray[0],dataArray[1]))
-            return "TWEET:SUCCESS";
-        else
-            return "TWEET:FAILURE";
+        if(twitterManager.postTweet(dataArray[0],dataArray[1])) {
+            result.add("TWEET:SUCCESS");
+            return result;
+        }
+        else {
+            result.add("TWEET:FAILURE");
+            return result;
+        }
     }
 
-    public String getimg(String data){
+    public List<String> getimg(String data){
+        ArrayList<String> result = new ArrayList<>();
         try {
             byte[] img = ImgReader.getImageArray(data);
             String encodedImage = ZLibCompression.encodeImage(img);
-            return "IMG:"+encodedImage;
+            result.add("IMG:"+encodedImage);
+            result.add("IMGEND:YES");
+            return result;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "IMG:FAILURE";
+        result.add("IMG:FAILURE");
+        return result;
     }
 
-    public String getweather(String data){
+    public List<String> getweather(String data){
+        ArrayList<String> resultList = new ArrayList<>();
         String result = null;
         try {
             result = WeatherProxy.getWeather(data);
         } catch (IOException e) {
-            return "WEATHER:FAILURE";
+            resultList.add("WEATHER:FAILURE");
+            return resultList;
         }
-        return "WEATHER:"+result;
+        resultList.add("WEATHER:"+result);
+        return resultList;
     }
 
-    private String error(){
-        return  "WEB:<h2>Mauvaise commande</h2>";
+    private List<String> error(){
+        ArrayList<String> result = new ArrayList<>();
+        result.add("WEB:<h2>Mauvaise commande</h2>");
+        return  result;
     }
 }
