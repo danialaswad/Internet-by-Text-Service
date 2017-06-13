@@ -1,15 +1,9 @@
 package weather;
 
-import jdk.internal.org.xml.sax.InputSource;
 import org.jsoup.Jsoup;
 import org.junit.Assert;
 import org.junit.Test;
 import org.jsoup.nodes.Document;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.ByteArrayInputStream;
-import java.io.StringReader;
 
 /**
  * WeatherProxyTest

@@ -28,7 +28,8 @@ public class PageManagerTest {
     public void nextWebPageTest(){
         PageManager pm = new PageManager();
         pm.getWebPage("http://anasghira.com/its/lorem2","");
-        String expected = "<p>Vestibulum tincidunt orci in neque efficitur tempus. Nulla vulputate vulputate ultrices. Maecenas pellentesque, metus at malesuada pulvinar, quam nibh fermentum lacus, et dapibus nibh felis eu odio. Nulla eget velit id dolor egestas volutpat. Pellentesque rutrum tellus ac dui tincidunt pulvinar. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris ut magna nunc. Aenean sollicitudin ut quam sed condimentum. Phasellus pulvinar ultricies lacus, ut vehicula eros tincidunt quis. Curabitur id nibh posuere, molestie mi commodo, pharetra arcu. Proin sed urna semper, euismod.</p>  \n" +
+        String expected = "<body>\n" +
+                " <p>Vestibulum tincidunt orci in neque efficitur tempus. Nulla vulputate vulputate ultrices. Maecenas pellentesque, metus at malesuada pulvinar, quam nibh fermentum lacus, et dapibus nibh felis eu odio. Nulla eget velit id dolor egestas volutpat. Pellentesque rutrum tellus ac dui tincidunt pulvinar. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris ut magna nunc. Aenean sollicitudin ut quam sed condimentum. Phasellus pulvinar ultricies lacus, ut vehicula eros tincidunt quis. Curabitur id nibh posuere, molestie mi commodo, pharetra arcu. Proin sed urna semper, euismod.</p> \n" +
                 "</body>";
         String actual = pm.nextWebPage("http://anasghira.com/its/lorem2","");
 

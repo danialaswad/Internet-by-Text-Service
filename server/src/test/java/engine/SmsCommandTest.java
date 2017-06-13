@@ -44,7 +44,7 @@ public class SmsCommandTest {
     @Test
     public void twitterHomeFailure(){
         SmsCommand command = new SmsCommand();
-        Assert.assertEquals("WEB:<h2>Mauvaise commande</h2>",command.process("TWITTERHOME:1234",""));
+        Assert.assertEquals("TWITTERHOME:FAILURE",command.process("TWITTERHOME:1234",""));
     }
 
     @Test
@@ -52,7 +52,7 @@ public class SmsCommandTest {
         SmsCommand command = new SmsCommand();
         Assert.assertEquals("TWEET:FAILURE",command.process("TWEET:1234",""));
 
-        Assert.assertEquals("WEB:<h2>Mauvaise commande</h2>",command.process("TWEET:1234,ok",""));
+        Assert.assertEquals("TWEET:FAILURE",command.process("TWEET:1234,ok",""));
     }
 
     @Test

@@ -24,15 +24,15 @@ public class PageManager {
         ArrayList<String> pages = new PageCutter(page).getFirstChunk();
 
         String result = pages.get(0);
-        try {
-          ITSDatabaseSQL.addPages(originator, reader.getUrlString(),pages.get(1));
-        } catch (SQLException e) {
-            LOG.error(e.getMessage());
+        if(pages.size()>1) {
+            try {
+                ITSDatabaseSQL.addPages(originator, reader.getUrlString(), pages.get(1));
+            } catch (SQLException e) {
+                LOG.error(e.getMessage());
+            }
         }
         return result;
-        //database.webpages().put(reader.getUrlString(),new PageCutter(page).getPageChunkList());
-        //return database.webpages().get(reader.getUrlString()).remove(0);
-    }
+ }
 
     public String nextWebPage(String url, String originator){
         URLReader reader = new URLReader(url);
@@ -49,13 +49,6 @@ public class PageManager {
         }
 
         return result;
-       /* if (database.webpages().containsKey(reader.getUrlString())){
-            if (database.webpages().get(reader.getUrlString()).size() > 0){
-                return database.webpages().get(reader.getUrlString()).remove(0);
-            }
-        }
-
-        return "";*/
     }
 
     public void removeWebPage(String url,String originator) {
@@ -64,6 +57,5 @@ public class PageManager {
         } catch (SQLException e) {
             LOG.error(e.getMessage());
         }
-        //database.webpages().remove(url);
     }
 }
