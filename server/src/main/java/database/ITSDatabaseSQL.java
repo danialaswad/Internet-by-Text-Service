@@ -19,16 +19,6 @@ public class ITSDatabaseSQL {
     private static Connection connection = null;
     private static Statement statement = null;
 
-    public static void main(String[] args){
-        try {
-            addPages("12344","hello.fr","asdasdaff'sdae'a'a''''as'd\"feaf\"aefaefaef'dfafef");
-            addMaxTweet("12313ff","123412423423");
-            addTwitterToken("1123123","1efdew43r23r","23r2f'2vrv2v\"ewvwev\"wefwfwev");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static String getPage(String telNum, String url) throws SQLException {
         return  executer("SELECT PAGES FROM Website WHERE NUMURL = \'" + telNum+url+"\'", "PAGES");
     }

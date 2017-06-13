@@ -1,70 +1,18 @@
-package web;
+package database;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
-import web.PageCutter;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class PageCutterTest {
+public class ITSDatabaseSQLTest {
 
     @Test
-    public void cutPageTest(){
-        String html ="<body> \n" +
-                "  <div>\n" +
-                "    Hello \n" +
-                "   <i> new </i> \n" +
-                "   <p class=\"unecessary\" id=\"necessary\">this must <i>not</i> be remove</p> world \n" +
-                "  </div> \n" +
-                "  <p id=\"n\">this must not be remove</p> \n" +
-                " </body>\n";
-        PageCutter p = new PageCutter(html);
-        String trimedPage = p.subHtmlTags(0,24);
-        Assert.assertEquals("<body> \n" +
-                "  <div>\n" +
-                "    Hell",html.substring(0,24));
-
-        String body = "<body> \n"+ " ";
-        Assert.assertEquals(body, trimedPage);
-
-
-
-        Assert.assertEquals("  <div>\n" +
-                "    Hello \n" +
-                "   <i> new </i> \n" +
-                "   <p class=\"unecessary\" id=\"ne",html.substring(8,75) );
-        trimedPage = p.subHtmlTags(8,75);
-        String res = " <div>\n" +
-                "   Hello \n" +
-                "  <i> new </i> \n" + "  ";
-        Assert.assertEquals(res, trimedPage);
-    }
-
-    @Test
-    @Ignore("infinity loop")
-    public void getChunkListTest(){
-        String pageTest="";
-        try {
-            pageTest= new String(Files.readAllBytes(Paths.get("./src/test/res/tmpClean.html")),"UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        PageCutter p = new PageCutter(pageTest);
-        ArrayList<String> chunkList = p.getPageChunkList();
-        for (String chunk:chunkList) {
-            Assert.assertTrue(chunk.length() <= 1000);
-        }
-
-    }
-
-
-    @Test
-    public void getFirstChunkTest(){
-        String html ="<body class=\"mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Vampire rootpage-Vampire skin-vector action-view\">\t\t<div id=\"mw-page-base\" class=\"noprint\"></div>\n" +
+    public void pageSaveTest() throws SQLException {
+        String url = "http://anasghira.com";
+        String tel = "0634205775";
+        String page = "<body class=\"mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Vampire rootpage-Vampire skin-vector action-view\">\t\t<div id=\"mw-page-base\" class=\"noprint\"></div>\n" +
                 "\t\t<div id=\"mw-head-base\" class=\"noprint\"></div>\n" +
                 "\t\t<div id=\"content\" class=\"mw-body\" role=\"main\">\n" +
                 "\t\t\t<a id=\"top\"></a>\n" +
@@ -270,27 +218,38 @@ public class PageCutterTest {
                 "<center>Le vampire est actif la nuit et mord le plus souvent ses victimes durant leur sommeil<br />\n" +
                 "(<i>Varney the Vampire</i>, gravure, 1847).</center>\n";
 
-        ArrayList<String> pages = new PageCutter(html).getFirstChunk();
+        ITSDatabaseSQL.addPages(tel,url,page);
 
-        Assert.assertTrue(pages.size() == 2);
+        String getPage = ITSDatabaseSQL.getPage(tel,url);
 
-        Assert.assertTrue(pages.get(0).length() < 1000);
-
-
-        html = "<body class=\"mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Vampire rootpage-Vampire skin-vector action-view\">\t\t<div id=\"mw-page-base\" class=\"noprint\"></div>\n" +
-                "\" +\n" +
-                "                \"\\t\\t<div id=\\\"mw-head-base\\\" class=\\\"noprint\\\"></div>\\n\" +\n" +
-                "                \"\\t\\t<div id=\\\"content\\\" class=\\\"mw-body\\\" role=\\\"main\\\">\\n\" +\n" +
-                "                \"\\t\\t\\t<a id=\\\"top\\\"></a>\\n\" +\n" +
-                "                \"\\n\" +\n" +
-                "                \"\\t\\t\\t\\t\\t\\t\\t<div id=\\\"siteNotice\\\" class=\\\"mw-body-content\\\"><!-- CentralNotice --></div>\\n\" +\n" +
-                "                \"\\t\\t\\t\\t\\t\\t<div class=\\\"mw-indicators mw-body-content\\\">\\n\" +\n" +
-                "                \"</div>\\n\" +\n";
-
-        pages = new PageCutter(html).getFirstChunk();
-
-        Assert.assertTrue(pages.size() == 1);
-
-        Assert.assertTrue(pages.get(0).length() < 1000);
+        Assert.assertEquals(page,getPage);
     }
+
+
+    @Test
+    public void tokenTest() throws SQLException {
+        String id = "12e1edsvwe";
+        String token = "SFERWE@!#SFV";
+        String secret ="ASFAF@Q$GTNUY>O>SERWEFA343TJEWF$#G%^%^^NUL.";
+
+        ITSDatabaseSQL.addTwitterToken(id,token,secret);
+
+        ArrayList<String> accesToken = ITSDatabaseSQL.getTwitterToken(id);
+
+        Assert.assertEquals(token, accesToken.get(0));
+        Assert.assertEquals(secret, accesToken.get(1));
+    }
+
+    @Test
+    public void maxTweetTest() throws SQLException {
+        String id = "!@#FRE#$V#";
+        String maxTweet = "123456797531234568754";
+
+
+        ITSDatabaseSQL.addMaxTweet(id,maxTweet);
+        Assert.assertEquals(maxTweet,ITSDatabaseSQL.getMaxTweetID(id));
+    }
+
+
+
 }
