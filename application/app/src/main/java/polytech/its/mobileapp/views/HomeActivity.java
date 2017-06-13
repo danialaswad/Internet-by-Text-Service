@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -64,7 +62,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
     private static View layout;
     private static Context dialogContext;
 
-    String webSiteAsked = "www.localhost.fr";
+    public static String webSiteAsked = "www.localhost.fr";
     static boolean available = false;
     final String HOME = "<h1>Bienvenue sur ITS</h1><p>Entrez l'URL dans la barre ci-dessus et soyez patients :) </p><br>Nous économisons les arbres de la fôrêt.<br><img alt=\"Image de film\" src=\"http://anasghira.com/its/test.png\"></img>";
 
@@ -156,7 +154,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                 }
                 return true;
             case R.id.action_country2:
-                newPhone = "+33666360803";
+                newPhone = "+33633192265";
                 if (newPhone != PHONE_NUMBER) {
                     PHONE_NUMBER = newPhone;
                     showToast(getString(R.string.service_changed));
@@ -360,11 +358,8 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         }
     }
 
-    private static void displayPopup() {
-//        ImagePopup ip = new ImagePopup(context);
+    public static void displayPopup() {
         Bitmap bitmap = new ImageManager().imageBuilder(imageData);
-        Drawable d = new BitmapDrawable(dialogContext.getResources(), bitmap);
-//        ip.initiatePopup(d);
 
         AlertDialog.Builder ImageDialog = new AlertDialog.Builder(dialogContext);
         LayoutInflater factory = LayoutInflater.from(dialogContext);
@@ -402,6 +397,22 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
 
     public static void showToast(String msg) {
         displayToast(msg);
+    }
+
+    public static void saveImage() {
+
+        String fileName = webSiteAsked + "_" + webFragment.imageURL + "_" + "cache.png";
+        try {
+            String newURL = "file://" + new CacheUtility().saveImage(context, fileName, imageData);
+            String pageContent = webFragment.getExistingPageContent();
+            pageContent = pageContent.replace(webFragment.imageURL, newURL);
+            webFragment.clearAndUpdateView(pageContent);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     public static class SmsListener extends BroadcastReceiver {
@@ -466,6 +477,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
             } else if (decompressed.contains(context.getString(R.string.image))) {
                 imageData += decompressed.substring(context.getString(R.string.image).length());
             } else if (decompressed.contains(context.getString(R.string.imgEnd))) {
+                saveImage();
                 displayPopup();
 
             }
