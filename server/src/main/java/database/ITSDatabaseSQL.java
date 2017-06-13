@@ -19,6 +19,15 @@ public class ITSDatabaseSQL {
     private static Connection connection = null;
     private static Statement statement = null;
 
+    public static void main(String[] args){
+        try {
+            addPages("12344","hello.fr","asdasdaff'sdae'a'a''''as'd\"feaf\"aefaefaef'dfafef");
+            addMaxTweet("12313ff","123412423423");
+            addTwitterToken("1123123","1efdew43r23r","23r2f'2vrv2v\"ewvwev\"wefwfwev");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static String getPage(String telNum, String url) throws SQLException {
         return  executer("SELECT PAGES FROM Website WHERE NUMURL = \'" + telNum+url+"\'", "PAGES");
@@ -49,25 +58,68 @@ public class ITSDatabaseSQL {
     }
 
     public static void addPages(String telNum, String url, String pages) throws SQLException {
-        executer("SELECT count(*) from Website WHERE NUMURL=?",
-                telNum+url,
-                "UPDATE Website SET PAGES = \'" +pages +"\' WHERE NUMURL = \'" + telNum+url+"\'",
-                "INSERT INTO Website(NUMURL,PAGES) VALUES(\'" + telNum+url+"\',\'" +pages +"\')");
+        executer(telNum+url,pages,"SELECT count(*) from Website WHERE NUMURL=?",
+                "UPDATE Website SET PAGES = ? WHERE NUMURL = ?",
+                "INSERT INTO Website(NUMURL,PAGES) VALUES(?,?)");
     }
-
+    public static void addMaxTweet(String twitterID, String maxTweet) throws SQLException {
+        executer(twitterID,maxTweet,"SELECT count(*) from TweetToken WHERE TWITTERID=?",
+                "UPDATE TweetToken SET MAXTWEET = ? WHERE TWITTERID = ?",
+                "INSERT INTO TweetToken(TWITTERID,MAXTWEET) VALUES(?,?)");
+    }
 
     public static void addTwitterToken(String twitterID, String twitterToken, String twitterSecret) throws SQLException {
-        executer("SELECT count(*) from TweetToken WHERE TWITTERID=?",
-                twitterID,
-                "UPDATE TweetToken SET TOKEN = \'" +twitterToken +"\' , SECRET = \'"+twitterSecret+"\' WHERE TWITTERID = \'" + twitterID+"\'",
-                "INSERT INTO TweetToken(TWITTERID,TOKEN,SECRET) VALUES(\'" + twitterID+"\',\'" +twitterToken +"\',\'" + twitterSecret + "\')");
+        executer(twitterID, twitterToken, twitterSecret, "SELECT count(*) from TweetToken WHERE TWITTERID=?",
+                "UPDATE TweetToken SET TOKEN = ? , SECRET = ? WHERE TWITTERID = ?",
+                "INSERT INTO TweetToken(TWITTERID,TOKEN,SECRET) VALUES(?,?,?)");
     }
 
-    public static void addMaxTweet(String twitterID, String maxTweet) throws SQLException {
-        executer("SELECT count(*) from TweetToken WHERE TWITTERID=?",
-                twitterID,
-                "UPDATE TweetToken SET MAXTWEET = \'" +maxTweet +"\' WHERE TWITTERID = \'" + twitterID+"\'",
-                "INSERT INTO TweetToken(TWITTERID,MAXTWEET) VALUES(\'" + twitterID+"\',\'" +maxTweet +"\')");
+
+
+    private static void executer(String telURL, String pages,String checkQuery, String updateQuery, String insertQuery) throws SQLException {
+        connection = getDBConnection();
+        PreparedStatement checkStatement = connection.prepareStatement(checkQuery);
+        checkStatement.setString(1,telURL);
+        ResultSet resultSet = checkStatement.executeQuery();
+
+        if (resultSet.next()){
+            if (resultSet.getInt("count(*)")>0){
+                PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+                updateStatement.setString(1,pages);
+                updateStatement.setString(2,telURL);
+                updateStatement.executeUpdate();
+            }
+            else {
+                PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+                insertStatement.setString(1,telURL);
+                insertStatement.setString(2,pages);
+                insertStatement.executeUpdate();
+            }
+        }
+    }
+
+    private static void executer(String id, String token, String secret,String checkQuery, String updateQuery, String insertQuery) throws SQLException {
+        connection = getDBConnection();
+        PreparedStatement checkStatement = connection.prepareStatement(checkQuery);
+        checkStatement.setString(1,id);
+        ResultSet resultSet = checkStatement.executeQuery();
+
+        if (resultSet.next()){
+            if (resultSet.getInt("count(*)")>0){
+                PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+                updateStatement.setString(1,token);
+                updateStatement.setString(2,secret);
+                updateStatement.setString(3,id);
+                updateStatement.executeUpdate();
+            }
+            else {
+                PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+                insertStatement.setString(1,id);
+                insertStatement.setString(2,token);
+                insertStatement.setString(3,secret);
+                insertStatement.executeUpdate();
+            }
+        }
     }
 
     private static void executer(String check, String verif,String update, String insert) throws SQLException {

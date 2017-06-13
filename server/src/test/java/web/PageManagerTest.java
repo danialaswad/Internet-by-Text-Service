@@ -35,4 +35,10 @@ public class PageManagerTest {
 
         Assert.assertEquals(expected,actual);
     }
+
+    @Test
+    public void andorazakTest(){
+        PageManager pm = new PageManager();
+        System.out.println(pm.getWebPage("andokarim.fr",""));
+    }
 }
