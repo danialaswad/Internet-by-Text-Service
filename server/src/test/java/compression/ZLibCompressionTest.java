@@ -1,8 +1,11 @@
 package compression;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import web.ImgReader;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
@@ -50,5 +53,14 @@ public class ZLibCompressionTest {
                                     ",\"text\":\"Je suis un ladyboy\"}]";
 
         System.out.println(ZLibCompression.compressToBase64(tmp, "UTF-8"));
+    }
+
+    @Test
+    public void compressImagetest() throws IOException {
+        byte[] img = ImgReader.getImageArray("http://e-cdn-images.deezer.com/images/artist/bb660d6512fcca65b9aea703af95a546/86x86-000000-80-0-0.jpg");
+        System.out.println(ZLibCompression.encodeImage(img));
+        String expected = ZLibCompression.encodeImage(img);
+        String result = ZLibCompression.decompressFromBase64(ZLibCompression.compressToBase64(expected,"UTF-8"),"UTF-8");
+        Assert.assertEquals(expected,result);
     }
 }
