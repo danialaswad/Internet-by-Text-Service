@@ -1,18 +1,10 @@
 package web;
 
-import compression.ZLibCompression;
-
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.WritableRaster;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-
 
 /**
  * ImgReader
@@ -22,7 +14,13 @@ import java.util.ArrayList;
  */
 public class ImgReader {
 
-    private static BufferedImage getImageFromURL(String imgURL) throws IOException {
+    /**
+     * Fetch an image from the given url
+     * @param imgURL
+     * @return BufferedImage
+     * @throws IOException
+     */
+    static BufferedImage getImageFromURL(String imgURL) throws IOException {
         URL url = new URL(imgURL);
         HttpURLConnection connection = (HttpURLConnection) url
                 .openConnection();
@@ -32,19 +30,19 @@ public class ImgReader {
         return ImageIO.read(connection.getInputStream());
     }
 
-    public static byte[] getImageArray(String imgURL) throws IOException {
-        //TODO
-        byte[] imageInByte;
-        BufferedImage img = getImageFromURL(imgURL);
+    /**
+     * Converts a BufferedImage into an array of bytes
+     * @param image
+     * @return byte[]
+     * @throws IOException
+     */
+    public static byte[] getImageArray(BufferedImage image, String format) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(img, "bmp", baos);
+        ImageIO.write(image, format, baos);
         baos.flush();
-        imageInByte = baos.toByteArray();
+        byte[] imageInByte = baos.toByteArray();
         baos.close();
-        System.out.println("Test2");
         return imageInByte;
     }
-
-
 
 }

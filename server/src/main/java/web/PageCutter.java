@@ -24,6 +24,12 @@ public class PageCutter {
         chunkList=new ArrayList<>();
     }
 
+    /**
+     * Retrieve the 1st 1000 character from an html text
+     * @param start
+     * @param end
+     * @return String
+     */
     String subHtmlTags(int start, int end){
         String result="";
 
@@ -40,7 +46,12 @@ public class PageCutter {
         return result;
     }
 
-    public ArrayList<String> getFirstChunk(){
+    /**
+     * Retrieve the 1st 1000 character in a given string
+     * Returns an arraylist that contains the 1st 1000 character in the and the rest
+     * @return Arraylist
+     */
+    ArrayList<String> getFirstChunk(){
         if (page.body().toString().length() < SIZE_CHUNK){
             chunkList.add(page.body().toString());
             return chunkList;
@@ -53,38 +64,6 @@ public class PageCutter {
 
         return chunkList;
     }
-
-
-    /**
-     *
-     * @return la liste des morceaux de la page
-     */
-    public ArrayList<String> getPageChunkList(){
-
-        if (page.body().toString().length() < SIZE_CHUNK){
-            chunkList.add(page.body().toString());
-            return chunkList;
-        }
-
-        int start = 0;
-        int end = SIZE_CHUNK;
-
-        while (SIZE_CHUNK + start < page.body().toString().length()){
-            String tmp = subHtmlTags(start, end);
-
-            start += tmp.length();
-            end = start+SIZE_CHUNK;
-            chunkList.add(tmp);
-
-        }
-
-        if (start < page.body().toString().length() ){
-            chunkList.add(page.body().toString().substring(start,page.body().toString().length()));
-        }
-
-        return chunkList;
-    }
-
 
     /**
      * Pour découper une nouvelle page

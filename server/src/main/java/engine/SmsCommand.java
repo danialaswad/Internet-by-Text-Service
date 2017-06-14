@@ -1,17 +1,17 @@
 package engine;
 
-import compression.ZLibCompression;
 import org.apache.log4j.Logger;
 import twitter.TwitterManager;
 import twitter4j.TwitterException;
 import weather.WeatherProxy;
-import web.ImgReader;
+import web.ImageManager;
 import web.PageManager;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.List;
 
 /**
  * SmsCommand class
@@ -24,8 +24,8 @@ public class SmsCommand {
     private static final Logger LOG = Logger.getLogger(SmsCommand.class);
 
     private PageManager pageManager;
-    private Map<String, Method> commands;
     private TwitterManager twitterManager;
+    private Map<String, Method> commands;
     private String msgOriginator;
 
     public SmsCommand(){
@@ -151,13 +151,14 @@ public class SmsCommand {
     public List<String> getimg(String data){
         ArrayList<String> result = new ArrayList<>();
         try {
-            byte[] img = ImgReader.getImageArray(data);
-            String encodedImage = ZLibCompression.encodeImage(img);
-            result.add("IMG:"+encodedImage);
+            ArrayList<String> encodedImage = ImageManager.getImageStringInList(data);
+            for (String img: encodedImage) {
+                result.add("IMG:"+img);
+            }
             result.add("IMGEND:YES");
             return result;
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
         }
         result.add("IMG:FAILURE");
         return result;

@@ -1,6 +1,5 @@
 package twitter;
 
-import database.ITSDatabase;
 import database.ITSDatabaseSQL;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -38,6 +37,12 @@ public class TwitterManager {
         }
     }
 
+    /**
+     * Stores the id, token and the token secret in the database
+     * @param token
+     * @param tokenSecret
+     * @param id
+     */
     public void configureAccount(String token, String tokenSecret, String id){
         //AccessToken accessToken = new AccessToken(token, tokenSecret,Long.parseLong(id));
         try {
@@ -48,11 +53,23 @@ public class TwitterManager {
         //database.twitterTokens().put(id,accessToken);
     }
 
+    /**
+     * Returns the latest tweet from the user timeline
+     * @param id
+     * @return String
+     * @throws TwitterException
+     */
     public String getHomeTimeline(String id) throws TwitterException {
 
         return getHomeTimeline(id,"");
     }
 
+    /**
+     * Returns the next timeline tweets. Tweets will be retrieve starting from the max tweet id
+     * @param id
+     * @return String
+     * @throws TwitterException
+     */
     public String getNextHomeTimeline(String id) throws TwitterException {
         String maxTweet = "";
         try {
@@ -64,6 +81,14 @@ public class TwitterManager {
         return "";
     }
 
+    /**
+     * Retrieve the timeline of a given id and the max tweet id
+     * A maximum of 5 tweets will be retrieve
+     * @param id
+     * @param maxId
+     * @return
+     * @throws TwitterException
+     */
     String getHomeTimeline(String id, String maxId) throws TwitterException {
         JSONArray jsonArray = new JSONArray();
         try {
@@ -71,15 +96,13 @@ public class TwitterManager {
             AccessToken accessToken = new AccessToken(list.get(0),list.get(1),Long.parseLong(id));
             twitter.setOAuthAccessToken(accessToken);
 
-
-
             Paging paging = new Paging(1,5);
             if ( !maxId.isEmpty()) {
                 paging.setMaxId(Long.parseLong(maxId));
             }
 
             List<Status> statuses = twitter.getHomeTimeline(paging);
-            jsonArray = processStatues(statuses);
+            jsonArray = processStatuses(statuses);
             Long m = statuses.get(statuses.size()-1).getId() -1;
 
             ITSDatabaseSQL.addMaxTweet(id,m.toString());
@@ -93,7 +116,12 @@ public class TwitterManager {
         return jsonArray.toString();
     }
 
-    public JSONArray processStatues(List<Status> statuses){
+    /**
+     * Filter all the unecessary info from a status
+     * @param statuses
+     * @return JSONArray
+     */
+    private JSONArray processStatuses(List<Status> statuses){
         JSONArray jsonArray = new JSONArray();
         for (Status status : statuses) {
             JSONObject jsonObject = new JSONObject();
@@ -105,7 +133,12 @@ public class TwitterManager {
         return jsonArray;
     }
 
-
+    /**
+     * Post tweet on twitter by providing tweet id and the message
+     * @param id
+     * @param tweet
+     * @return boolean
+     */
     public boolean postTweet(String id, String tweet){
         Status status = null;
         ArrayList<String> list = null;

@@ -1,32 +1,28 @@
 package engine;
 
-import compression.ZLibCompression;
-import database.ITSDatabase;
 import org.apache.log4j.Logger;
 import org.smslib.*;
 import org.smslib.modem.SerialModemGateway;
-import java.io.*;
+
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * SmsServer class
  * @Author : ITS Team
  **/
 
-public class SmsServer  implements Runnable {
+public class ServerMulti  implements Runnable {
 
     private SerialModemGateway gateway;
     private SmsCommand smsCommand;
     private Boolean shutdown = false;
 
-    private static final Logger LOG = Logger.getLogger(SmsServer.class);
+    private static final Logger LOG = Logger.getLogger(ServerMulti.class);
 
-    private static final String DBFILE = "database.txt";
+    private ArrayList<OutboundMessage> toSendQueue = new ArrayList<>();
 
-    private ITSDatabase database = ITSDatabase.instance();
-
-    public SmsServer(String pin, String smscNumber, String comPort) throws GatewayException {
+    public ServerMulti(String pin, String smscNumber, String comPort) throws GatewayException {
         gateway = new SerialModemGateway("modem.com9", comPort,125000, "", "");
         gateway.setInbound(true);
         gateway.setOutbound(true);
@@ -38,6 +34,8 @@ public class SmsServer  implements Runnable {
 
     public void run() {
         try {
+            SmsSender senderThread = new SmsSender(toSendQueue);
+            senderThread.start();
             smsCommand = new SmsCommand();
             Service.getInstance().startService();
             logModemInfo();
@@ -49,13 +47,13 @@ public class SmsServer  implements Runnable {
                     LOG.info("\tMessage : " +  msg.getText());
                     LOG.info("\tSender : " +  msg.getOriginator());
                     String originator = "+"+msg.getOriginator();
-                    List<String> toSend = smsCommand.process(msg.getText(),originator);
-                    for(String message : toSend) {
-                        String cryptedMsg = ZLibCompression.compressToBase64(message, "UTF-8");
-                        sendMessage(originator, cryptedMsg);
-                    }
+                    SmsProcessor smsProcessor = new SmsProcessor(msg.getText(),originator,toSendQueue);
+                    Thread t = new Thread(smsProcessor);
+                    t.start();
                     gateway.deleteMessage(msg);
                 }
+                senderThread.interrupt();
+                senderThread.join();
                 msgList.clear();
             }
             Service.getInstance().stopService();
@@ -89,3 +87,4 @@ public class SmsServer  implements Runnable {
 
 
 }
+

@@ -44,23 +44,6 @@ public class PageCutterTest {
         Assert.assertEquals(res, trimedPage);
     }
 
-    @Test
-    @Ignore("infinity loop")
-    public void getChunkListTest(){
-        String pageTest="";
-        try {
-            pageTest= new String(Files.readAllBytes(Paths.get("./src/test/res/tmpClean.html")),"UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        PageCutter p = new PageCutter(pageTest);
-        ArrayList<String> chunkList = p.getPageChunkList();
-        for (String chunk:chunkList) {
-            Assert.assertTrue(chunk.length() <= 1000);
-        }
-
-    }
-
 
     @Test
     public void getFirstChunkTest(){

@@ -1,9 +1,9 @@
 package twitter;
 
-import database.ITSDatabase;
 import database.ITSDatabaseSQL;
 import org.junit.Assert;
 import org.junit.Test;
+import twitter4j.Status;
 import twitter4j.auth.AccessToken;
 
 import java.sql.SQLException;
@@ -25,6 +25,5 @@ public class TwitterManagerTest {
         List<String> list = ITSDatabaseSQL.getTwitterToken("0123");
         Assert.assertTrue(expected.equals(new AccessToken(list.get(0),list.get(1),Long.parseLong("0123"))));
     }
-
 
 }
