@@ -121,7 +121,7 @@ public class TwitterManager {
      * @param statuses
      * @return JSONArray
      */
-    private JSONArray processStatuses(List<Status> statuses){
+    JSONArray processStatuses(List<Status> statuses){
         JSONArray jsonArray = new JSONArray();
         for (Status status : statuses) {
             JSONObject jsonObject = new JSONObject();

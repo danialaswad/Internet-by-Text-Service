@@ -24,7 +24,6 @@ public class ImageManager {
         img = resizeImage(img);
         byte[] imgArray = ImgReader.getImageArray(img,"jpg");
         String result = ZLibCompression.encodeImage(imgArray);
-
         return getArrayListFromString(result);
     }
 

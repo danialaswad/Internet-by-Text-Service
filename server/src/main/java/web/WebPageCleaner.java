@@ -105,6 +105,9 @@ public class WebPageCleaner {
                 if (attribute.getKey().equals("href")){
                     completeURL(attribute);
                 }
+                if (attribute.getKey().equals("src")){
+                    completeURL(attribute);
+                }
             }
             for (String s :keys){
                 element.removeAttr(s);
@@ -129,7 +132,8 @@ public class WebPageCleaner {
             domain = url;
             url = "https://" + url;
         }
-        if (attribute.getValue().contains(url) || attribute.getValue().startsWith("http")){
+        if (attribute.getValue().contains(url) || attribute.getValue().startsWith("http")
+                || attribute.getValue().startsWith("//")){
             return;
         }
         if (attribute.getValue().contains(domain)){
