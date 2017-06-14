@@ -36,7 +36,7 @@ public class ImgReader {
      * @return byte[]
      * @throws IOException
      */
-    static byte[] getImageArray(BufferedImage image, String format) throws IOException {
+    public static byte[] getImageArray(BufferedImage image, String format) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(image, format, baos);
         baos.flush();
