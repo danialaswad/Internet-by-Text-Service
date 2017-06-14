@@ -22,7 +22,7 @@ import java.util.ArrayList;
  */
 public class ImgReader {
 
-    private static BufferedImage getImageFromURL(String imgURL) throws IOException {
+    static BufferedImage getImageFromURL(String imgURL) throws IOException {
         URL url = new URL(imgURL);
         HttpURLConnection connection = (HttpURLConnection) url
                 .openConnection();
@@ -45,6 +45,13 @@ public class ImgReader {
         return imageInByte;
     }
 
-
+    static byte[] getImageArray(BufferedImage image) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(image, "png", baos);
+        baos.flush();
+        byte[] imageInByte = baos.toByteArray();
+        baos.close();
+        return imageInByte;
+    }
 
 }
