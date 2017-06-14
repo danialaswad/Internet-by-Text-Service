@@ -38,8 +38,7 @@ public class ServerMulti  implements Runnable {
 
     public void run() {
         try {
-            SmsSender sender = new SmsSender(toSendQueue);
-            Thread senderThread = new Thread(sender);
+            SmsSender senderThread = new SmsSender(toSendQueue);
             senderThread.start();
             smsCommand = new SmsCommand();
             Service.getInstance().startService();
@@ -57,6 +56,8 @@ public class ServerMulti  implements Runnable {
                     t.start();
                     gateway.deleteMessage(msg);
                 }
+                senderThread.interrupt();
+                senderThread.join();
                 msgList.clear();
             }
             Service.getInstance().stopService();
