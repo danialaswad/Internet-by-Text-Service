@@ -35,6 +35,7 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Map;
 
 import polytech.its.mobileapp.R;
@@ -400,10 +401,10 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
     }
 
     public static void saveImage() {
-
-        String fileName = webSiteAsked + "_" + webFragment.imageURL + "_" + "cache.png";
+        String fileName = URI.create(webFragment.imageURL).toString();
+        fileName = webSiteAsked + "_" + fileName + "_" + "cache.png";
         try {
-            String newURL = "file://" + new CacheUtility().saveImage(context, fileName, imageData);
+            String newURL = new CacheUtility().saveImage(context, fileName, imageData);
             String pageContent = webFragment.getExistingPageContent();
             pageContent = pageContent.replace(webFragment.imageURL, newURL);
             webFragment.clearAndUpdateView(pageContent);
