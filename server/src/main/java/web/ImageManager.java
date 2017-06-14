@@ -27,7 +27,7 @@ public class ImageManager {
         BufferedImage img = ImgReader.getImageFromURL(url);
         img = resizeImage(img);
         //writeBufferedImage(img,"bmp");
-        byte[] imgArray = ImgReader.getImageArray(img,"bmp");
+        byte[] imgArray = ImgReader.getImageArray(img,"jpg");
         imageString = ZLibCompression.encodeImage(imgArray);
 
         return imageString;
@@ -43,8 +43,8 @@ public class ImageManager {
     public static ArrayList<String> getImageStringInList(String url) throws IOException {
         BufferedImage img = ImgReader.getImageFromURL(url);
         img = resizeImage(img);
-        byte[] imgArray = ImgReader.getImageArray(img,"bmp");
-        String result = ZLibCompression.compressToBase64(ZLibCompression.encodeImage(imgArray), "UTF-8");
+        byte[] imgArray = ImgReader.getImageArray(img,"jpg");
+        String result = ZLibCompression.encodeImage(imgArray);
 
         return getArrayListFromString(result);
     }
