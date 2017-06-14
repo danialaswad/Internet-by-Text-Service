@@ -55,6 +55,9 @@ public class ImageManager {
      * @return BufferedImage
      */
     static BufferedImage resizeImage(BufferedImage original){
+        if (original.getWidth()<=120 && original.getHeight() <=120){
+            return original;
+        }
         return Scalr.resize(original, MAX_DIM);
     }
 
