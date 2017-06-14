@@ -22,6 +22,12 @@ import java.util.ArrayList;
  */
 public class ImgReader {
 
+    /**
+     * Fetch an image from the given url
+     * @param imgURL
+     * @return BufferedImage
+     * @throws IOException
+     */
     static BufferedImage getImageFromURL(String imgURL) throws IOException {
         URL url = new URL(imgURL);
         HttpURLConnection connection = (HttpURLConnection) url
@@ -45,9 +51,15 @@ public class ImgReader {
         return imageInByte;
     }
 
-    static byte[] getImageArray(BufferedImage image) throws IOException {
+    /**
+     * Converts a Bufferedmage into an array of bytes
+     * @param image
+     * @return byte[]
+     * @throws IOException
+     */
+    static byte[] getImageArray(BufferedImage image, String format) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(image, "png", baos);
+        ImageIO.write(image, format, baos);
         baos.flush();
         byte[] imageInByte = baos.toByteArray();
         baos.close();

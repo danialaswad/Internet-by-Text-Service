@@ -26,14 +26,12 @@ public class SmsCommand {
 
     private PageManager pageManager;
     private TwitterManager twitterManager;
-    private ImageManager imageManager;
     private Map<String, Method> commands;
     private String msgOriginator;
 
     public SmsCommand(){
         pageManager = new PageManager();
         twitterManager = new TwitterManager();
-        imageManager = new ImageManager();
         commands = initCommand();
         msgOriginator="";
     }
@@ -154,10 +152,10 @@ public class SmsCommand {
     public List<String> getimg(String data){
         ArrayList<String> result = new ArrayList<>();
         try {
-            //byte[] img = ImgReader.getImageArray(data);
-            //String encodedImage = ZLibCompression.encodeImage(img);
-            String encodedImage = imageManager.getImage(data);
-            result.add("IMG:"+encodedImage);
+            ArrayList<String> encodedImage = ImageManager.getImageStringInList(data);
+            for (String img: encodedImage) {
+                result.add("IMG:"+img);
+            }
             result.add("IMGEND:YES");
             return result;
         } catch (IOException e) {
