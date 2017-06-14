@@ -54,7 +54,7 @@ public class ImageManager {
      * @param original
      * @return BufferedImage
      */
-    private static BufferedImage resizeImage(BufferedImage original){
+    static BufferedImage resizeImage(BufferedImage original){
         return Scalr.resize(original, MAX_DIM);
     }
 
