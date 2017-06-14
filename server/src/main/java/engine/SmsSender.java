@@ -6,6 +6,7 @@ import org.smslib.OutboundMessage;
 import org.smslib.Service;
 import org.smslib.TimeoutException;
 
+import javax.swing.text.StyledEditorKit;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -15,10 +16,11 @@ import java.util.ArrayList;
  * @author Anasse GHIRA
  * @version 1.0
  */
-public class SmsSender implements Runnable {
+public class SmsSender extends Thread {
 
     private SemOutputMessage outputSemaphore = SemOutputMessage.getInstance();
     private ArrayList<OutboundMessage> toSendQueue;
+
     private static final Logger LOG = Logger.getLogger(SmsSender.class);
 
     public SmsSender(ArrayList<OutboundMessage> output){
@@ -28,7 +30,7 @@ public class SmsSender implements Runnable {
 
     @Override
     public void run() {
-        while(true){
+        while(!isInterrupted()){
 
             if(toSendQueue.size()>0){
                 try {
