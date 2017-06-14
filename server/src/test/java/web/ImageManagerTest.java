@@ -12,6 +12,24 @@ public class ImageManagerTest {
 
     private static final String URL = "https://static.pexels.com/photos/24205/pexels-photo.jpg";
 
+    private static final String SMALL_URL = "https://secure.runhosting.com/images/icon_method_27.jpg";
+
+    @Test
+    public void resizeSmallImage() throws IOException {
+        BufferedImage image = ImgReader.getImageFromURL(SMALL_URL);
+        Assert.assertTrue(image.getHeight() <= 120 && image.getWidth() <= 120);
+
+        BufferedImage resImage = ImageManager.resizeImage(image);
+
+        Assert.assertTrue(resImage.getHeight() <= 120 && resImage.getWidth() <= 120);
+
+        Assert.assertTrue(resImage.getHeight() == image.getHeight());
+
+        Assert.assertTrue(resImage.getWidth() == image.getWidth());
+    }
+
+
+
     @Test
     public void getArrayListFromStringTest(){
         // Message with 4 thousands characters

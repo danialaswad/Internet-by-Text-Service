@@ -13,14 +13,24 @@ import java.io.*;
 public class WeatherProxy {
     final static String urlAPI = "http://api.openweathermap.org/data/2.5/weather?APPID=a45c1e831e27780fcaf1cb59dd223396&units=metric&mode=xml&q=";
 
+    /**
+     * Returns the wheather from a given city
+     * @param city
+     * @return String
+     * @throws IOException
+     */
     public static String getWeather(String city) throws IOException {
         String urlString = urlAPI + city;
         Document result = Jsoup.connect(urlString).get();
         return processRequest(result);
     }
 
-    /*public pour tests */
-    public static String processRequest(Document response){
+    /**
+     * Filter the response given by the API to retrieve only the necessary info
+     * @param response
+     * @return String
+     */
+    static String processRequest(Document response){
         String temp = response.select("temperature").first().attr("value").split("\\.")[0];
         String weather = response.select("weather").first().attr("value");
         String weatherID = response.select("weather").first().attr("number");

@@ -1,6 +1,5 @@
 package engine;
 
-import compression.ZLibCompression;
 import org.apache.log4j.Logger;
 import twitter.TwitterManager;
 import twitter4j.TwitterException;

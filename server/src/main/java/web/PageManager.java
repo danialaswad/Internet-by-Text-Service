@@ -17,6 +17,13 @@ public class PageManager {
 
     private final static Logger LOG = org.apache.log4j.Logger.getLogger(PageManager.class);
 
+    /**
+     * Retieve the a page from the given url and returns the 1st 1000 characters.
+     * Save the rest of the website in the ITSDatabaseSQL
+     * @param url
+     * @param originator
+     * @return String
+     */
     public String getWebPage(String url, String originator){
         URLReader reader = new URLReader(url);
         Document document = reader.fetchFile();
@@ -32,8 +39,15 @@ public class PageManager {
             }
         }
         return result;
- }
+    }
 
+    /**
+     * Retrieve the 1st 1000 character of a web site from the ITSDatabaseSQL
+     * and save the rest back in the database
+     * @param url
+     * @param originator
+     * @return String
+     */
     public String nextWebPage(String url, String originator){
         URLReader reader = new URLReader(url);
         String result="";
@@ -51,6 +65,11 @@ public class PageManager {
         return result;
     }
 
+    /**
+     * Remove web page from the ITSDatabaseSQL
+     * @param url
+     * @param originator
+     */
     public void removeWebPage(String url,String originator) {
         try {
             ITSDatabaseSQL.removePages(originator,url);

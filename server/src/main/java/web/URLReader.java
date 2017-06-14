@@ -26,6 +26,10 @@ public class URLReader {
     }
 
 
+    /**
+     * fetch file from a given url
+     * @return
+     */
     public Document fetchFile() {
         if(urlString.equals("http://"))
             return error();
@@ -37,6 +41,10 @@ public class URLReader {
         return error();
     }
 
+    /**
+     * Error when file cannot be fetch
+     * @return
+     */
     Document error(){
         Document doc = Jsoup.parse("<html><head><title>Error</title></head>\"\n" +
                 "  + \"<body><p>" + getUrlString() + " is not available</p></body></html>");
@@ -45,10 +53,6 @@ public class URLReader {
 
     public String getUrlString() {
         return urlString;
-    }
-
-    void setUrlString(String urlString) {
-        this.urlString = urlString;
     }
 
 }

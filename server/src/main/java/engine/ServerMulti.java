@@ -1,6 +1,5 @@
 package engine;
 
-import database.ITSDatabase;
 import org.apache.log4j.Logger;
 import org.smslib.*;
 import org.smslib.modem.SerialModemGateway;
@@ -19,11 +18,8 @@ public class ServerMulti  implements Runnable {
     private SmsCommand smsCommand;
     private Boolean shutdown = false;
 
-    private static final Logger LOG = Logger.getLogger(engine.SmsServer.class);
+    private static final Logger LOG = Logger.getLogger(ServerMulti.class);
 
-    private static final String DBFILE = "database.txt";
-
-    private ITSDatabase database = ITSDatabase.instance();
     private ArrayList<OutboundMessage> toSendQueue = new ArrayList<>();
 
     public ServerMulti(String pin, String smscNumber, String comPort) throws GatewayException {

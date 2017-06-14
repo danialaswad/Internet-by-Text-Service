@@ -12,12 +12,13 @@ ITS is a service that allows users to surf the internet using only SMS through o
   - Sending tweets and viewing user's timeline is also possible
 
 You can also:
+  - Images on the website can be transfered on demand
   - Jump from one page to another (on page links are clickable)
   - Click on next to receive the sequence of a webpage
 
 ### Tech
 
-ITS uses a number of open source projects to work properly:
+ITS were developed and tested using numerous tools such as:
 
 * [Android Studio] - an IDE to develop application on android
 * [Intellij IDEA] - an IDE to develop programs on JAVA
@@ -56,7 +57,6 @@ ITS is currently extended with the following dependancies. Instructions on how t
 ### Todos
 
  - Implement css on application side
- - Allow pictures to be send through the service
  - Allow user to send mail using the service
  - Integrate Instagram
  - Integrate Facebook

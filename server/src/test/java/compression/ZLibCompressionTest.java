@@ -42,13 +42,4 @@ public class ZLibCompressionTest {
         Assert.assertEquals(decompress,actual);
 
     }
-
-    @Test
-    public void compressTest(){
-        String tmp = "TWITTERHOME:[{\"un\":\"Karim\"" +
-                                    ",\"usn\":\"bogosfr\"" +
-                                    ",\"text\":\"Je suis un ladyboy\"}]";
-
-        System.out.println(ZLibCompression.compressToBase64(tmp, "UTF-8"));
-    }
 }

@@ -1,18 +1,10 @@
 package web;
 
-import compression.ZLibCompression;
-
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.WritableRaster;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-
 
 /**
  * ImgReader
@@ -38,21 +30,8 @@ public class ImgReader {
         return ImageIO.read(connection.getInputStream());
     }
 
-    public static byte[] getImageArray(String imgURL) throws IOException {
-        //TODO
-        byte[] imageInByte;
-        BufferedImage img = getImageFromURL(imgURL);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(img, "bmp", baos);
-        baos.flush();
-        imageInByte = baos.toByteArray();
-        baos.close();
-        System.out.println("Test2");
-        return imageInByte;
-    }
-
     /**
-     * Converts a Bufferedmage into an array of bytes
+     * Converts a BufferedImage into an array of bytes
      * @param image
      * @return byte[]
      * @throws IOException

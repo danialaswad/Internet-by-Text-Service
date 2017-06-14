@@ -49,9 +49,9 @@ public class WebPageCleanerTest {
         Assert.assertEquals(Jsoup.parse("<p>this must not be remove</p>").toString(), document.toString());
 
 
-        document = Jsoup.parse("<body><style>this is a script</style><p>this must not be remove</p></body>");
+        document = Jsoup.parse("<body><style>this is a script</style><p>this must <em>not</em> be remove</p></body>");
         new WebPageCleaner().removeUnecessaryTags(document);
-        Assert.assertEquals(Jsoup.parse("<p>this must not be remove</p>").toString(), document.toString());
+        Assert.assertEquals(Jsoup.parse("<p>this must <em>not</em> be remove</p>").toString(), document.toString());
     }
 
     @Test
