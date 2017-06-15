@@ -109,9 +109,8 @@ public class SmsCommand {
     }
     public List<String> twitterhome(String data){
         ArrayList<String> result = new ArrayList<>();
-        String id = data;
         try {
-            result.add("TWITTERHOME:"+twitterManager.getHomeTimeline(id));
+            result.add("TWITTERHOME:"+twitterManager.getHomeTimeline(data));
             return result;
         } catch (TwitterException e) {
             LOG.warn(e.getMessage());
@@ -121,9 +120,8 @@ public class SmsCommand {
     }
     public List<String> twitternext(String data){
         ArrayList<String> result = new ArrayList<>();
-        String id = data;
         try {
-            result.add("TWITTERNEXT:"+twitterManager.getNextHomeTimeline(id));
+            result.add("TWITTERNEXT:"+twitterManager.getNextHomeTimeline(data));
             return result;
         } catch (TwitterException e) {
             LOG.warn(e.getMessage());
