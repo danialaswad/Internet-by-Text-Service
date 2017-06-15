@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import web.ImgReader;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -47,7 +48,8 @@ public class ZLibCompressionTest {
 
     @Test
     public void compressImagetest() throws IOException {
-        byte[] img = ImgReader.getImageArray("http://e-cdn-images.deezer.com/images/artist/bb660d6512fcca65b9aea703af95a546/86x86-000000-80-0-0.jpg");
+        BufferedImage bufferedImage = ImgReader.getImageFromURL("http://e-cdn-images.deezer.com/images/artist/bb660d6512fcca65b9aea703af95a546/86x86-000000-80-0-0.jpg");
+        byte[] img = ImgReader.getImageArray(bufferedImage,"UTF-8 ");
         System.out.println(ZLibCompression.encodeImage(img));
         String expected = ZLibCompression.encodeImage(img);
         String result = ZLibCompression.decompressFromBase64(ZLibCompression.compressToBase64(expected,"UTF-8"),"UTF-8");

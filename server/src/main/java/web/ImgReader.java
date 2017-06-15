@@ -20,7 +20,7 @@ public class ImgReader {
      * @return BufferedImage
      * @throws IOException
      */
-    static BufferedImage getImageFromURL(String imgURL) throws IOException {
+    public static BufferedImage getImageFromURL(String imgURL) throws IOException {
         URL url = new URL(imgURL);
         HttpURLConnection connection = (HttpURLConnection) url
                 .openConnection();
