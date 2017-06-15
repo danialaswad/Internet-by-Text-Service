@@ -3,14 +3,14 @@ package polytech.its.mobileapp.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +40,7 @@ public class CacheUtility {
     }
 
     public String saveImage(Context context, String filename, String content) throws IOException {
-        Bitmap b = new ImageManager().imageBuilder(content);
+        Bitmap b = new ImageManager().buildInternetImage(content);
         File mydir = context.getDir("cachedImages", Context.MODE_PRIVATE); //Creating an internal dir;
         File f = new File(mydir, filename);
         f.getParentFile().mkdirs();
@@ -52,24 +52,25 @@ public class CacheUtility {
         return f.getAbsolutePath();
     }
 
-    public String getImage(Context context, String path) throws IOException {
+    public byte[] getImage(Context context, String path) throws IOException {
+        String file = "file:///";
+        path = "/" + path.substring(file.length());
         File f = new File(path);
 
-        StringBuilder text = new StringBuilder();
 
+
+        int size = (int) f.length();
+        byte[] bytes = new byte[size];
         try {
-            BufferedReader br = new BufferedReader(new FileReader(f));
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                text.append(line);
-                text.append('\n');
-            }
-            br.close();
+            BufferedInputStream buf = new BufferedInputStream(new FileInputStream(f));
+            buf.read(bytes, 0, bytes.length);
+            buf.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
-            e.toString();
+            e.printStackTrace();
         }
-        return text.toString();
+        return bytes;
     }
 
     public Map<String, History> retrieveWebsites(Context context) throws IOException {

@@ -10,8 +10,16 @@ import android.util.Base64;
 
 public class ImageManager {
 
-    public Bitmap   imageBuilder(String content) {
+    public Bitmap buildInternetImage(String content) {
         byte[] blob = decompress(content);
+        return buildImage(blob);
+    }
+
+    public Bitmap buildNormalImage(byte[] content) {
+        return buildImage(content);
+    }
+
+    public Bitmap buildImage(byte[] blob) {
         Bitmap bmp = BitmapFactory.decodeByteArray(blob, 0, blob.length);
         return bmp;
     }
