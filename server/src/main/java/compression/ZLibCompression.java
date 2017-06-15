@@ -1,6 +1,5 @@
 package compression;
 import org.apache.commons.codec.binary.Base64;
-
 import java.io.*;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
