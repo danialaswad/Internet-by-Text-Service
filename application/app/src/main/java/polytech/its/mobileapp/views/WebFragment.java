@@ -14,11 +14,15 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 
+import java.io.IOException;
+
 import polytech.its.mobileapp.R;
+import polytech.its.mobileapp.utils.CacheUtility;
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 
 import static android.webkit.WebView.HitTestResult.IMAGE_TYPE;
+import static android.webkit.WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE;
 
 
 /**
@@ -126,6 +130,7 @@ public class WebFragment extends Fragment {
 
 
                 } else {
+                    home.webSiteAsked = url;
                     clearViewAndSend(getString(R.string.GET) + url);
                 }
                 return true;
@@ -138,12 +143,19 @@ public class WebFragment extends Fragment {
                 final WebView webview = (WebView) v;
                 final WebView.HitTestResult result = webview.getHitTestResult();
 
-                if (result.getType() == IMAGE_TYPE) {
+                if (result.getType() == IMAGE_TYPE || result.getType() == SRC_IMAGE_ANCHOR_TYPE) {
                     Log.d("LONGPRESSSS", result.getExtra());
                     if (result.getExtra() != null) {
+                        home.imageData = "";
                         imageURL = result.getExtra();
                         if (imageURL.contains("data/user/0")) {
-                            home.displayPopup();
+                            try {
+                                home.imageData = new CacheUtility().getImage(getContext(), imageURL);
+                                home.displayPopup();
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         } else {
                             home.sendMessage(getString(R.string.getImage) + imageURL);
                             home.showToast(getString(R.string.imageDownload));

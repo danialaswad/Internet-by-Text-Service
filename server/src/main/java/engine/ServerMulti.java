@@ -52,10 +52,10 @@ public class ServerMulti  implements Runnable {
                     t.start();
                     gateway.deleteMessage(msg);
                 }
-                senderThread.interrupt();
-                senderThread.join();
                 msgList.clear();
             }
+            senderThread.interrupt();
+            senderThread.join();
             Service.getInstance().stopService();
             Service.getInstance().removeGateway(gateway);
 

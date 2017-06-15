@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
@@ -49,6 +50,26 @@ public class CacheUtility {
         fos.flush();
         fos.close();
         return f.getAbsolutePath();
+    }
+
+    public String getImage(Context context, String path) throws IOException {
+        File f = new File(path);
+
+        StringBuilder text = new StringBuilder();
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(f));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
+            }
+            br.close();
+        } catch (IOException e) {
+            e.toString();
+        }
+        return text.toString();
     }
 
     public Map<String, History> retrieveWebsites(Context context) throws IOException {
