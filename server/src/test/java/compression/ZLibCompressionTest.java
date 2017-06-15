@@ -1,13 +1,13 @@
 package compression;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import web.ImgReader;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Random;
+
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * ZLibCompressionTest
@@ -47,12 +47,14 @@ public class ZLibCompressionTest {
     }
 
     @Test
-    public void compressImagetest() throws IOException {
-        BufferedImage bufferedImage = ImgReader.getImageFromURL("http://e-cdn-images.deezer.com/images/artist/bb660d6512fcca65b9aea703af95a546/86x86-000000-80-0-0.jpg");
-        byte[] img = ImgReader.getImageArray(bufferedImage,"UTF-8 ");
-        System.out.println(ZLibCompression.encodeImage(img));
-        String expected = ZLibCompression.encodeImage(img);
-        String result = ZLibCompression.decompressFromBase64(ZLibCompression.compressToBase64(expected,"UTF-8"),"UTF-8");
-        Assert.assertEquals(expected,result);
+    public void encodeImageTest() throws UnsupportedEncodingException {
+        byte[] bActuel = new byte[20];
+
+        new Random().nextBytes(bActuel);
+
+        String bEncode = ZLibCompression.encodeImage(bActuel);
+        byte[] bTransforme = Base64.decodeBase64(bEncode.getBytes("UTF-8"));
+
+        Assert.assertTrue(Arrays.equals(bActuel,bTransforme));
     }
 }

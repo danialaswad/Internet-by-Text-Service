@@ -3,7 +3,6 @@ package engine;
 
 import database.ITSDatabaseSQL;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.SQLException;

@@ -19,7 +19,7 @@ public class ImgReader {
      * @return BufferedImage
      * @throws IOException
      */
-    public static BufferedImage getImageFromURL(String imgURL) throws IOException {
+    static BufferedImage getImageFromURL(String imgURL) throws IOException {
         URL url = new URL(imgURL);
         HttpURLConnection connection = (HttpURLConnection) url
                 .openConnection();
@@ -35,7 +35,7 @@ public class ImgReader {
      * @return byte[]
      * @throws IOException
      */
-    public static byte[] getImageArray(BufferedImage image, String format) throws IOException {
+    static byte[] getImageArray(BufferedImage image, String format) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(image, format, baos);
         baos.flush();

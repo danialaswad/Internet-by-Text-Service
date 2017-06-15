@@ -1,9 +1,9 @@
 package weather;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.junit.Assert;
 import org.junit.Test;
-import org.jsoup.nodes.Document;
 
 /**
  * WeatherProxyTest

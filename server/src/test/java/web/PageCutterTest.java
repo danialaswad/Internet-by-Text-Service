@@ -1,13 +1,8 @@
 package web;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
-import web.PageCutter;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class PageCutterTest {
