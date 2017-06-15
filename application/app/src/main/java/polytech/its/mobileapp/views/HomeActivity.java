@@ -99,6 +99,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //ajoute les entrées de menu_test à l'ActionBar
@@ -155,7 +156,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                 }
                 return true;
             case R.id.action_country2:
-                newPhone = "+33633192265";
+                newPhone = "+33668639846";
                 if (newPhone != PHONE_NUMBER) {
                     PHONE_NUMBER = newPhone;
                     showToast(getString(R.string.service_changed));
@@ -359,16 +360,24 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
         }
     }
 
-    public static void displayPopup() {
-        Bitmap bitmap = new ImageManager().imageBuilder(imageData);
+    public static void displayInternetPopup() {
+        Bitmap b = new ImageManager().buildInternetImage(imageData);
+        displayPopup(b);
+    }
 
+    public void displayCachedPopup(byte[] image) {
+        Bitmap b = new ImageManager().buildNormalImage(image);
+        displayPopup(b);
+    }
+
+    public static void displayPopup(Bitmap b) {
         AlertDialog.Builder ImageDialog = new AlertDialog.Builder(dialogContext);
         LayoutInflater factory = LayoutInflater.from(dialogContext);
         final View view = factory.inflate(R.layout.custom_fullimage_dialog, null);
         ImageDialog.setView(view);
 
         ImageView showImage = (ImageView) view.findViewById(R.id.fullimage);
-        showImage.setImageBitmap(bitmap);
+        showImage.setImageBitmap(b);
         ImageDialog.setNegativeButton("ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {
             }
@@ -479,7 +488,7 @@ public class HomeActivity extends AppCompatActivity implements WebFragment.OnFra
                 imageData += decompressed.substring(context.getString(R.string.image).length());
             } else if (decompressed.contains(context.getString(R.string.imgEnd))) {
                 saveImage();
-                displayPopup();
+                displayInternetPopup();
 
             }
             return "Commande incomprise";

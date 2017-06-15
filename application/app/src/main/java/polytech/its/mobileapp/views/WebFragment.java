@@ -150,8 +150,8 @@ public class WebFragment extends Fragment {
                         imageURL = result.getExtra();
                         if (imageURL.contains("data/user/0")) {
                             try {
-                                home.imageData = new CacheUtility().getImage(getContext(), imageURL);
-                                home.displayPopup();
+                                byte[] data = new CacheUtility().getImage(getContext(), imageURL);
+                                home.displayCachedPopup(data);
 
                             } catch (IOException e) {
                                 e.printStackTrace();
