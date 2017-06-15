@@ -57,7 +57,7 @@
 
                     <item
                         android:id="@+id/action_country2"
-                        android:icon="@drawable/france"
+                        android:icon="@drawable/spain"
                         android:title="@string/serveur_2"
                         app:showAsAction="ifRoom" />
                 </menu>
