@@ -8,6 +8,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * ImageManager class
+ *
+ * @Author : ITS Team
+ **/
 public class ImageManager {
 
     private static final int MAX_DIM = 120;

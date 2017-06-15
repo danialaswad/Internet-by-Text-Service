@@ -8,7 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * SmsServer class
+ * ServerMulti class
+ *
  * @Author : ITS Team
  **/
 
@@ -48,8 +49,8 @@ public class ServerMulti  implements Runnable {
                     LOG.info("\tSender : " +  msg.getOriginator());
                     String originator = "+"+msg.getOriginator();
                     SmsProcessor smsProcessor = new SmsProcessor(msg.getText(),originator,toSendQueue);
-                    Thread t = new Thread(smsProcessor);
-                    t.start();
+                    Thread processorThread = new Thread(smsProcessor);
+                    processorThread.start();
                     gateway.deleteMessage(msg);
                 }
                 msgList.clear();
@@ -73,15 +74,7 @@ public class ServerMulti  implements Runnable {
     }
 
 
-
-    private void sendMessage(String to, String body) throws InterruptedException, TimeoutException, GatewayException, IOException {
-        OutboundMessage msg = new OutboundMessage(to, body);
-        Service.getInstance().sendMessage(msg);
-        LOG.info("Output Message :");
-        LOG.info("\tMessage : " +  msg.getText());
-    }
-
-    public void stop() throws InterruptedException, SMSLibException, IOException {
+    public void stop(){
         shutdown = true;
     }
 

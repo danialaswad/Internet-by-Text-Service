@@ -11,11 +11,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * SmsSender
+ * SmsSender class
  *
- * @author Anasse GHIRA
- * @version 1.0
- */
+ * @Author : ITS Team
+ **/
 public class SmsSender extends Thread {
 
     private SemOutputMessage outputSemaphore = SemOutputMessage.getInstance();
@@ -27,7 +26,6 @@ public class SmsSender extends Thread {
         toSendQueue = output;
     }
 
-
     @Override
     public void run() {
         while(!isInterrupted()){
@@ -35,22 +33,10 @@ public class SmsSender extends Thread {
             if(toSendQueue.size()>0){
                 try {
                     outputSemaphore.getSemaphore().acquire();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                //Prendre le semaphore
-                OutboundMessage msg = toSendQueue.remove(0);
-                outputSemaphore.getSemaphore().release();
-                //relacher le semaphore
-                try {
+                    OutboundMessage msg = toSendQueue.remove(0);
+                    outputSemaphore.getSemaphore().release();
                     sendMessage(msg);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (TimeoutException e) {
-                    e.printStackTrace();
-                } catch (GatewayException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
+                } catch (InterruptedException | IOException | GatewayException | TimeoutException e) {
                     e.printStackTrace();
                 }
             }

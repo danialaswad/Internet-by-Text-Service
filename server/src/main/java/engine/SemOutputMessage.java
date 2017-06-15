@@ -3,8 +3,10 @@ package engine;
 import java.util.concurrent.Semaphore;
 
 /**
- * Created by Antoine on 13/06/2017.
- */
+ * SemOutputMessage class
+ *
+ * @Author : ITS Team
+ **/
 public class SemOutputMessage {
         private static Semaphore semaphore;
 

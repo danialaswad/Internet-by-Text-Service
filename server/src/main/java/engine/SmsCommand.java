@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * SmsCommand class
+ *
  * @Author : ITS Team
  */
 
@@ -26,6 +27,9 @@ public class SmsCommand {
     private PageManager pageManager;
     private TwitterManager twitterManager;
     private Map<String, Method> commands;
+
+
+
     private String msgOriginator;
 
     public SmsCommand(){
@@ -33,6 +37,10 @@ public class SmsCommand {
         twitterManager = new TwitterManager();
         commands = initCommand();
         msgOriginator="";
+    }
+
+    public void setMsgOriginator(String msgOriginator) {
+        this.msgOriginator = msgOriginator;
     }
 
     private Map<String, Method> initCommand(){
@@ -76,6 +84,7 @@ public class SmsCommand {
         result.add("WEB:"+pageManager.getWebPage(data,msgOriginator));
         return result;
     }
+
     public List<String> next(String data){
         ArrayList<String> result = new ArrayList<>();
         result.add("WEBNEXT:" + pageManager.nextWebPage(data,msgOriginator));

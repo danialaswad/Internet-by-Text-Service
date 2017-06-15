@@ -8,11 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * SmsProcessor
+ * SmsProcessor class
  *
- * @author Anasse GHIRA
- * @version 1.0
- */
+ * @Author : ITS Team
+ **/
 public class SmsProcessor implements Runnable {
 
     String originator;
@@ -41,7 +40,7 @@ public class SmsProcessor implements Runnable {
         }
     }
 
-    private void sendMessage(String to, String body){
+    void sendMessage(String to, String body){
         OutboundMessage msg = new OutboundMessage(to, body);
         try {
             outputSemaphore.getSemaphore().acquire();
@@ -50,6 +49,5 @@ public class SmsProcessor implements Runnable {
         }
         toSendQueue.add(msg);
         outputSemaphore.getSemaphore().release();
-        //lacher le semaphore
     }
 }

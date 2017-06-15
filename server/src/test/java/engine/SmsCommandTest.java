@@ -1,14 +1,72 @@
 package engine;
 
 
+import database.ITSDatabaseSQL;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SmsCommandTest {
 
+    @Test
+    public void getTest(){
+        SmsCommand command = new SmsCommand();
+        command.setMsgOriginator("+33668639846");
+        List<String> result = command.get("http://anasghira.com/its");
+        List<String> expected = new ArrayList<>();
+        expected.add("WEB:<body> \n" +
+                " <div> \n" +
+                "  <div> \n" +
+                "   <a href=\"http://anasghira.com/its#.html\" title=\"Home\">Home</a> \n" +
+                "   <a href=\"http://anasghira.com/its#.html\" title=\"About Us\">About</a> \n" +
+                "   <a href=\"http://anasghira.com/its#.html\" title=\"Products\">Products</a> \n" +
+                "   <a href=\"http://anasghira.com/its#.html\" title=\"Services\">Services</a> \n" +
+                "   <a href=\"http://anasghira.com/its#.html\" title=\"Contact\">Contact</a> \n" +
+                "  </div> \n" +
+                "  <div> \n" +
+                "   <b>ITS</b> \n" +
+                "   <em>Internet by Text Service</em> \n" +
+                "  </div> \n" +
+                "  <div></div> \n" +
+                "  <div> \n" +
+                "   <img src=\"http://anasghira.com/its/images_tree.jpg\"> \n" +
+                "   <h3>Great Slogan!</h3> Phasellus id est. Quisque blandit eros sed pede. Quisque est. Donec lectus neque, posuere at, adipiscing id, lobortis id, nisl. Vivamus id ante. Aliquam ut augue. Fusce venenatis libero vel urna. Suspendisse quis dui sit amet purus tincidunt facilisis. Sed velit. Sed varius, nibh quis egestas aliquam, eros libero feugiat lorem, eu lobortis \n" +
+                "   <a href=\"http://anasghira.com/its/lorem\">urna velit ut turpis. </a> \n" +
+                "   ");
+        Assert.assertEquals(expected,result);
+    }
+
+    /*@Test
+    public void nextTest(){
+        SmsCommand command = new SmsCommand();
+        command.setMsgOriginator("+33668639846");
+        List<String> result = command.next("http://anasghira.com/its");
+        List<String> expected = new ArrayList<>();
+        expected.add("WEBNEXT:<body>\n" +
+                " <li>Nullam ut metus ac quam aliquet ullamcorper.</li> \n" +
+                " <li>Proin sit amet tortor id risus euismod pretium.</li> \n" +
+                " <li>Proin facilisis orci vel purus.</li> \n" +
+                " <li>Vivamus eget felis at pede porttitor accumsan.</li> \n" +
+                " <li>Suspendisse at lacus eget eros tristique ultrices. </li> \n" +
+                " <li>Suspendisse euismod tellus vel purus.</li> \n" +
+                " <li>Suspendisse at lacus eget eros tristique ultrices. </li> Donec lectus neque, posuere at, adipiscing id, lobortis id, nisl. Vivamus id ante. Aliquam ut augue. Fusce venenatis libero vel urna. Suspendisse quis dui sit amet purus tincidunt facilisis. Sed velit. Sed varius, nibh quis egestas aliquam, eros libero feugiat lorem, eu lobortis urna velit ut turpis. Nulla vitae lacus. Quisque lectus lorem, cursus auctor, ornare non, dictum in, tortor. Suspendisse gravida. Ut volutpat. Pellentesque \n" +
+                " <a href=\"http://anasghira.com/its#\">habitant morbi tristique");
+        Assert.assertEquals(expected,result);
+    }*/
+
+    @Test
+    public  void endwebsiteTest() throws SQLException {
+
+        SmsCommand command = new SmsCommand();
+        command.setMsgOriginator("+33668639846");
+        List<String> result = command.endwebsite("http://anasghira.com/its");
+
+        Assert.assertEquals("",ITSDatabaseSQL.getPage("+33668639846","http://anasghira.com/its"));
+    }
 
     @Test
     public void errorTest(){

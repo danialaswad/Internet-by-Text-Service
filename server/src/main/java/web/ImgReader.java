@@ -7,11 +7,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * ImgReader
+ * ImgReader class
  *
- * @author Anasse GHIRA
- * @version 1.0
- */
+ * @Author : ITS Team
+ **/
 public class ImgReader {
 
     /**

@@ -1,10 +1,14 @@
 package database;
 
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * ITSDatabaseSQL class
+ *
+ * @Author : ITS Team
+ **/
 public class ITSDatabaseSQL {
 
     // drivers

@@ -5,11 +5,10 @@ import org.jsoup.nodes.Document;
 import java.io.*;
 
 /**
- * weather.WeatherProxy
+ * WeatherProxy class
  *
- * @author Anasse GHIRA
- * @version 1.0
- */
+ * @Author : ITS Team
+ **/
 public class WeatherProxy {
     final static String urlAPI = "http://api.openweathermap.org/data/2.5/weather?APPID=a45c1e831e27780fcaf1cb59dd223396&units=metric&mode=xml&q=";
 
